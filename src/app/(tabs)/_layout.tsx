@@ -68,6 +68,13 @@ const TabsNavigation = () => {
 						tabBarIcon: ({ color }) => <FontAwesome6 name="users-line" size={20} color={color} />,
 					}}
 				/>
+				<Tabs.Screen
+					name="setting"
+					options={{
+						title: 'Setting',
+						tabBarIcon: ({ color }) => <FontAwesome6 name="users-line" size={20} color={color} />,
+					}}
+				/>
 			</Tabs>
 
 			<FloatingPlayer

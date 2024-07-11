@@ -37,7 +37,6 @@ export const QueueControls = ({ tracks, style, ...viewProps }: QueueControlsProp
 			<View style={{ flex: 1 }}>
 				<TouchableOpacity onPress={handleShufflePlay} activeOpacity={0.8} style={styles.button}>
 					<Ionicons name={'shuffle-sharp'} size={24} color={colors.primary} />
-
 					<Text style={styles.buttonText}>Shuffle</Text>
 				</TouchableOpacity>
 			</View>

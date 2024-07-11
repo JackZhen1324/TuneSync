@@ -1,12 +1,12 @@
 import { TracksList } from '@/components/TracksList'
-import { screenPadding } from '@/constants/tokens'
 import { trackTitleFilter } from '@/helpers/filter'
 import { generateTracksListId } from '@/helpers/miscellaneous'
+import usePaganation from '@/helpers/usePaganation'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { useTracks } from '@/store/library'
+import { useLibraryStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
-import { useMemo } from 'react'
-import { ScrollView, View } from 'react-native'
+import { useEffect, useMemo } from 'react'
+import { View } from 'react-native'
 
 const SongsScreen = () => {
 	const search = useNavigationSearch({
@@ -14,27 +14,54 @@ const SongsScreen = () => {
 			placeholder: 'Find in songs',
 		},
 	})
+	const { setTracks, tracks } = useLibraryStore((state) => state)
+	const [data, setPage, currentPage] = usePaganation({ data: tracks })
 
-	const tracks = useTracks()
+	// const tracks = useTrack()
+	// console.log('tracks666', tracks)
+	useEffect(() => {
+		setTracks()
+		return () => {}
+	}, [])
+	console.log(new Date())
+	const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+		const paddingToBottom = 200
+		return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom
+	}
 
 	const filteredTracks = useMemo(() => {
-		if (!search) return tracks
+		if (!search) return data
 
 		return tracks.filter(trackTitleFilter(search))
-	}, [search, tracks])
+	}, [data, search, tracks])
+	// console.log('tracks6666', tracks)
 
 	return (
 		<View style={defaultStyles.container}>
-			<ScrollView
+			{/* <ScrollView
+				onScroll={({ nativeEvent }) => {
+					if (isCloseToBottom(nativeEvent)) {
+						setPage(currentPage + 1)
+						console.log('scroll to end')
+					}
+				}}
 				contentInsetAdjustmentBehavior="automatic"
 				style={{ paddingHorizontal: screenPadding.horizontal }}
-			>
-				<TracksList
-					id={generateTracksListId('songs', search)}
-					tracks={filteredTracks}
-					scrollEnabled={false}
-				/>
-			</ScrollView>
+				refreshControl={
+					<RefreshControl
+						refreshing={false}
+						onRefresh={() => {
+							// console.log('scroll to end', tracks)
+						}}
+					/>
+				}
+			> */}
+			<TracksList
+				id={generateTracksListId('songs', search)}
+				tracks={filteredTracks}
+				scrollEnabled={true}
+			/>
+			{/* </ScrollView> */}
 		</View>
 	)
 }

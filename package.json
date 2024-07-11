@@ -8,7 +8,10 @@
 		"lint": "eslint ."
 	},
 	"dependencies": {
+		"@react-native-async-storage/async-storage": "^1.23.1",
 		"@react-native-menu/menu": "^0.9.1",
+		"ahooks": "^3.8.0",
+		"axios": "^1.6.8",
 		"expo": "~50.0.14",
 		"expo-blur": "~12.9.2",
 		"expo-constants": "~15.4.5",
@@ -17,10 +20,13 @@
 		"expo-linking": "~6.2.2",
 		"expo-router": "~3.4.8",
 		"expo-status-bar": "~1.11.1",
+		"js-base64": "^3.7.7",
 		"react": "18.2.0",
 		"react-native": "0.73.6",
 		"react-native-awesome-slider": "^2.5.1",
+		"react-native-base64": "^0.2.1",
 		"react-native-fast-image": "^8.6.3",
+		"react-native-fs": "^2.20.0",
 		"react-native-gesture-handler": "~2.14.0",
 		"react-native-image-colors": "^2.4.0",
 		"react-native-loader-kit": "^2.0.8",
@@ -29,6 +35,7 @@
 		"react-native-screens": "~3.29.0",
 		"react-native-track-player": "^4.1.1",
 		"ts-pattern": "^5.0.8",
+		"webdav": "^5.6.0",
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {

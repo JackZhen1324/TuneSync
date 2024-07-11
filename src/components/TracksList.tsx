@@ -29,22 +29,24 @@ export const TracksList = ({
 
 	const handleTrackSelect = async (selectedTrack: Track) => {
 		const trackIndex = tracks.findIndex((track) => track.url === selectedTrack.url)
+		console.log('selectedTrack', selectedTrack)
 
 		if (trackIndex === -1) return
 
 		const isChangingQueue = id !== activeQueueId
+		// console.log('isChangingQueue', isChangingQueue, id, activeQueueId, a)
 
 		if (isChangingQueue) {
 			const beforeTracks = tracks.slice(0, trackIndex)
 			const afterTracks = tracks.slice(trackIndex + 1)
+			// const downloadLink: string = webdavClient.getFileDownloadLink(selectedTrack.url)
+			// console.log('selectedTrack', selectedTrack)
 
 			await TrackPlayer.reset()
-
 			// we construct the new queue
 			await TrackPlayer.add(selectedTrack)
 			await TrackPlayer.add(afterTracks)
 			await TrackPlayer.add(beforeTracks)
-
 			await TrackPlayer.play()
 
 			queueOffset.current = trackIndex
@@ -62,6 +64,21 @@ export const TracksList = ({
 
 	return (
 		<FlatList
+			// keyExtractor={(item) => item.etag}
+			scrollEventThrottle={400}
+			onEndReachedThreshold={0.5}
+			// onEndReached={({ distanceFromEnd }) => {
+			// 	console.log('endreach', distanceFromEnd)
+			// }}
+			// onScrollToTop={(data) => {
+			// 	console.log('onScrollToTop', data)
+			// }}
+			// onScroll={(data) => {
+			// 	console.log('onScroll', data)
+			// }}
+			maxToRenderPerBatch={15}
+			initialNumToRender={15}
+			removeClippedSubviews={true}
 			data={tracks}
 			contentContainerStyle={{ paddingTop: 10, paddingBottom: 128 }}
 			ListHeaderComponent={

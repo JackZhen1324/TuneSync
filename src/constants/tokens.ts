@@ -18,3 +18,6 @@ export const fontSize = {
 export const screenPadding = {
 	horizontal: 24,
 }
+export const settingPadding = {
+	horizontal: 0,
+}
