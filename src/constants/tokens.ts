@@ -1,5 +1,5 @@
 export const colors = {
-	primary: '#fc3c44',
+	primary: '#E76F51',
 	background: '#000',
 	text: '#fff',
 	textMuted: '#9ca3af',
@@ -7,7 +7,22 @@ export const colors = {
 	maximumTrackTintColor: 'rgba(255,255,255,0.4)',
 	minimumTrackTintColor: 'rgba(255,255,255,0.6)',
 }
-
+export const darkMode = {
+	colors: {
+		...colors,
+	},
+}
+export const lightMode = {
+	colors: {
+		primary: '#E76F51',
+		background: '#fff',
+		text: '#000',
+		textMuted: '#9ca3af',
+		icon: '#000',
+		maximumTrackTintColor: 'rgba(255,255,255,0.4)',
+		minimumTrackTintColor: 'rgba(255,255,255,0.6)',
+	},
+}
 export const fontSize = {
 	xs: 12,
 	sm: 16,

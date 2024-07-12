@@ -4,6 +4,7 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
 import { Entypo, Ionicons } from '@expo/vector-icons'
+import React, { memo, useCallback, useMemo } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
@@ -14,22 +15,37 @@ export type TracksListItemProps = {
 	onTrackSelect: (track: Track) => void
 }
 
-export const TracksListItem = ({
+const TracksListItemComponent = ({
 	track,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
 	const { playing } = useIsPlaying()
+	const activeTrack = useActiveTrack()
 
-	const isActiveTrack = useActiveTrack()?.url === track.url
-	// console.log('track6666', track)
+	const cachedTrack = useMemo(() => {
+		return track
+	}, [track])
+	// 优化isActiveTrack的计算，使用useMemo缓存计算结果
+	const isActiveTrack = useMemo(
+		() => activeTrack?.url === cachedTrack.url,
+		[activeTrack, cachedTrack.url],
+	)
+
+	// 使用useCallback优化事件处理函数
+	const handlePress = useCallback(() => {
+		console.log('press')
+		console.log('cachedTrack', cachedTrack)
+
+		handleTrackSelect(cachedTrack)
+	}, [handleTrackSelect, cachedTrack])
 
 	return (
-		<TouchableHighlight onPress={() => handleTrackSelect(track)}>
+		<TouchableHighlight onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
 				<View>
 					<FastImage
 						source={{
-							uri: track.artwork ?? unknownTrackImageUri,
+							uri: cachedTrack.artwork ?? unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
 						style={{
@@ -55,16 +71,8 @@ export const TracksListItem = ({
 						))}
 				</View>
 
-				<View
-					style={{
-						flex: 1,
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					{/* Track title + artist */}
-					<View style={{ width: '100%' }}>
+				<View style={styles.trackDetailsContainer}>
+					<View style={styles.trackTextContainer}>
 						<Text
 							numberOfLines={1}
 							style={{
@@ -72,12 +80,12 @@ export const TracksListItem = ({
 								color: isActiveTrack ? colors.primary : colors.text,
 							}}
 						>
-							{track.title}
+							{cachedTrack.title}
 						</Text>
 
-						{track.artist && (
+						{cachedTrack.artist && (
 							<Text numberOfLines={1} style={styles.trackArtistText}>
-								{track.artist}
+								{cachedTrack.artist}
 							</Text>
 						)}
 					</View>
@@ -92,6 +100,8 @@ export const TracksListItem = ({
 		</TouchableHighlight>
 	)
 }
+
+export const TracksListItem = memo(TracksListItemComponent)
 
 const styles = StyleSheet.create({
 	trackItemContainer: {
@@ -116,6 +126,15 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		width: 50,
 		height: 50,
+	},
+	trackDetailsContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	trackTextContainer: {
+		width: '100%',
 	},
 	trackTitleText: {
 		...defaultStyles.text,

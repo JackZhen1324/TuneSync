@@ -9,7 +9,7 @@ const Resouce = () => {
 	return (
 		<View style={defaultStyles.container}>
 			{/* <PlaylistTracksList playlist={playlist} /> */}
-			<ResourceManage></ResourceManage>
+			<ResourceManage />
 		</View>
 	)
 }

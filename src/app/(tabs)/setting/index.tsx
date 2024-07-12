@@ -9,8 +9,7 @@ const SettingScreen = () => {
 	const router = useRouter()
 	const setting = useSetting()
 
-	const handlePlaylistPress = ({ title }) => {
-		// console.log('title2222', title)
+	const handlePlaylistPress = ({ title }: any) => {
 		switch (title) {
 			case 'add source':
 				router.push(`/(tabs)/setting/resource`)
