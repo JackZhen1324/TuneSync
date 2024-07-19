@@ -34,7 +34,7 @@ export const ArtistTracksList = ({ artist }: { artist: Artist }) => {
 					<View style={styles.artworkImageContainer}>
 						<FastImage
 							source={{
-								uri: unknownArtistImageUri,
+								uri: artist?.artistInfo?.images?.[0]?.url || unknownArtistImageUri,
 								priority: FastImage.priority.high,
 							}}
 							style={styles.artistImage}

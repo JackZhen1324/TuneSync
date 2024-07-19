@@ -1,9 +1,10 @@
 import { colors } from '@/constants/tokens'
+import StorageUtil from '@/helpers/storage'
 import useThemeColor from '@/hooks/useThemeColor'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { router } from 'expo-router'
-import React, { useEffect, useState } from 'react'
-import { Alert, ScrollView, StyleSheet, useColorScheme } from 'react-native'
+import { router, useLocalSearchParams } from 'expo-router'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Alert, ScrollView, StyleSheet } from 'react-native'
 import {
 	Button,
 	MD2DarkTheme as PaperDarkTheme,
@@ -18,31 +19,35 @@ const ConfigScreen = () => {
 	const [protocol, setProtocol] = useState('webdav')
 	const [location, setlocation] = useState('https://')
 	const [username, setUsername] = useState('')
+	const [modalVisible, setModalVisible] = useState(false)
 	const [password, setPassword] = useState('')
 	const [errors, setErrors] = useState({})
+	const { selected } = useLocalSearchParams()
+	const [hidePassword, setHidePassword] = React.useState(true)
 
-	const colorScheme = useColorScheme()
-	const isDarkMode = colorScheme === 'dark'
-
-	useEffect(() => {
-		loadConfig()
-	}, [])
-
-	const loadConfig = async () => {
+	const loadConfig = useCallback(async () => {
 		try {
 			const config = await AsyncStorage.getItem('dataSourceConfig')
 			if (config !== null) {
 				const parsedConfig = JSON.parse(config)
-				setProtocol(parsedConfig.protocol)
-				setlocation(parsedConfig.location)
-				setUsername(parsedConfig.username)
-				setPassword(parsedConfig.password)
+				const getMatchedConfig = parsedConfig.find(
+					(el: { location: string | string[] }) => el.location === selected,
+				)
+				setProtocol(getMatchedConfig.protocol)
+				setlocation(getMatchedConfig.location)
+				setUsername(getMatchedConfig.username)
+				setPassword(getMatchedConfig.password)
+				setConfigName(getMatchedConfig.configName)
 			}
 		} catch (error) {
 			Alert.alert('Error', 'Failed to load config')
 		}
-	}
-
+	}, [selected])
+	useEffect(() => {
+		if (selected) {
+			loadConfig()
+		}
+	}, [loadConfig, selected])
 	const validate = () => {
 		const newErrors = {}
 		if (!location) {
@@ -59,12 +64,18 @@ const ConfigScreen = () => {
 		setErrors(newErrors)
 		return Object.keys(newErrors).length === 0
 	}
-
+	const deleteConfig = useCallback(async () => {
+		const config = await StorageUtil.get('dataSourceConfig')
+		await StorageUtil.save(
+			'dataSourceConfig',
+			(config || [])?.filter((el: { location: string | string[] }) => el.location !== selected),
+		)
+		router.back()
+	}, [selected])
 	const saveConfig = async () => {
 		if (!validate()) {
 			return
 		}
-
 		try {
 			const config = {
 				configName,
@@ -73,19 +84,24 @@ const ConfigScreen = () => {
 				username,
 				password,
 			}
+
 			const configData = await AsyncStorage.getItem('dataSourceConfig')
-
-			const newConfig = JSON.parse(configData || '[]')
-			const isDuplicate = newConfig.some((el) => {
-				console.log('el.location === config.location', el.location, config.location)
-
+			let newConfig = JSON.parse(configData || '[]')
+			const isDuplicate = newConfig.some((el: { location: string }) => {
 				return el.location === config.location
 			})
-			console.log('isDuplicate', isDuplicate)
 
-			if (!isDuplicate) {
-				newConfig.push(config)
-				console.log('JSON.stringify(newConfig)', JSON.stringify(newConfig))
+			if (!isDuplicate || selected) {
+				if (selected) {
+					newConfig = newConfig.map((el: { location: string | string[] }) => {
+						if (el.location === selected) {
+							return config
+						}
+						return el
+					})
+				} else {
+					newConfig.push(config)
+				}
 
 				await AsyncStorage.setItem('dataSourceConfig', JSON.stringify(newConfig))
 				router.back()
@@ -145,16 +161,30 @@ const ConfigScreen = () => {
 					onChangeText={setPassword}
 					mode="flat"
 					style={styles.input}
-					secureTextEntry
+					secureTextEntry={hidePassword}
 					theme={theme}
 					error={!!errors.password}
+					right={
+						<TextInput.Icon
+							onPress={() => setHidePassword(!hidePassword)}
+							icon={hidePassword ? 'eye' : 'eye-off'}
+						/>
+					}
 				/>
+
 				{errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 				<TouchableRipple centered={true} rippleColor="rgba(0, 0, 0, .32)">
 					<Button mode="contained" onPress={saveConfig} style={styles.button}>
-						Save Configuration
+						<Text style={{ color: theme.colors.text }}>Save Configuration</Text>
 					</Button>
 				</TouchableRipple>
+				{selected && (
+					<TouchableRipple centered={true} rippleColor="rgba(0	, 0, 0, .32)">
+						<Button mode="contained" onPress={deleteConfig} style={styles.delButton}>
+							<Text style={{ color: colors.errorColor }}>Delete Configuration</Text>
+						</Button>
+					</TouchableRipple>
+				)}
 			</ScrollView>
 		</PaperProvider>
 	)
@@ -179,6 +209,10 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: 'red',
 		marginBottom: 20,
+	},
+	delButton: {
+		backgroundColor: 'white',
+		marginTop: 20,
 	},
 })
 

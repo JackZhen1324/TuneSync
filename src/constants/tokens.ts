@@ -1,4 +1,5 @@
 export const colors = {
+	errorColor: 'red',
 	primary: '#E76F51',
 	background: '#000',
 	text: '#fff',
@@ -14,6 +15,7 @@ export const darkMode = {
 }
 export const lightMode = {
 	colors: {
+		...colors,
 		primary: '#E76F51',
 		background: '#fff',
 		text: '#000',

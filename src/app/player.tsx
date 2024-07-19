@@ -139,6 +139,11 @@ const styles = StyleSheet.create({
 		paddingHorizontal: screenPadding.horizontal,
 		backgroundColor: 'rgba(0,0,0,0.5)',
 	},
+	header: {
+		display: 'flex',
+		justifyContent: 'center',
+		color: 'white',
+	},
 	artworkImageContainer: {
 		shadowOffset: {
 			width: 0,

@@ -21,7 +21,7 @@ const PlaylistsScreen = () => {
 	const { playlists } = usePlaylists()
 
 	const filteredPlaylists = useMemo(() => {
-		return playlists.filter(playlistNameFilter(search))
+		return playlists?.filter(playlistNameFilter(search)) || []
 	}, [playlists, search])
 
 	const handlePlaylistPress = (playlist: Playlist) => {

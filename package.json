@@ -21,6 +21,7 @@
 		"expo-router": "~3.4.8",
 		"expo-status-bar": "~1.11.1",
 		"js-base64": "^3.7.7",
+		"music-metadata-browser": "^2.5.11",
 		"react": "18.2.0",
 		"react-native": "0.73.6",
 		"react-native-awesome-slider": "^2.5.1",

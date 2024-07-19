@@ -1,52 +1,85 @@
 import davIcon from '@/assets/icons/dav.png'
 import StorageUtil from '@/helpers/storage'
 import useThemeColor from '@/hooks/useThemeColor'
-import { utilsStyles } from '@/styles'
+import { useCurrentClientStore } from '@/store/library'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
+import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native'
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 import { List, TouchableRipple } from 'react-native-paper'
-
-const ItemDivider = () => (
-	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 0, marginVertical: 0 }} />
-)
-
 const ResourceManage = () => {
 	const [added, setAdded] = useState([])
-	const onPressOut = useCallback((item: string) => {
-		console.log('item', item)
-
+	const { client, setClient } = useCurrentClientStore()
+	const isFocused = useIsFocused()
+	const onPressOut = useCallback((item: string, mode: string, selected?: string) => {
 		switch (item) {
 			case 'webdav':
-				router.push('/setting/add/webdav')
+				mode === 'create'
+					? router.push('/setting/add/webdav')
+					: router.push({
+							pathname: '/setting/add/webdav',
+							params: {
+								selected: selected || '',
+							},
+						})
 		}
 	}, [])
-	useEffect(() => {
-		StorageUtil.get('dataSourceConfig').then((res) => {
-			setAdded(res)
-		})
-	})
 
-	console.log('addedData', added)
+	useEffect(() => {
+		if (isFocused) {
+			StorageUtil.get('dataSourceConfig').then((res) => {
+				setAdded(res || [])
+			})
+		}
+		return () => {}
+	}, [isFocused])
 
 	const theme = useThemeColor()
 	const renderAddedResource = useMemo(() => {
-		return added.map((el: any, index) => {
+		return added.map((el: any) => {
+			const { location } = el
+
 			return (
 				<TouchableRipple
-					key={el.address}
+					key={el.location}
 					style={{ borderRadius: 4 }}
 					borderless
-					onPress={() => console.log('Pressed')}
+					onPress={() => {
+						// debugger
+						setClient(el)
+						router.push({
+							pathname: `/(tabs)/setting/media/${encodeURIComponent('/')}`,
+						})
+					}}
 					rippleColor="rgba(0, 0, 0, .32)"
 				>
 					<List.Item
-						onPressOut={() => {
-							onPressOut('webdav')
-						}}
+						// onPressOut={() => {
+						// 	onPressOut('webdav', 'edit', el.location)
+						// }}
 						style={styles.itemSolo}
 						theme={theme}
 						title={el.configName}
+						right={() => (
+							<TouchableRipple
+								key={el.location}
+								style={{ borderRadius: 4 }}
+								borderless
+								onPress={(e) => {
+									e.stopPropagation()
+									onPressOut('webdav', 'edit', el.location)
+								}}
+								rippleColor="rgba(0, 0, 0, .32)"
+							>
+								<FontAwesome6
+									style={{ paddingTop: 6 }}
+									color={theme.colors.primary}
+									name="edit"
+									size={16}
+								/>
+							</TouchableRipple>
+						)}
 						left={() => <List.Icon icon={davIcon} />}
 					/>
 				</TouchableRipple>
@@ -82,7 +115,7 @@ const ResourceManage = () => {
 				>
 					<List.Item
 						onPressOut={() => {
-							onPressOut('webdav')
+							onPressOut('webdav', 'create')
 						}}
 						style={styles.itemSolo}
 						theme={theme}
@@ -90,7 +123,7 @@ const ResourceManage = () => {
 						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				<List.Subheader theme={theme}>added resource</List.Subheader>
+				{added?.length > 0 && <List.Subheader theme={theme}>added resource</List.Subheader>}
 				{renderAddedResource}
 			</List.Section>
 		</SafeAreaView>
@@ -148,6 +181,17 @@ const styles = StyleSheet.create({
 		padding: 0,
 		fontSize: 16,
 		color: 'white',
+	},
+	deleteButton: {
+		backgroundColor: 'red',
+		justifyContent: 'center',
+		alignItems: 'flex-end',
+		paddingHorizontal: 20,
+	},
+	deleteText: {
+		color: 'white',
+		fontSize: 16,
+		fontWeight: 'bold',
 	},
 })
 

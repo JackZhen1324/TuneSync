@@ -15,55 +15,37 @@ const SongsScreen = () => {
 			placeholder: 'Find in songs',
 		},
 	})
+
 	const { setTracks, tracks } = useLibraryStore((state) => state)
+
 	const [data, setPage, currentPage] = usePaganation({ data: tracks })
 
-	// const tracks = useTrack()
-	// console.log('tracks666', tracks)
 	useEffect(() => {
 		setTracks()
 
 		return () => {}
 	}, [])
-	// console.log('tracks', tracks)
-	console.log(new Date())
 
 	const filteredTracks = useMemo(() => {
 		if (!search) return tracks
 
 		return tracks.filter(trackTitleFilter(search))
-	}, [data, search, tracks])
-	// console.log('tracks6666', tracks)
+	}, [search, tracks])
 
 	return (
 		<View style={defaultStyles.container}>
-			{/* <ScrollView
-				onScroll={({ nativeEvent }) => {
-					if (isCloseToBottom(nativeEvent)) {
-						setPage(currentPage + 1)
-						console.log('scroll to end')
-					}
-				}}
-				contentInsetAdjustmentBehavior="automatic"
-				style={{ paddingHorizontal: screenPadding.horizontal }}
-				refreshControl={
-					<RefreshControl
-						refreshing={false}
-						onRefresh={() => {
-							// console.log('scroll to end', tracks)
-						}}
-					/>
-				}
-			> */}
 			<TracksList
 				setPage={setPage}
 				currentPage={currentPage}
-				style={{ paddingHorizontal: screenPadding.horizontal, paddingTop: search ? 20 : 200 }}
+				style={{
+					paddingHorizontal: screenPadding.horizontal,
+					// paddingTop: search ? 20 : 200,
+				}}
 				id={generateTracksListId('songs', search)}
 				tracks={filteredTracks}
 				scrollEnabled={true}
+				search={search}
 			/>
-			{/* </ScrollView> */}
 		</View>
 	)
 }

@@ -28,7 +28,7 @@ const PlaylistsScreenLayout = () => {
 					}}
 				/>
 				<Stack.Screen
-					name="media/[...path]"
+					name="media/[index]"
 					options={{
 						headerTitle: '',
 						headerBackVisible: true,

@@ -1,18 +1,22 @@
 // import library from '@/assets/data/library.json'
-import { fetchLibrary, indexingDb } from '@/helpers/indexMusic'
-import { Artist, TrackWithPlaylist } from '@/helpers/types'
+import { unknownTrackImageUri } from '@/constants/images'
+import { fetchLibrary } from '@/helpers/indexMusic'
+import { Artist, Playlist, TrackWithPlaylist } from '@/helpers/types'
 import AntDesign from '@expo/vector-icons/AntDesign'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
 
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
+	setTracks: any
 	toggleTrackFavorite: (track: Track) => void
 	addToPlaylist: (track: Track, playlistName: string) => void
 }
-
+interface IndexState {
+	percentage: number
+	loading: boolean
+	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void
+}
 export const useLibraryStore = create<LibraryState>()((set) => {
 	return {
 		tracks: [],
@@ -50,14 +54,45 @@ export const useLibraryStore = create<LibraryState>()((set) => {
 			})),
 	}
 })
-
+export const useIndexStore = create<IndexState>()((set) => {
+	return {
+		loading: false,
+		percentage: 0,
+		setLoading: (props) => {
+			const { loading, percentage } = props
+			set({
+				loading,
+				percentage,
+			})
+		},
+	}
+})
+export const useCurrentClientStore = create<any>()((set) => {
+	return {
+		client: false,
+		setClient: (props) => {
+			set({
+				client: props,
+			})
+		},
+	}
+})
+export const useSpotofyAuthToken = create<any>()((set) => {
+	return {
+		token: '',
+		setToken: (token: string) => {
+			set({
+				token: token,
+			})
+		},
+	}
+})
 export const useTracks = () => useLibraryStore((state) => state.tracks)
 
 export const useFavorites = () => {
 	const favorites = useLibraryStore(async (state) => {
-		// const tracks = await state.setTracks()
-		// return [].filter((track) => track.rating === 1)
-		return []
+		const tracks = await state.setTracks()
+		return tracks.filter((track) => track.rating === 1)
 	})
 	const toggleTrackFavorite = useLibraryStore((state) => state.toggleTrackFavorite)
 
@@ -69,16 +104,30 @@ export const useFavorites = () => {
 
 export const useArtists = () =>
 	useLibraryStore((state) => {
-		return state.tracks.reduce((acc, track) => {
+		return state?.tracks?.reduce((acc, track) => {
 			const existingArtist = acc.find((artist) => artist.name === track.artist)
 
 			if (existingArtist) {
 				existingArtist.tracks.push(track)
 			} else {
-				acc.push({
-					name: track.artist ?? 'Unknown',
-					tracks: [track],
-				})
+				if (track.artist) {
+					acc.push({
+						name: track.artist ?? 'Unknown',
+						tracks: [track],
+						artistInfo: track?.artistInfo,
+					})
+				} else {
+					const index = acc.findIndex((el) => el.name === 'Unknown')
+
+					if (index === -1) {
+						acc.push({
+							name: track.artist ?? 'Unknown',
+							tracks: [track],
+						})
+					} else {
+						acc[index].tracks.push(track)
+					}
+				}
 			}
 
 			return acc
@@ -86,26 +135,22 @@ export const useArtists = () =>
 	})
 
 export const usePlaylists = () => {
-	console.log('indexingDb')
-
-	indexingDb('/')
 	const playlists = useLibraryStore((state) => {
-		// return state.tracks.reduce((acc, track) => {
-		// 	track.playlist?.forEach((playlistName) => {
-		// 		const existingPlaylist = acc.find((playlist) => playlist.name === playlistName)
-		// 		if (existingPlaylist) {
-		// 			existingPlaylist.tracks.push(track)
-		// 		} else {
-		// 			acc.push({
-		// 				name: playlistName,
-		// 				tracks: [track],
-		// 				artworkPreview: track.artwork ?? unknownTrackImageUri,
-		// 			})
-		// 		}
-		// 	})
-		// 	return acc
-		// }, [] as Playlist[])
-		return []
+		return state?.tracks?.reduce((acc, track) => {
+			track.playlist?.forEach((playlistName) => {
+				const existingPlaylist = acc.find((playlist) => playlist.name === playlistName)
+				if (existingPlaylist) {
+					existingPlaylist.tracks.push(track)
+				} else {
+					acc.push({
+						name: playlistName,
+						tracks: [track],
+						artworkPreview: track.artwork ?? unknownTrackImageUri,
+					})
+				}
+			})
+			return acc
+		}, [] as Playlist[])
 	})
 
 	const addToPlaylist = useLibraryStore((state) => state.addToPlaylist)
@@ -118,13 +163,13 @@ export const useSetting = () => {
 			title: 'add source',
 			icon: <AntDesign name="plus" size={24} color="#E76F51" />,
 		},
-		{
-			title: 'general',
-			icon: <SimpleLineIcons name="settings" size={24} color="#E76F51" />,
-		},
-		{
-			title: 'media library',
-			icon: <MaterialIcons name="my-library-music" size={24} color="#E76F51" />,
-		},
+		// {
+		// 	title: 'general',
+		// 	icon: <SimpleLineIcons name="settings" size={24} color="#E76F51" />,
+		// },
+		// {
+		// 	title: 'media library',
+		// 	icon: <MaterialIcons name="my-library-music" size={24} color="#E76F51" />,
+		// },
 	]
 }

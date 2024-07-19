@@ -9,13 +9,10 @@ const SettingScreen = () => {
 	const router = useRouter()
 	const setting = useSetting()
 
-	const handlePlaylistPress = ({ title }: any) => {
+	const handleMenuPress = ({ title }: any) => {
 		switch (title) {
 			case 'add source':
 				router.push(`/(tabs)/setting/resource`)
-				break
-			case 'media library':
-				router.push(`/(tabs)/setting/media/root`)
 				break
 		}
 	}
@@ -28,7 +25,7 @@ const SettingScreen = () => {
 					paddingHorizontal: screenPadding.horizontal,
 				}}
 			>
-				<Setting scrollEnabled={false} setting={setting} onMenuPress={handlePlaylistPress} />
+				<Setting scrollEnabled={false} setting={setting} onMenuPress={handleMenuPress} />
 			</ScrollView>
 		</View>
 	)

@@ -13,6 +13,7 @@ export type menu = {
 export type Artist = {
 	name: string
 	tracks: Track[]
+	artistInfo?: any
 }
 
 export type TrackWithPlaylist = Track & { playlist?: string[] }

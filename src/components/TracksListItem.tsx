@@ -33,9 +33,6 @@ const TracksListItemComponent = ({
 
 	// 使用useCallback优化事件处理函数
 	const handlePress = useCallback(() => {
-		console.log('press')
-		console.log('cachedTrack', cachedTrack)
-
 		handleTrackSelect(cachedTrack)
 	}, [handleTrackSelect, cachedTrack])
 
@@ -45,7 +42,7 @@ const TracksListItemComponent = ({
 				<View>
 					<FastImage
 						source={{
-							uri: cachedTrack.artwork ?? unknownTrackImageUri,
+							uri: cachedTrack.artwork || unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
 						style={{
@@ -80,7 +77,7 @@ const TracksListItemComponent = ({
 								color: isActiveTrack ? colors.primary : colors.text,
 							}}
 						>
-							{cachedTrack.title}
+							{cachedTrack.formatedTitle || cachedTrack.basename}
 						</Text>
 
 						{cachedTrack.artist && (

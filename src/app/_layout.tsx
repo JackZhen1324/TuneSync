@@ -2,9 +2,12 @@ import { playbackService } from '@/constants/playbackService'
 import { colors } from '@/constants/tokens'
 import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState'
 import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer'
+import { getAccessToken } from '@/service/auth'
+import { useSpotofyAuthToken } from '@/store/library'
+import { useRequest } from 'ahooks'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
@@ -17,7 +20,15 @@ const App = () => {
 	const handleTrackPlayerLoaded = useCallback(() => {
 		SplashScreen.hideAsync()
 	}, [])
-
+	const { setToken } = useSpotofyAuthToken()
+	const { runAsync } = useRequest(getAccessToken, {
+		pollingInterval: 3000,
+	})
+	useEffect(() => {
+		runAsync().then((el) => {
+			setToken(`${el.token_type} ${el.access_token}`)
+		})
+	}, [])
 	useSetupTrackPlayer({
 		onLoad: handleTrackPlayerLoaded,
 	})
