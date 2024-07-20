@@ -3,7 +3,7 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { screenPadding } from '@/constants/tokens'
 import { useQueue } from '@/store/queue'
 import { utilsStyles } from '@/styles'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, { Track } from 'react-native-track-player'
@@ -31,41 +31,28 @@ export const TracksList = ({
 }: TracksListProps) => {
 	const queueOffset = useRef(0)
 	const { activeQueueId, setActiveQueueId } = useQueue()
-
+	const [activeSong, setAtiveSong] = useState('')
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
-			const trackIndex = tracks.findIndex((track) => track.url === selectedTrack.url)
-			if (trackIndex === -1) return
-
-			const isChangingQueue = id !== activeQueueId
-
-			if (isChangingQueue) {
-				const beforeTracks = tracks.slice(0, trackIndex)
-				const afterTracks = tracks.slice(trackIndex + 1)
-
-				await TrackPlayer.reset()
-				await TrackPlayer.add([selectedTrack, ...afterTracks, ...beforeTracks])
-				await TrackPlayer.play()
-
-				queueOffset.current = trackIndex
-				setActiveQueueId(id)
-			} else {
-				const nextTrackIndex =
-					trackIndex - queueOffset.current < 0
-						? tracks.length + trackIndex - queueOffset.current
-						: trackIndex - queueOffset.current
-
-				await TrackPlayer.skip(nextTrackIndex)
-				TrackPlayer.play()
-			}
+			setAtiveSong(selectedTrack.title)
+			await TrackPlayer.reset()
+			await TrackPlayer.add([selectedTrack])
+			await TrackPlayer.play()
 		},
-		[tracks, id, activeQueueId, setActiveQueueId],
+		[tracks, id, activeQueueId, setActiveQueueId, queueOffset],
 	)
 	const renderItem = useCallback(
 		({ item: track }: any) => {
-			return <TracksListItem key={track.filename} track={track} onTrackSelect={handleTrackSelect} />
+			return (
+				<TracksListItem
+					activeSong={activeSong}
+					key={track.filename}
+					track={track}
+					onTrackSelect={handleTrackSelect}
+				/>
+			)
 		},
-		[handleTrackSelect],
+		[handleTrackSelect, activeSong],
 	)
 
 	return (

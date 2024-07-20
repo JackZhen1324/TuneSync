@@ -3,38 +3,30 @@ import { StopPropagation } from '@/components/utils/StopPropagation'
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
 import React, { memo, useCallback, useMemo } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
-import { Track, useActiveTrack, useIsPlaying } from 'react-native-track-player'
+import { Track } from 'react-native-track-player'
 
 export type TracksListItemProps = {
 	track: Track
 	onTrackSelect: (track: Track) => void
+	activeSong: string
 }
 
 const TracksListItemComponent = ({
+	activeSong,
 	track,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
-	const { playing } = useIsPlaying()
-	const activeTrack = useActiveTrack()
-
-	const cachedTrack = useMemo(() => {
-		return track
-	}, [track])
-	// 优化isActiveTrack的计算，使用useMemo缓存计算结果
-	const isActiveTrack = useMemo(
-		() => activeTrack?.url === cachedTrack.url,
-		[activeTrack, cachedTrack.url],
-	)
-
-	// 使用useCallback优化事件处理函数
+	const isAtive = useMemo(() => {
+		return activeSong === track.title
+	}, [activeSong, track.title])
 	const handlePress = useCallback(() => {
-		handleTrackSelect(cachedTrack)
-	}, [handleTrackSelect, cachedTrack])
+		handleTrackSelect(track)
+	}, [handleTrackSelect, track])
 
 	return (
 		<TouchableHighlight onPress={handlePress}>
@@ -42,30 +34,22 @@ const TracksListItemComponent = ({
 				<View>
 					<FastImage
 						source={{
-							uri: cachedTrack.artwork || unknownTrackImageUri,
+							uri: track.artwork || unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
 						style={{
 							...styles.trackArtworkImage,
-							opacity: isActiveTrack ? 0.6 : 1,
+							opacity: isAtive ? 0.6 : 1,
 						}}
 					/>
 
-					{isActiveTrack &&
-						(playing ? (
-							<LoaderKit
-								style={styles.trackPlayingIconIndicator}
-								name="LineScaleParty"
-								color={colors.icon}
-							/>
-						) : (
-							<Ionicons
-								style={styles.trackPausedIndicator}
-								name="play"
-								size={24}
-								color={colors.icon}
-							/>
-						))}
+					{isAtive && (
+						<LoaderKit
+							style={styles.trackPlayingIconIndicator}
+							name="LineScaleParty"
+							color={colors.icon}
+						/>
+					)}
 				</View>
 
 				<View style={styles.trackDetailsContainer}>
@@ -74,15 +58,15 @@ const TracksListItemComponent = ({
 							numberOfLines={1}
 							style={{
 								...styles.trackTitleText,
-								color: isActiveTrack ? colors.primary : colors.text,
+								color: isAtive ? colors.primary : colors.text,
 							}}
 						>
-							{cachedTrack.formatedTitle || cachedTrack.basename}
+							{track.formatedTitle || track.basename}
 						</Text>
 
-						{cachedTrack.artist && (
+						{track.artist && (
 							<Text numberOfLines={1} style={styles.trackArtistText}>
-								{cachedTrack.artist}
+								{track.artist}
 							</Text>
 						)}
 					</View>
