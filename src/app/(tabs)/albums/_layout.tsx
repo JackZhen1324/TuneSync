@@ -12,7 +12,7 @@ const PlaylistsScreenLayout = () => {
 					name="index"
 					options={{
 						...StackScreenWithSearchBar,
-						headerTitle: 'Playlists',
+						headerTitle: 'Albums',
 					}}
 				/>
 

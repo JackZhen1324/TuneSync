@@ -14,6 +14,7 @@ import {
 	TouchableRipple,
 } from 'react-native-paper'
 PaperDarkTheme.colors.primary = colors.primary
+PaperDarkTheme.colors.background = 'black'
 const ConfigScreen = () => {
 	const [configName, setConfigName] = useState('my webdav')
 	const [protocol, setProtocol] = useState('webdav')

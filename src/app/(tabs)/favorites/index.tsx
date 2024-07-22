@@ -1,9 +1,9 @@
 import { TracksList } from '@/components/TracksList'
-import { screenPadding } from '@/constants/tokens'
+import { screenPaddingXs } from '@/constants/tokens'
 import { trackTitleFilter } from '@/helpers/filter'
 import { generateTracksListId } from '@/helpers/miscellaneous'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { useFavorites } from '@/store/library'
+import { useFavorateStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
@@ -15,18 +15,18 @@ const FavoritesScreen = () => {
 		},
 	})
 
-	const favoritesTracks = useFavorites().favorites
+	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
 
 	const filteredFavoritesTracks = useMemo(() => {
-		if (!search) return favoritesTracks
+		if (!search) return favorateTracks
 
-		return favoritesTracks.filter(trackTitleFilter(search))
-	}, [search, favoritesTracks])
+		return favorateTracks.filter(trackTitleFilter(search))
+	}, [search, favorateTracks])
 
 	return (
 		<View style={defaultStyles.container}>
 			<ScrollView
-				style={{ paddingHorizontal: screenPadding.horizontal }}
+				style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 				contentInsetAdjustmentBehavior="automatic"
 			>
 				<TracksList

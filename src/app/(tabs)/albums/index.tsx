@@ -1,31 +1,31 @@
-import { PlaylistsList } from '@/components/PlaylistsList'
+import { AlbumsList } from '@/components/AblumList'
 import { screenPadding } from '@/constants/tokens'
 import { playlistNameFilter } from '@/helpers/filter'
 import { Playlist } from '@/helpers/types'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { usePlaylists } from '@/store/library'
+import { useAlbums } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
 
-const PlaylistsScreen = () => {
+const AlbumsScreen = () => {
 	const router = useRouter()
 
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in playlists',
+			placeholder: 'Find in ablums',
 		},
 	})
 
-	const { playlists } = usePlaylists()
+	const { albums } = useAlbums()
 
-	const filteredPlaylists = useMemo(() => {
-		return playlists?.filter(playlistNameFilter(search)) || []
-	}, [playlists, search])
+	const filteredAlbums = useMemo(() => {
+		return albums?.filter(playlistNameFilter(search)) || []
+	}, [albums, search])
 
-	const handlePlaylistPress = (playlist: Playlist) => {
-		router.push(`/(tabs)/playlists/${playlist.name}`)
+	const handleAlbumsPress = (playlist: Playlist) => {
+		router.push(`/(tabs)/albums/${playlist.name}`)
 	}
 
 	return (
@@ -36,14 +36,10 @@ const PlaylistsScreen = () => {
 					paddingHorizontal: screenPadding.horizontal,
 				}}
 			>
-				<PlaylistsList
-					scrollEnabled={false}
-					playlists={filteredPlaylists}
-					onPlaylistPress={handlePlaylistPress}
-				/>
+				<AlbumsList albums={filteredAlbums} onAlbumPress={handleAlbumsPress} />
 			</ScrollView>
 		</View>
 	)
 }
 
-export default PlaylistsScreen
+export default AlbumsScreen

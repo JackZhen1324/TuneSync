@@ -17,17 +17,13 @@ export function throttled(fn, delay) {
 }
 export function titleFormater(title: string) {
 	let titleTemp = (title || '').match(/(.+?)(\.[^.]*$|$)/) || ''
-	console.log('titleTemp0', titleTemp[1])
 	titleTemp = titleTemp[1]
-	console.log('titleTemp1', titleTemp)
 	titleTemp = titleTemp.replace(/\(.*\)/, '')
-	console.log('titleTemp2', titleTemp)
 	titleTemp = titleTemp.replace('.', '')
-	console.log('titleTemp3', titleTemp)
+
 	if (titleTemp.includes('-')) {
 		titleTemp = titleTemp.split('-').slice(1).join()
 	}
-	console.log('titleTemp4', titleTemp)
 
 	titleTemp = titleTemp.trim()
 	return titleTemp

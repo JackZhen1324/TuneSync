@@ -45,13 +45,13 @@ const ArtistsScreen = () => {
 					<View>
 						<Text>No artist found</Text>
 
-						<FastImage
+						{/* <FastImage
 							source={{
 								uri: unknownArtistImageUri,
 								priority: FastImage.priority.normal,
 							}}
 							style={utilsStyles.emptyContentImage}
-						/>
+						/> */}
 					</View>
 				}
 				data={filteredArtists}

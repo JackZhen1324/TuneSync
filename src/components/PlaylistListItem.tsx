@@ -1,63 +1,140 @@
-import { colors } from '@/constants/tokens'
-import { Playlist } from '@/helpers/types'
+import { unknownTrackImageUri } from '@/constants/images'
+import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
-import { AntDesign } from '@expo/vector-icons'
-import { StyleSheet, Text, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import React, { memo, useCallback, useMemo } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import LoaderKit from 'react-native-loader-kit'
+import { TouchableRipple } from 'react-native-paper'
+import { Track } from 'react-native-track-player'
+import { StopPropagation } from './utils/StopPropagation'
+export type TracksListItemProps = {
+	activeSong: string
+	track: Track
+	onTrackSelect: (track: Track) => void
+	onDelete: any
+}
 
-type PlaylistListItemProps = {
-	playlist: Playlist
-} & TouchableHighlightProps
+const PlayListItemComponent = ({
+	activeSong,
+	track,
+	onTrackSelect: handleTrackSelect,
+	onDelete: handleDelete,
+}: TracksListItemProps) => {
+	// const { activeTrack } = useActiveTrack()
 
-export const PlaylistListItem = ({ playlist, ...props }: PlaylistListItemProps) => {
+	const isAtive = useMemo(() => {
+		return activeSong === track.title
+	}, [activeSong, track.title])
+	const handlePress = useCallback(() => {
+		handleTrackSelect(track)
+	}, [handleTrackSelect, track])
+
 	return (
-		<TouchableHighlight activeOpacity={0.8} {...props}>
-			<View style={styles.playlistItemContainer}>
+		<TouchableRipple centered={true} rippleColor="rgba(255, 255, 255, .005)" onPress={handlePress}>
+			<View style={styles.trackItemContainer}>
 				<View>
 					<FastImage
 						source={{
-							uri: playlist.artworkPreview,
+							uri: track.artwork || unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
-						style={styles.playlistArtworkImage}
+						style={{
+							...styles.trackArtworkImage,
+							opacity: isAtive ? 0.6 : 1,
+						}}
 					/>
+
+					{isAtive && (
+						<LoaderKit
+							style={styles.trackPlayingIconIndicator}
+							name="LineScaleParty"
+							color={colors.icon}
+						/>
+					)}
 				</View>
 
-				<View
-					style={{
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						width: '100%',
-					}}
-				>
-					<Text numberOfLines={1} style={styles.playlistNameText}>
-						{playlist.name}
-					</Text>
+				<View style={styles.trackDetailsContainer}>
+					<View style={styles.trackTextContainer}>
+						<Text
+							numberOfLines={1}
+							style={{
+								...styles.trackTitleText,
+								color: isAtive ? colors.primary : colors.text,
+							}}
+						>
+							{track.formatedTitle || track.basename}
+						</Text>
 
-					<AntDesign name="right" size={16} color={colors.icon} style={{ opacity: 0.5 }} />
+						{track.artist && (
+							<Text numberOfLines={1} style={styles.trackArtistText}>
+								{track.artist}
+							</Text>
+						)}
+					</View>
+
+					{/* <Pressable > */}
+					<StopPropagation>
+						<MaterialIcons
+							onPress={() => handleDelete(track)}
+							name="delete-outline"
+							size={24}
+							color="gray"
+						/>
+					</StopPropagation>
+					{/* </Pressable> */}
 				</View>
 			</View>
-		</TouchableHighlight>
+		</TouchableRipple>
 	)
 }
 
+export const PlayListItem = memo(PlayListItemComponent)
+
 const styles = StyleSheet.create({
-	playlistItemContainer: {
+	trackItemContainer: {
 		flexDirection: 'row',
 		columnGap: 14,
 		alignItems: 'center',
-		paddingRight: 90,
+		paddingRight: 20,
 	},
-	playlistArtworkImage: {
+	trackPlayingIconIndicator: {
+		position: 'absolute',
+		top: 18,
+		left: 16,
+		width: 16,
+		height: 16,
+	},
+	trackPausedIndicator: {
+		position: 'absolute',
+		top: 14,
+		left: 14,
+	},
+	trackArtworkImage: {
 		borderRadius: 8,
-		width: 70,
-		height: 70,
+		width: 50,
+		height: 50,
 	},
-	playlistNameText: {
+	trackDetailsContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	trackTextContainer: {
+		width: '96.6%',
+	},
+	trackTitleText: {
 		...defaultStyles.text,
-		fontSize: 17,
+		fontSize: fontSize.sm,
 		fontWeight: '600',
-		maxWidth: '80%',
+		maxWidth: '90%',
+	},
+	trackArtistText: {
+		...defaultStyles.text,
+		color: colors.textMuted,
+		fontSize: 14,
+		marginTop: 4,
 	},
 })

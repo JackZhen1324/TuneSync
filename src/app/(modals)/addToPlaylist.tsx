@@ -2,7 +2,7 @@ import { PlaylistsList } from '@/components/PlaylistsList'
 import { screenPadding } from '@/constants/tokens'
 import { Playlist } from '@/helpers/types'
 import { usePlaylists, useTracks } from '@/store/library'
-import { useQueue } from '@/store/queue'
+import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -14,7 +14,7 @@ const AddToPlaylistModal = () => {
 	const router = useRouter()
 	const headerHeight = useHeaderHeight()
 
-	const { activeQueueId } = useQueue()
+	const { activeQueueId, queueListWithContent } = useQueueStore((state) => state)
 
 	const { trackUrl } = useLocalSearchParams<{ trackUrl: Track['url'] }>()
 
@@ -47,7 +47,10 @@ const AddToPlaylistModal = () => {
 
 	return (
 		<SafeAreaView style={[styles.modalContainer, { paddingTop: headerHeight }]}>
-			<PlaylistsList playlists={availablePlaylists} onPlaylistPress={handlePlaylistPress} />
+			<PlaylistsList
+				playlists={Object.keys(queueListWithContent)}
+				onPlaylistPress={handlePlaylistPress}
+			/>
 		</SafeAreaView>
 	)
 }

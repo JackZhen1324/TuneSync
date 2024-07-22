@@ -3,8 +3,10 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { fetchLibrary } from '@/helpers/indexMusic'
 import { Artist, Playlist, TrackWithPlaylist } from '@/helpers/types'
 import AntDesign from '@expo/vector-icons/AntDesign'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
@@ -70,7 +72,7 @@ export const useIndexStore = create<IndexState>()((set) => {
 export const useCurrentClientStore = create<any>()((set) => {
 	return {
 		client: false,
-		setClient: (props) => {
+		setClient: (props: any) => {
 			set({
 				client: props,
 			})
@@ -87,20 +89,68 @@ export const useSpotofyAuthToken = create<any>()((set) => {
 		},
 	}
 })
+export const useActiveTrack = create<any>()(
+	persist(
+		(set) => {
+			return {
+				activeTrack: '',
+				activeTrackObj: {},
+				setActiveTrack: (track: any) => {
+					if (!track) {
+						set({
+							activeTrack: '',
+							activeTrackObj: undefined,
+						})
+					} else {
+						set({
+							activeTrack: track.title,
+							activeTrackObj: track,
+						})
+					}
+				},
+			}
+		},
+		{
+			name: 'activeTrack', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: async (name: string) => {
+					const value = await AsyncStorage.getItem(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name: string, value: any) => AsyncStorage.setItem(name, JSON.stringify(value)),
+				removeItem: (name: string) => AsyncStorage.removeItem(name),
+			},
+		},
+	),
+)
 export const useTracks = () => useLibraryStore((state) => state.tracks)
 
-export const useFavorites = () => {
-	const favorites = useLibraryStore(async (state) => {
-		const tracks = await state.setTracks()
-		return tracks.filter((track) => track.rating === 1)
-	})
-	const toggleTrackFavorite = useLibraryStore((state) => state.toggleTrackFavorite)
+export const useFavorateStore = create<any>()(
+	persist(
+		(set) => ({
+			favorateTracks: [],
+			setFavorateTracks: (tracks: any) => {
+				console.log('setFavorateTrackssetFavorateTracks', tracks)
 
-	return {
-		favorites,
-		toggleTrackFavorite,
-	}
-}
+				set({ favorateTracks: [...tracks] })
+			},
+			addTracks: (track: any, favorateTracks: any) => {
+				set({ favorateTracks: [...favorateTracks, track] })
+			},
+		}),
+		{
+			name: 'favorateTracks', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: async (name) => {
+					const value = await AsyncStorage.getItem(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name, value) => AsyncStorage.setItem(name, JSON.stringify(value)),
+				removeItem: (name) => AsyncStorage.removeItem(name),
+			},
+		},
+	),
+)
 
 export const useArtists = () =>
 	useLibraryStore((state) => {
@@ -152,10 +202,31 @@ export const usePlaylists = () => {
 			return acc
 		}, [] as Playlist[])
 	})
-
 	const addToPlaylist = useLibraryStore((state) => state.addToPlaylist)
 
 	return { playlists, addToPlaylist }
+}
+export const useAlbums = () => {
+	const albums = useLibraryStore((state) => {
+		return state?.tracks?.reduce((acc, track) => {
+			track.playlist?.forEach((playlistName) => {
+				const existingPlaylist = acc.find((playlist) => playlist.name === playlistName)
+				if (existingPlaylist) {
+					existingPlaylist.tracks.push(track)
+				} else {
+					acc.push({
+						name: playlistName,
+						tracks: [track],
+						artworkPreview: track.artwork ?? unknownTrackImageUri,
+					})
+				}
+			})
+			return acc
+		}, [] as any[])
+	})
+	const addToPlaylist = useLibraryStore((state) => state.addToPlaylist)
+
+	return { albums, addToPlaylist }
 }
 export const useSetting = () => {
 	return [

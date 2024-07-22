@@ -1,12 +1,14 @@
-import { PlaylistListItem } from '@/components/PlaylistListItem'
 import { unknownTrackImageUri } from '@/constants/images'
-import { playlistNameFilter } from '@/helpers/filter'
 import { Playlist } from '@/helpers/types'
-import { useNavigationSearch } from '@/hooks/useNavigationSearch'
+import { useActiveTrack } from '@/store/library'
+import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
-import { useMemo } from 'react'
+import { router } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import TrackPlayer from 'react-native-track-player'
+import { PlayListItem } from './PlaylistListItem'
 
 type PlaylistsListProps = {
 	playlists: Playlist[]
@@ -17,41 +19,87 @@ const ItemDivider = () => (
 	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 80, marginVertical: 12 }} />
 )
 
-export const PlaylistsList = ({
-	playlists,
-	onPlaylistPress: handlePlaylistPress,
-	...flatListProps
-}: PlaylistsListProps) => {
-	const search = useNavigationSearch({
-		searchBarOptions: {
-			placeholder: 'Find in playlist',
-		},
-	})
+export const PlaylistsList = () => {
+	const [queue, setQueue] = useState([])
+	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
+		(state) => state,
+	)
+	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
 
-	const filteredPlaylist = useMemo(() => {
-		return playlists.filter(playlistNameFilter(search))
-	}, [playlists, search])
+	useEffect(() => {
+		setQueue(queueListWithContent[activeQueueId])
+	}, [activeQueueId, queueListWithContent])
+
+	const onDelete = useCallback(
+		async (item) => {
+			const targetIndex = queueListWithContent[activeQueueId].findIndex(
+				(track) => track.title === item.title,
+			)
+			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
+				(el) => el.title !== item.title,
+			)
+
+			await TrackPlayer.remove([targetIndex])
+
+			// await TrackPlayer.remove([targetIndex])
+
+			setQueueListContent(filteredQueueListWithContent, activeQueueId, queueListWithContent)
+
+			// Update active track if the deleted item was the active track
+			if (item.title === activeTrack) {
+				const nextTrack =
+					filteredQueueListWithContent[targetIndex] || filteredQueueListWithContent[targetIndex - 1]
+				if (nextTrack) {
+					setActiveTrack(nextTrack.title)
+					await TrackPlayer.skip(targetIndex)
+					await TrackPlayer.play()
+				} else {
+					setActiveTrack(undefined)
+					router.back()
+				}
+			}
+		},
+		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
+	)
+
+	const renderItem = useCallback(
+		({ item: track }) => {
+			return (
+				<PlayListItem
+					onDelete={onDelete}
+					activeSong={activeTrack}
+					key={track.filename}
+					track={track}
+					onTrackSelect={() => {
+						setActiveTrack(track)
+						const index = queueListWithContent[activeQueueId].findIndex(
+							(el) => el.title === track.title,
+						)
+						TrackPlayer.skip(index)
+						TrackPlayer.play()
+					}}
+				/>
+			)
+		},
+		[activeQueueId, activeTrack, onDelete, queueListWithContent, setActiveTrack],
+	)
 
 	return (
 		<FlatList
-			contentContainerStyle={{ paddingTop: 10, paddingBottom: 128 }}
+			contentContainerStyle={{ paddingTop: 10, paddingBottom: 300 }}
 			ItemSeparatorComponent={ItemDivider}
 			ListFooterComponent={ItemDivider}
 			ListEmptyComponent={
 				<View>
 					<Text style={utilsStyles.emptyContentText}>No playlist found</Text>
-
 					<FastImage
 						source={{ uri: unknownTrackImageUri, priority: FastImage.priority.normal }}
 						style={utilsStyles.emptyContentImage}
 					/>
 				</View>
 			}
-			data={filteredPlaylist}
-			renderItem={({ item: playlist }) => (
-				<PlaylistListItem playlist={playlist} onPress={() => handlePlaylistPress(playlist)} />
-			)}
-			{...flatListProps}
+			data={queueListWithContent[activeQueueId]}
+			renderItem={renderItem}
 		/>
 	)
 }

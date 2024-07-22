@@ -90,15 +90,10 @@ const ResourceManage = () => {
 		<SafeAreaView style={styles.container}>
 			<List.Section theme={theme}>
 				<List.Subheader theme={theme}>local resource</List.Subheader>
-				<TouchableRipple
-					borderless
-					style={{ borderRadius: 4 }}
-					onPress={() => console.log('Pressed')}
-					rippleColor="rgba(0, 0, 0, .32)"
-				>
+				<TouchableRipple borderless style={{ borderRadius: 4 }} rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
-							onPressOut('local resource')
+							onPressOut('local resource', 'create')
 						}}
 						style={styles.itemSolo}
 						theme={theme}
@@ -107,12 +102,7 @@ const ResourceManage = () => {
 					/>
 				</TouchableRipple>
 				<List.Subheader theme={theme}>remote resource</List.Subheader>
-				<TouchableRipple
-					style={{ borderRadius: 4 }}
-					borderless
-					onPress={() => console.log('Pressed')}
-					rippleColor="rgba(0, 0, 0, .32)"
-				>
+				<TouchableRipple style={{ borderRadius: 4 }} borderless rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
 							onPressOut('webdav', 'create')

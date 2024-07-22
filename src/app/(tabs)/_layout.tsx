@@ -1,6 +1,6 @@
 import { FloatingPlayer } from '@/components/FloatingPlayer'
 import { colors, fontSize } from '@/constants/tokens'
-import { FontAwesome, FontAwesome6, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
 import { Tabs } from 'expo-router'
 import { StyleSheet } from 'react-native'
@@ -44,11 +44,11 @@ const TabsNavigation = () => {
 					}}
 				/>
 				<Tabs.Screen
-					name="playlists"
+					name="albums"
 					options={{
-						title: 'Playlists',
+						title: 'albums',
 						tabBarIcon: ({ color }) => (
-							<MaterialCommunityIcons name="playlist-play" size={28} color={color} />
+							<MaterialIcons name="library-music" size={24} color={color} />
 						),
 					}}
 				/>
@@ -72,7 +72,7 @@ const TabsNavigation = () => {
 					name="setting"
 					options={{
 						title: 'Setting',
-						tabBarIcon: ({ color }) => <FontAwesome6 name="users-line" size={20} color={color} />,
+						tabBarIcon: ({ color }) => <AntDesign name="setting" size={23} color={color} />,
 					}}
 				/>
 			</Tabs>

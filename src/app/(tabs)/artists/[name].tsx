@@ -1,5 +1,5 @@
 import { ArtistTracksList } from '@/components/ArtistTracksList'
-import { screenPadding } from '@/constants/tokens'
+import { screenPaddingXs } from '@/constants/tokens'
 import { useArtists } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { Redirect, useLocalSearchParams } from 'expo-router'
@@ -23,7 +23,7 @@ const ArtistDetailScreen = () => {
 		<View style={defaultStyles.container}>
 			<ScrollView
 				contentInsetAdjustmentBehavior="automatic"
-				style={{ paddingHorizontal: screenPadding.horizontal }}
+				style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 			>
 				<ArtistTracksList artist={artist} />
 			</ScrollView>

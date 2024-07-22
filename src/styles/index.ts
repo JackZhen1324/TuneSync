@@ -14,6 +14,7 @@ export const defaultStyles = StyleSheet.create({
 
 export const utilsStyles = StyleSheet.create({
 	centeredRow: {
+		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',

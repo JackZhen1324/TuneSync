@@ -1,5 +1,5 @@
-// 封装后的axios
 import axios from 'axios'
+import axiosRetry from 'axios-retry'
 import { TIMEOUT } from './config'
 
 const instance = axios.create({
@@ -20,7 +20,7 @@ instance.interceptors.request.use(
 		return config
 	},
 	(err) => {
-		return err
+		return Promise.reject(err)
 	},
 )
 
@@ -44,7 +44,19 @@ instance.interceptors.response.use(
 					console.log('其他信息错误')
 			}
 		}
+		return Promise.reject(err)
 	},
 )
+
+// Add retry functionality
+axiosRetry(instance, {
+	retries: 3,
+	retryCondition: (error) => {
+		return true // Retry only for status code 503 (Service Unavailable)
+	},
+	retryDelay: (retryCount) => {
+		return retryCount * 1000 // Exponential backoff: 1s, 2s, 3s, etc.
+	},
+})
 
 export default instance

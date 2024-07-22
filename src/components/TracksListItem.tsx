@@ -11,19 +11,19 @@ import LoaderKit from 'react-native-loader-kit'
 import { Track } from 'react-native-track-player'
 
 export type TracksListItemProps = {
+	activeTrack: string
 	track: Track
 	onTrackSelect: (track: Track) => void
-	activeSong: string
 }
 
 const TracksListItemComponent = ({
-	activeSong,
+	activeTrack,
 	track,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
 	const isAtive = useMemo(() => {
-		return activeSong === track.title
-	}, [activeSong, track.title])
+		return activeTrack === track.title
+	}, [activeTrack, track.title])
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track)
 	}, [handleTrackSelect, track])

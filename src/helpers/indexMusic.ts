@@ -4,6 +4,7 @@ import { searchSongsViaSpotify } from '@/service/spotifyMetadata'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import TrackPlayer from 'react-native-track-player'
 import { WebDAVClient } from 'webdav'
+import { getBitRate } from './getBitRate'
 import { titleFormater } from './utils'
 
 export async function indexingDb(
@@ -43,6 +44,7 @@ export async function indexingDb(
 					url: downloadLink,
 					title: el.basename,
 					playlist: el?.album?.title || [],
+					bitrate: getBitRate(el.size, metadata.duration),
 					...el,
 					...metadata,
 				}
@@ -99,6 +101,7 @@ async function getNestMusic(
 			const downloadLink: string = webdavClient.getFileDownloadLink(element.filename)
 			const metadata = await fetchMetadata({ title: element.basename }, token, singerInfoCache)
 			const formattedElement = {
+				bitrate: getBitRate(element.size, metadata.duration),
 				url: downloadLink,
 				title: element.basename,
 				playlist: element?.album?.title || [],
@@ -118,40 +121,45 @@ export async function fetchLibrary() {
 }
 
 export async function fetchMetadata(params: { title: any }, token: string, singerInfoCache: any) {
-	const { title } = params
-	const formatedTitle = titleFormater(title)
+	try {
+		const { title } = params
+		const formatedTitle = titleFormater(title)
 
-	const { results }: any = await searchSongs({
-		track: formatedTitle,
-	})
-	const matchedTrack = results?.trackmatches?.track?.filter((el) => el.mbid)
-	const { mbid, image, artist } = matchedTrack?.[0] || results?.trackmatches?.track?.[0] || {}
-	const songInfo: any = await getSongInfo({
-		mbid: mbid,
-	})
-	const { url, album, artist: artistObj, ...res } = songInfo?.track ?? {}
-	if (!singerInfoCache?.[artist] && artist) {
-		const { artists } = await searchSongsViaSpotify(
-			{ q: artist, type: 'artist' },
-			{
-				headers: {
-					Authorization: token,
-					'Content-Type': 'application/json',
+		const { results }: any = await searchSongs({
+			track: formatedTitle,
+		})
+		const matchedTrack = results?.trackmatches?.track?.filter((el) => el.mbid)
+		const { mbid, image, artist } = matchedTrack?.[0] || results?.trackmatches?.track?.[0] || {}
+		const songInfo: any = await getSongInfo({
+			mbid: mbid,
+		})
+		const { url, album, artist: artistObj, duration, ...res } = songInfo?.track ?? {}
+		if (!singerInfoCache?.[artist] && artist) {
+			const { artists } = await searchSongsViaSpotify(
+				{ q: artist, type: 'artist' },
+				{
+					headers: {
+						Authorization: token,
+						'Content-Type': 'application/json',
+					},
 				},
-			},
-		)
-		singerInfoCache[artist] = artists?.items?.[0]
-	}
+			)
+			singerInfoCache[artist] = artists?.items?.[0]
+		}
 
-	return {
-		artwork: album?.image?.[3]?.['#text'] || singerInfoCache?.[artist]?.images?.[0]?.url,
-		artist,
-		artistInfo: singerInfoCache?.[artist] || {},
-		rating: 0,
-		formatedTitle: formatedTitle,
-		genre: formatedTitle,
-		album: album,
-		playlist: [album?.title || 'unknown'],
-		// ...res,
+		return {
+			artwork: album?.image?.[3]?.['#text'] || singerInfoCache?.[artist]?.images?.[0]?.url,
+			artist,
+			artistInfo: singerInfoCache?.[artist] || {},
+			rating: 0,
+			formatedTitle: formatedTitle,
+			genre: formatedTitle,
+			album: album,
+			playlist: [album?.title || 'unknown'],
+			duration,
+			// ...res,
+		}
+	} catch (errir) {
+		return {}
 	}
 }

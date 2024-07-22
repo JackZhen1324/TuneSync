@@ -1,5 +1,5 @@
 import { PlaylistTracksList } from '@/components/PlaylistTracksList'
-import { screenPadding } from '@/constants/tokens'
+import { screenPaddingXs } from '@/constants/tokens'
 import { usePlaylists } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { Redirect, useLocalSearchParams } from 'expo-router'
@@ -15,14 +15,14 @@ const PlaylistScreen = () => {
 	if (!playlist) {
 		console.warn(`Playlist ${playlistName} was not found!`)
 
-		return <Redirect href={'/(tabs)/playlists'} />
+		return <Redirect href={'/(tabs)/albums'} />
 	}
 
 	return (
 		<View style={defaultStyles.container}>
 			<ScrollView
 				contentInsetAdjustmentBehavior="automatic"
-				style={{ paddingHorizontal: screenPadding.horizontal }}
+				style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 			>
 				<PlaylistTracksList playlist={playlist} />
 			</ScrollView>
