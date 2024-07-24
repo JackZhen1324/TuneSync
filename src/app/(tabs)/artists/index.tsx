@@ -27,6 +27,7 @@ const ArtistsScreen = () => {
 
 		return artists.filter(artistNameFilter(search))
 	}, [artists, search])
+	console.log('filteredArtists', filteredArtists)
 
 	return (
 		<View style={defaultStyles.container}>
@@ -40,16 +41,12 @@ const ArtistsScreen = () => {
 				removeClippedSubviews={true}
 				keyExtractor={(el) => el.name}
 				ItemSeparatorComponent={ItemSeparatorComponent}
-				ListFooterComponent={ItemSeparatorComponent}
+				// ListFooterComponent={ItemSeparatorComponent}
 				ListEmptyComponent={
 					<View>
-						<Text>No artist found</Text>
-
+						<Text style={utilsStyles.emptyContentText}>No artists found</Text>
 						{/* <FastImage
-							source={{
-								uri: unknownArtistImageUri,
-								priority: FastImage.priority.normal,
-							}}
+							source={{ uri: unknownArtistImageUri, priority: FastImage.priority.normal }}
 							style={utilsStyles.emptyContentImage}
 						/> */}
 					</View>

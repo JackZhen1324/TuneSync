@@ -3,10 +3,10 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { fetchLibrary } from '@/helpers/indexMusic'
 import { Artist, Playlist, TrackWithPlaylist } from '@/helpers/types'
 import AntDesign from '@expo/vector-icons/AntDesign'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { storage } from './mkkv'
 
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
@@ -93,18 +93,21 @@ export const useActiveTrack = create<any>()(
 	persist(
 		(set) => {
 			return {
+				activeTrackId: 0,
 				activeTrack: '',
 				activeTrackObj: {},
-				setActiveTrack: (track: any) => {
+				setActiveTrack: (track: any, index: number) => {
 					if (!track) {
 						set({
 							activeTrack: '',
 							activeTrackObj: undefined,
+							activeTrackId: -1,
 						})
 					} else {
 						set({
 							activeTrack: track.title,
 							activeTrackObj: track,
+							activeTrackId: index,
 						})
 					}
 				},
@@ -113,12 +116,12 @@ export const useActiveTrack = create<any>()(
 		{
 			name: 'activeTrack', // 存储在 AsyncStorage 中的键名
 			storage: {
-				getItem: async (name: string) => {
-					const value = await AsyncStorage.getItem(name)
+				getItem: (name: string) => {
+					const value = storage.getString(name)
 					return value ? JSON.parse(value) : null
 				},
-				setItem: (name: string, value: any) => AsyncStorage.setItem(name, JSON.stringify(value)),
-				removeItem: (name: string) => AsyncStorage.removeItem(name),
+				setItem: (name: string, value: any) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name: string) => storage.delete(name),
 			},
 		},
 	),
@@ -130,8 +133,6 @@ export const useFavorateStore = create<any>()(
 		(set) => ({
 			favorateTracks: [],
 			setFavorateTracks: (tracks: any) => {
-				console.log('setFavorateTrackssetFavorateTracks', tracks)
-
 				set({ favorateTracks: [...tracks] })
 			},
 			addTracks: (track: any, favorateTracks: any) => {
@@ -141,12 +142,12 @@ export const useFavorateStore = create<any>()(
 		{
 			name: 'favorateTracks', // 存储在 AsyncStorage 中的键名
 			storage: {
-				getItem: async (name) => {
-					const value = await AsyncStorage.getItem(name)
+				getItem: (name) => {
+					const value = storage.getString(name)
 					return value ? JSON.parse(value) : null
 				},
-				setItem: (name, value) => AsyncStorage.setItem(name, JSON.stringify(value)),
-				removeItem: (name) => AsyncStorage.removeItem(name),
+				setItem: (name, value) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name) => storage.delete(name),
 			},
 		},
 	),

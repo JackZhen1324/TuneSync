@@ -1,5 +1,6 @@
 // import { PlaylistListItem } from '@/components/PlaylistListItem'
 import { unknownTrackImageUri } from '@/constants/images'
+import { screenPadding } from '@/constants/tokens'
 import { playlistNameFilter } from '@/helpers/filter'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { utilsStyles } from '@/styles'
@@ -34,9 +35,13 @@ export const AlbumsList = ({
 
 	return (
 		<FlatList
+			contentInsetAdjustmentBehavior="automatic"
+			style={{
+				paddingHorizontal: screenPadding.horizontal,
+			}}
 			contentContainerStyle={{ paddingTop: 10, paddingBottom: 128 }}
 			ItemSeparatorComponent={ItemDivider}
-			ListFooterComponent={ItemDivider}
+			// ListFooterComponent={ItemDivider}
 			ListEmptyComponent={
 				<View>
 					<Text style={utilsStyles.emptyContentText}>No album found</Text>

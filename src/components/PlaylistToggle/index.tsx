@@ -21,7 +21,7 @@ export default (props: { onPress: any; isPlaylistEnable: any }) => {
 			}}
 			name="format-list-bulleted"
 			size={24}
-			color={enable ? 'white' : 'gray'}
+			color={'white'}
 		/>
 	)
 }

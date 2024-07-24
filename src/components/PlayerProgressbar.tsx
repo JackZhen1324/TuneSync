@@ -1,12 +1,13 @@
 import { colors, fontSize } from '@/constants/tokens'
 import { formatSecondsToMinutes } from '@/helpers/miscellaneous'
 import { defaultStyles, utilsStyles } from '@/styles'
+import { memo } from 'react'
 import { StyleSheet, Text, View, ViewProps } from 'react-native'
 import { Slider } from 'react-native-awesome-slider'
 import { useSharedValue } from 'react-native-reanimated'
 import TrackPlayer, { useProgress } from 'react-native-track-player'
 
-export const PlayerProgressBar = ({ style }: ViewProps) => {
+export const PlayerProgressBar = memo(({ style }: ViewProps) => {
 	const { duration, position } = useProgress(250)
 
 	const isSliding = useSharedValue(false)
@@ -57,7 +58,7 @@ export const PlayerProgressBar = ({ style }: ViewProps) => {
 			</View>
 		</View>
 	)
-}
+})
 
 const styles = StyleSheet.create({
 	timeRow: {

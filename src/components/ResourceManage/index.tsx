@@ -1,7 +1,7 @@
 import davIcon from '@/assets/icons/dav.png'
-import StorageUtil from '@/helpers/storage'
 import useThemeColor from '@/hooks/useThemeColor'
 import { useCurrentClientStore } from '@/store/library'
+import { storage } from '@/store/mkkv'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 import { List, TouchableRipple } from 'react-native-paper'
 const ResourceManage = () => {
-	const [added, setAdded] = useState([])
+	const [added, setAdded] = useState([] as any)
 	const { client, setClient } = useCurrentClientStore()
 	const isFocused = useIsFocused()
 	const onPressOut = useCallback((item: string, mode: string, selected?: string) => {
@@ -28,16 +28,16 @@ const ResourceManage = () => {
 
 	useEffect(() => {
 		if (isFocused) {
-			StorageUtil.get('dataSourceConfig').then((res) => {
-				setAdded(res || [])
-			})
+			const config = storage.getString('dataSourceConfig')
+			setAdded(JSON.parse(config || '[]') || [])
 		}
 		return () => {}
 	}, [isFocused])
 
 	const theme = useThemeColor()
 	const renderAddedResource = useMemo(() => {
-		return added.map((el: any) => {
+		console.log('added', added)
+		return added?.map((el: any) => {
 			const { location } = el
 
 			return (
@@ -85,7 +85,7 @@ const ResourceManage = () => {
 				</TouchableRipple>
 			)
 		})
-	}, [added, onPressOut, theme])
+	}, [added, onPressOut, setClient, theme])
 	return (
 		<SafeAreaView style={styles.container}>
 			<List.Section theme={theme}>

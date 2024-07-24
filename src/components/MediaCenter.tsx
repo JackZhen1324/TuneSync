@@ -1,7 +1,7 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { Playlist } from '@/helpers/types'
+import { storage } from '@/store/mkkv'
 import { utilsStyles } from '@/styles'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
 import { memo, useEffect, useState } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
@@ -23,9 +23,8 @@ export const MediaCenter = memo(
 		const isFocused = useIsFocused()
 		useEffect(() => {
 			if (isFocused) {
-				AsyncStorage.getItem('indexList').then((el: any) => {
-					setPinnedList(JSON.parse(el))
-				})
+				const el = storage.getString('indexList')
+				setPinnedList(JSON.parse(el || '[]'))
 			}
 			return () => {}
 		}, [isFocused])
@@ -50,8 +49,8 @@ export const MediaCenter = memo(
 					</View>
 				}
 				data={data}
-				renderItem={({ item }) => {
-					const isPinned = (pinnedList || []).some((el) => el.dir === item.filename)
+				renderItem={({ item }: any) => {
+					const isPinned = (pinnedList || []).some((el: any) => el.dir === item.filename)
 					return (
 						<DirectoryItem pinned={isPinned} data={item} onPress={(dir) => handleDirPress(item)} />
 					)

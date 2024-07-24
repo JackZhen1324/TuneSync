@@ -8,7 +8,7 @@ import React, { memo, useCallback, useMemo } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
-import { Track } from 'react-native-track-player'
+import { Track, useIsPlaying } from 'react-native-track-player'
 
 export type TracksListItemProps = {
 	activeTrack: string
@@ -27,6 +27,7 @@ const TracksListItemComponent = ({
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track)
 	}, [handleTrackSelect, track])
+	const { playing } = useIsPlaying()
 
 	return (
 		<TouchableHighlight onPress={handlePress}>
@@ -43,7 +44,7 @@ const TracksListItemComponent = ({
 						}}
 					/>
 
-					{isAtive && (
+					{isAtive && playing && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
 							name="LineScaleParty"

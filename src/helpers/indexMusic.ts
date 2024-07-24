@@ -1,8 +1,7 @@
 import getWebdavClient from '@/hooks/useWebdavClient'
 import { getSongInfo, searchSongs } from '@/service/metadata'
 import { searchSongsViaSpotify } from '@/service/spotifyMetadata'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import TrackPlayer from 'react-native-track-player'
+import { storage } from '@/store/mkkv'
 import { WebDAVClient } from 'webdav'
 import { getBitRate } from './getBitRate'
 import { titleFormater } from './utils'
@@ -67,9 +66,9 @@ export async function indexingDb(
 	}
 
 	try {
-		await AsyncStorage.setItem('musicLibrary', JSON.stringify(total))
+		storage.set('musicLibrary', JSON.stringify(total))
 		refresh()
-		TrackPlayer.reset()
+		// TrackPlayer.reset()
 		setLoading({
 			loading: false,
 			percentage: 100,
@@ -116,7 +115,7 @@ async function getNestMusic(
 }
 
 export async function fetchLibrary() {
-	const result = await AsyncStorage.getItem('musicLibrary')
+	const result = storage.getString('musicLibrary') || '[]'
 	return JSON.parse(result)
 }
 

@@ -130,6 +130,9 @@ PODS:
   - libwebp/sharpyuv (1.3.2)
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
+  - MMKV (1.3.7):
+    - MMKVCore (~> 1.3.7)
+  - MMKVCore (1.3.7)
   - NVActivityIndicatorView (5.1.1):
     - NVActivityIndicatorView/Base (= 5.1.1)
   - NVActivityIndicatorView/Base (5.1.1)
@@ -1013,6 +1016,11 @@ PODS:
     - React-Core
   - react-native-menu (0.9.1):
     - React
+  - react-native-mmkv (2.12.2):
+    - glog
+    - MMKV (>= 1.3.3)
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - react-native-pager-view (6.3.3):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1277,6 +1285,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-loader-kit (from `../node_modules/react-native-loader-kit`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
+  - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-track-player (from `../node_modules/react-native-track-player`)
@@ -1314,6 +1323,8 @@ SPEC REPOS:
     - fmt
     - libevent
     - libwebp
+    - MMKV
+    - MMKVCore
     - NVActivityIndicatorView
     - SDWebImage
     - SDWebImageWebPCoder
@@ -1420,6 +1431,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-loader-kit"
   react-native-menu:
     :path: "../node_modules/@react-native-menu/menu"
+  react-native-mmkv:
+    :path: "../node_modules/react-native-mmkv"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
@@ -1512,6 +1525,8 @@ SPEC CHECKSUMS:
   ImageColors: 88be684570585c07ae2750bff34eb7b78bfc53b4
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  MMKV: 36a22a9ec84c9bb960613a089ddf6f48be9312b0
+  MMKVCore: 158e61c8516401a9fac730288acb29e6fc19bbf9
   NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: ca1d7414aba0b27efcfa2ccd37637edb1ab77d96
@@ -1537,6 +1552,7 @@ SPEC CHECKSUMS:
   react-native-blur: 799045500f56146afc46245148080e7b7623cb75
   react-native-loader-kit: ed18c8ce83b69083211912326897d8286f37d797
   react-native-menu: 9728f90160c36b9a75481fc76e05354b99d54c59
+  react-native-mmkv: 1fdc81aa70c1aba09370718e6a63a09cbbbac8d2
   react-native-pager-view: 4cc7e44dbc04cad0ca9e0a49c62c593d0fa793cc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-track-player: 82ef1756ffeea61140fea17519ecd6d64ec3cf3e

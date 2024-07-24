@@ -9,22 +9,48 @@ import PlaylistToggle from '@/components/PlaylistToggle'
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize, screenPadding } from '@/constants/tokens'
 import { usePlayerBackground } from '@/hooks/usePlayerBackground'
-import { useTrackPlayerFavorite } from '@/hooks/useTrackPlayerFavorite'
 import { searchLyricViaNetease, searchSongsViaNetease } from '@/service/neteaseData'
-import { useActiveTrack } from '@/store/library'
+import { useActiveTrack, useFavorateStore } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import {
+	ActivityIndicator,
+	Dimensions,
+	Pressable,
+	PressableAndroidRippleConfig,
+	StyleProp,
+	StyleSheet,
+	Text,
+	TextStyle,
+	View,
+	ViewStyle,
+} from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
+import {
+	NavigationState,
+	Route,
+	SceneRendererProps,
+	TabBar,
+	TabBarIndicatorProps,
+	TabBarItemProps,
+	TabView,
+} from 'react-native-tab-view'
+import { Event, Scene } from 'react-native-tab-view/lib/typescript/src/types'
 
 import SlidingUpPanel from 'rn-sliding-up-panel'
 
-const SongInfoRoute = ({ activeTrack, isFavorite, toggleFavorite, togglePlaylist }) => {
+const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
+	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
+	const isFavorite = useMemo(() => {
+		if (activeTrack) {
+			return favorateTracks.some((el: { title: any }) => el.title === activeTrack.title)
+		}
+		return false
+	}, [activeTrack, favorateTracks])
 	if (!activeTrack) {
 		return (
 			<View style={[defaultStyles.container, { justifyContent: 'center' }]}>
@@ -70,7 +96,17 @@ const SongInfoRoute = ({ activeTrack, isFavorite, toggleFavorite, togglePlaylist
 								size={20}
 								color={isFavorite ? colors.primary : colors.icon}
 								style={{ marginHorizontal: 14 }}
-								onPress={toggleFavorite}
+								onPress={() => {
+									if (isFavorite) {
+										setFavorateTracks(
+											favorateTracks.filter((el: { title: string | undefined }) => {
+												return el.title !== activeTrack.title
+											}),
+										)
+									} else {
+										addTracks(activeTrack, favorateTracks)
+									}
+								}}
 							/>
 						</View>
 
@@ -91,20 +127,23 @@ const SongInfoRoute = ({ activeTrack, isFavorite, toggleFavorite, togglePlaylist
 
 				<View style={utilsStyles.centeredRow}>
 					<MaterialIcons
+						onPress={() => {
+							setIndex(1)
+						}}
 						style={{ marginBottom: 6, flex: 1 }}
 						name="lyrics"
 						size={24}
 						color="white"
 					/>
 					<PlayerRepeatToggle size={30} style={{ marginBottom: 6, flex: 1, textAlign: 'center' }} />
-					<PlaylistToggle onPress={togglePlaylist} />
+					<PlaylistToggle isPlaylistEnable={false} onPress={togglePlaylist} />
 				</View>
 			</View>
 		</View>
 	)
 }
 
-const LyricsRoute = ({ lyrics }) => (
+const LyricsRoute = ({ lyrics }: any) => (
 	<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 		<LyricsDisplay lyrics={lyrics} />
 	</View>
@@ -112,10 +151,10 @@ const LyricsRoute = ({ lyrics }) => (
 
 const PlayerScreen = () => {
 	const { activeTrack, activeTrackObj } = useActiveTrack()
+	console.log('activeTrackObj', activeTrackObj.title)
 
 	const { imageColors } = usePlayerBackground(activeTrackObj?.artwork ?? unknownTrackImageUri)
 	const { top, bottom } = useSafeAreaInsets()
-	const { isFavorite, toggleFavorite } = useTrackPlayerFavorite()
 	const [lyricsInfo, setLyrics] = useState([])
 	const [index, setIndex] = useState(0)
 	const [routes] = useState([
@@ -129,7 +168,7 @@ const PlayerScreen = () => {
 		const params = {
 			s: activeTrackObj?.formatedTitle || '',
 		}
-		const parseTime = (timeString) => {
+		const parseTime = (timeString: { split: (arg0: string) => [any, any] }) => {
 			const [minutes, seconds] = timeString.split(':')
 			const [secs, millis] = seconds.split('.')
 
@@ -142,7 +181,7 @@ const PlayerScreen = () => {
 				const raw = lyric?.lrc?.lyric
 				const formatedLyric = raw
 					.split('\n')
-					.map((l) => {
+					.map((l: string) => {
 						const regex = /\[([0-9]{2,3}:[0-9]{2,3}\.[0-9]{2,3})\]\s*(.*)/
 						const match = l.match(regex)
 						if (match) {
@@ -154,25 +193,69 @@ const PlayerScreen = () => {
 							}
 						}
 					})
-					.filter((el) => el)
+					.filter((el: any) => el)
 				setLyrics(formatedLyric)
 			})
 		})
 	}, [activeTrackObj])
 
-	const renderScene = SceneMap({
-		songInfo: () => (
-			<SongInfoRoute
-				activeTrack={activeTrackObj}
-				isFavorite={isFavorite}
-				toggleFavorite={toggleFavorite}
-				togglePlaylist={() => panelRef.current.show()}
-			/>
-		),
-		lyrics: () => LyricsRoute({ lyrics: lyricsInfo }),
-	})
+	const renderScene = ({ route }) => {
+		console.log('key', route.key)
 
-	const renderTabBar = (props) => (
+		switch (route.key) {
+			case 'songInfo':
+				return (
+					<SongInfoRoute
+						setIndex={setIndex}
+						activeTrack={activeTrackObj}
+						togglePlaylist={() => panelRef.current.show()}
+					/>
+				)
+			case 'lyrics':
+				return LyricsRoute({ lyrics: lyricsInfo })
+			default:
+				return null
+		}
+	}
+
+	const renderTabBar = (
+		props: React.JSX.IntrinsicAttributes &
+			SceneRendererProps & {
+				navigationState: NavigationState<Route>
+				scrollEnabled?: boolean
+				bounces?: boolean
+				activeColor?: string
+				inactiveColor?: string
+				pressColor?: string
+				pressOpacity?: number
+				getLabelText?: ((scene: Scene<Route>) => string | undefined) | undefined
+				getAccessible?: ((scene: Scene<Route>) => boolean | undefined) | undefined
+				getAccessibilityLabel?: ((scene: Scene<Route>) => string | undefined) | undefined
+				getTestID?: ((scene: Scene<Route>) => string | undefined) | undefined
+				renderLabel?:
+					| ((scene: Scene<Route> & { focused: boolean; color: string }) => React.ReactNode)
+					| undefined
+				renderIcon?:
+					| ((scene: Scene<Route> & { focused: boolean; color: string }) => React.ReactNode)
+					| undefined
+				renderBadge?: ((scene: Scene<Route>) => React.ReactNode) | undefined
+				renderIndicator?: ((props: TabBarIndicatorProps<Route>) => React.ReactNode) | undefined
+				renderTabBarItem?:
+					| ((props: TabBarItemProps<Route> & { key: string }) => React.ReactElement)
+					| undefined
+				onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined
+				onTabLongPress?: ((scene: Scene<Route>) => void) | undefined
+				tabStyle?: StyleProp<ViewStyle>
+				indicatorStyle?: StyleProp<ViewStyle>
+				indicatorContainerStyle?: StyleProp<ViewStyle>
+				labelStyle?: StyleProp<TextStyle>
+				contentContainerStyle?: StyleProp<ViewStyle>
+				style?: StyleProp<ViewStyle>
+				gap?: number
+				testID?: string
+				android_ripple?: PressableAndroidRippleConfig
+			},
+	) => (
 		<TabBar
 			{...props}
 			indicatorStyle={{ backgroundColor: 'white' }}

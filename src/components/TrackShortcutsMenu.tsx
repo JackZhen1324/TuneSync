@@ -15,10 +15,6 @@ export const TrackShortcutsMenu = ({ track, children }: TrackShortcutsMenuProps)
 	const isFavorite = favorateTracks.some(
 		(el: { title: string | undefined }) => el.title === track.title,
 	)
-	console.log(
-		'favorateTracks',
-		favorateTracks.map((el) => el.title),
-	)
 
 	// const { toggleTrackFavorite } = useFavorites()
 	const { activeQueueId } = useQueueStore((state) => state)

@@ -36,7 +36,7 @@ export const screenPadding = {
 	horizontal: 24,
 }
 export const screenPaddingXs = {
-	horizontal: 0,
+	horizontal: 24,
 }
 export const settingPadding = {
 	horizontal: 0,

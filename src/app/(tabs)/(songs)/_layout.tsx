@@ -5,14 +5,13 @@ import { colors } from '@/constants/tokens'
 import { indexingDb } from '@/helpers/indexMusic'
 import useThemeColor from '@/hooks/useThemeColor'
 import { useIndexStore, useLibraryStore, useSpotofyAuthToken } from '@/store/library'
+import { storage } from '@/store/mkkv'
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Stack } from 'expo-router'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
-import TrackPlayer from 'react-native-track-player'
 
 const SongsScreenLayout = () => {
 	const { loading, percentage, setLoading } = useIndexStore()
@@ -21,23 +20,15 @@ const SongsScreenLayout = () => {
 	const { setTracks } = useLibraryStore((state) => state)
 	const theme = useThemeColor()
 	const { setActiveQueueId, activeQueueId } = useQueueStore((state) => state)
-	useEffect(() => {
-		getqueue()
-		// refreshLibrary()
-	}, [])
-	const getqueue = async () => {
-		const a = await TrackPlayer.getQueue()
-	}
+
 	const refresh = useCallback(() => {
 		setTracks()
 		setActiveQueueId(activeQueueId)
 	}, [activeQueueId, setActiveQueueId, setTracks])
 	const refreshLibrary = useCallback(async () => {
-		AsyncStorage.getItem('indexList').then((el) => {
-			const config = JSON.parse(el || '[]')
-
-			indexingDb(config, setLoading, refresh, token)
-		})
+		const el = storage.getString('indexList')
+		const config = JSON.parse(el || '[]')
+		indexingDb(config, setLoading, refresh, token)
 	}, [token])
 
 	return (

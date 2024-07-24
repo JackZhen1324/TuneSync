@@ -1,6 +1,6 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
-import { screenPadding } from '@/constants/tokens'
+import { screenPaddingXs } from '@/constants/tokens'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
@@ -27,6 +27,7 @@ export const debounce = (
 	let timeout: string | number | NodeJS.Timeout | undefined
 
 	return function (...args: any) {
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const context = this
 
 		clearTimeout(timeout)
@@ -36,30 +37,23 @@ export const debounce = (
 	}
 }
 export const TracksList = ({
-	search,
-	id,
-	setPage,
-	currentPage,
 	tracks,
 	hideQueueControls = false,
 	...flatlistProps
 }: TracksListProps) => {
 	const { activeQueueId, queueListWithContent, setQueueListContent, setActiveQueueId } =
 		useQueueStore((state) => state)
-
-	// const [activeSong, setAtiveSong] = useState('')
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
 
 	useTrackPlayerEvents(
-		[Event.PlaybackTrackChanged],
-		debounce(async (event: { type: Event; nextTrack: number | null }) => {
-			if (event.type === Event.PlaybackTrackChanged && event.nextTrack != null) {
-				const track = await TrackPlayer.getTrack(event.nextTrack)
-				if (activeTrack.title !== track?.title) {
-					setActiveTrack(track)
-				}
+		[Event.PlaybackState],
+		debounce(async (event: { state: string }) => {
+			if (event.state === 'playing') {
+				const track = await TrackPlayer.getActiveTrack()
+				const activeIndex = await TrackPlayer.getActiveTrackIndex()
+				setActiveTrack(track, activeIndex)
 			}
-		}, 1000),
+		}, 10),
 	)
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
@@ -82,13 +76,11 @@ export const TracksList = ({
 				await TrackPlayer.skip(index)
 				TrackPlayer.play()
 			}
-
-			// await TrackPlayer.play()
 		},
 		[activeQueueId, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
 	const renderItem = useCallback(
-		({ item: track }: any) => {
+		({ item: track, index }: any) => {
 			return (
 				<TracksListItem
 					activeTrack={activeTrack}
@@ -103,8 +95,8 @@ export const TracksList = ({
 
 	return (
 		<FlatList
+			style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 			contentInsetAdjustmentBehavior="automatic"
-			style={{ paddingHorizontal: screenPadding.horizontal }}
 			data={tracks}
 			renderItem={renderItem}
 			keyExtractor={(item) => item?.filename}

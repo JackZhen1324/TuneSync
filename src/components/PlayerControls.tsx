@@ -1,5 +1,6 @@
 import { colors } from '@/constants/tokens'
 import { FontAwesome6 } from '@expo/vector-icons'
+import { memo } from 'react'
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 import TrackPlayer, { useIsPlaying } from 'react-native-track-player'
 
@@ -12,7 +13,7 @@ type PlayerButtonProps = {
 	iconSize?: number
 }
 
-export const PlayerControls = ({ style }: PlayerControlsProps) => {
+export const PlayerControls = memo(({ style }: PlayerControlsProps) => {
 	return (
 		<View style={[styles.container, style]}>
 			<View style={styles.row}>
@@ -24,9 +25,9 @@ export const PlayerControls = ({ style }: PlayerControlsProps) => {
 			</View>
 		</View>
 	)
-}
+})
 
-export const PlayPauseButton = ({ style, iconSize = 48 }: PlayerButtonProps) => {
+export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps) => {
 	const { playing } = useIsPlaying()
 
 	return (
@@ -39,15 +40,15 @@ export const PlayPauseButton = ({ style, iconSize = 48 }: PlayerButtonProps) => 
 			</TouchableOpacity>
 		</View>
 	)
-}
+})
 
-export const SkipToNextButton = ({ iconSize = 30 }: PlayerButtonProps) => {
+export const SkipToNextButton = memo(({ iconSize = 30 }: PlayerButtonProps) => {
 	return (
 		<TouchableOpacity activeOpacity={0.7} onPress={() => TrackPlayer.skipToNext()}>
 			<FontAwesome6 name="forward" size={iconSize} color={colors.text} />
 		</TouchableOpacity>
 	)
-}
+})
 
 export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
 	return (

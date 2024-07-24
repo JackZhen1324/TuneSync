@@ -1,7 +1,6 @@
 import { colors } from '@/constants/tokens'
-import StorageUtil from '@/helpers/storage'
 import useThemeColor from '@/hooks/useThemeColor'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { storage } from '@/store/mkkv'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, ScrollView, StyleSheet } from 'react-native'
@@ -20,7 +19,6 @@ const ConfigScreen = () => {
 	const [protocol, setProtocol] = useState('webdav')
 	const [location, setlocation] = useState('https://')
 	const [username, setUsername] = useState('')
-	const [modalVisible, setModalVisible] = useState(false)
 	const [password, setPassword] = useState('')
 	const [errors, setErrors] = useState({})
 	const { selected } = useLocalSearchParams()
@@ -28,7 +26,9 @@ const ConfigScreen = () => {
 
 	const loadConfig = useCallback(async () => {
 		try {
-			const config = await AsyncStorage.getItem('dataSourceConfig')
+			const config = storage.getString('dataSourceConfig') || ''
+			console.log('config', config)
+
 			if (config !== null) {
 				const parsedConfig = JSON.parse(config)
 				const getMatchedConfig = parsedConfig.find(
@@ -44,6 +44,8 @@ const ConfigScreen = () => {
 			Alert.alert('Error', 'Failed to load config')
 		}
 	}, [selected])
+	console.log('selected', selected)
+
 	useEffect(() => {
 		if (selected) {
 			loadConfig()
@@ -66,8 +68,8 @@ const ConfigScreen = () => {
 		return Object.keys(newErrors).length === 0
 	}
 	const deleteConfig = useCallback(async () => {
-		const config = await StorageUtil.get('dataSourceConfig')
-		await StorageUtil.save(
+		const config = JSON.parse(storage.getString('dataSourceConfig') || '[]')
+		storage.set(
 			'dataSourceConfig',
 			(config || [])?.filter((el: { location: string | string[] }) => el.location !== selected),
 		)
@@ -85,8 +87,7 @@ const ConfigScreen = () => {
 				username,
 				password,
 			}
-
-			const configData = await AsyncStorage.getItem('dataSourceConfig')
+			const configData = storage.getString('dataSourceConfig')
 			let newConfig = JSON.parse(configData || '[]')
 			const isDuplicate = newConfig.some((el: { location: string }) => {
 				return el.location === config.location
@@ -103,8 +104,7 @@ const ConfigScreen = () => {
 				} else {
 					newConfig.push(config)
 				}
-
-				await AsyncStorage.setItem('dataSourceConfig', JSON.stringify(newConfig))
+				storage.set('dataSourceConfig', JSON.stringify(newConfig))
 				router.back()
 			} else {
 				Alert.alert('Error', 'config exist!')
