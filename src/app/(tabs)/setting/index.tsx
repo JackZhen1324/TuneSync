@@ -11,8 +11,14 @@ const SettingScreen = () => {
 
 	const handleMenuPress = ({ title }: any) => {
 		switch (title) {
-			case 'add source':
+			case 'Add source':
 				router.push(`/(tabs)/setting/resource`)
+				break
+			case 'Folder':
+				router.push(`/(tabs)/setting/folder`)
+				break
+			case 'About':
+				router.push(`/(tabs)/setting/about`)
 				break
 		}
 	}

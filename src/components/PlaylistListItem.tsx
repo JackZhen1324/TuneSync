@@ -7,7 +7,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
 import { TouchableRipple } from 'react-native-paper'
-import { Track } from 'react-native-track-player'
+import { Track, useIsPlaying } from 'react-native-track-player'
 import { StopPropagation } from './utils/StopPropagation'
 export type TracksListItemProps = {
 	activeSong: string
@@ -23,7 +23,7 @@ const PlayListItemComponent = ({
 	onDelete: handleDelete,
 }: TracksListItemProps) => {
 	// const { activeTrack } = useActiveTrack()
-
+	const { playing } = useIsPlaying()
 	const isAtive = useMemo(() => {
 		return activeSong === track.title
 	}, [activeSong, track.title])
@@ -46,7 +46,7 @@ const PlayListItemComponent = ({
 						}}
 					/>
 
-					{isAtive && (
+					{isAtive && playing && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
 							name="LineScaleParty"

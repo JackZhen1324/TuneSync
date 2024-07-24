@@ -4,23 +4,29 @@
 		"slug": "music-player",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "dark",
 		"scheme": "music-player",
-		"splash": {
-			"image": "./assets/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#000"
-		},
+
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
 			"bundleIdentifier": "com.music.player",
+			"icon": "./assets/icon.png",
+			"splash": {
+				"image": "./assets/splash.png",
+				"resizeMode": "contain",
+				"backgroundColor": "#000"
+			},
 			"infoPlist": {
 				"UIBackgroundModes": ["audio"]
 			}
 		},
 		"android": {
+			"splash": {
+				"image": "./assets/splash.png",
+				"resizeMode": "contain",
+				"backgroundColor": "#000"
+			},
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#000"

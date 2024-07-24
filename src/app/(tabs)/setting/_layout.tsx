@@ -49,6 +49,50 @@ const PlaylistsScreenLayout = () => {
 						headerTintColor: colors.primary,
 					}}
 				/>
+				<Stack.Screen
+					name="folder/index"
+					options={{
+						headerTitle: '',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="folder/[nest]"
+					options={{
+						headerTitle: '文件',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="about/index"
+					options={{
+						headerTitle: '',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="about/privacy"
+					options={{
+						headerTitle: '',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
 			</Stack>
 		</View>
 	)

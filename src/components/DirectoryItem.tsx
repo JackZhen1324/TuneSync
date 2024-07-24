@@ -9,11 +9,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
 
 type DirectoryItemProps = {
+	mode: string
 	pinned: boolean
 	data: any
 } & TouchableHighlightProps
 
-export const DirectoryItem = ({ data, pinned, ...props }: DirectoryItemProps) => {
+export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemProps) => {
 	const { basename, type } = data
 	const { client: config } = useCurrentClientStore()
 	const [isPinned, setIsPinned] = useState(pinned)
@@ -56,7 +57,7 @@ export const DirectoryItem = ({ data, pinned, ...props }: DirectoryItemProps) =>
 							{data?.basename}
 						</Text>
 					</View>
-					{type === 'directory' ? (
+					{type === 'directory' && mode === 'edit' ? (
 						<TouchableHighlight
 							onPress={async (e) => {
 								e.stopPropagation()

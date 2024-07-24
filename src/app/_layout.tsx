@@ -20,6 +20,9 @@ const App = () => {
 	const handleTrackPlayerLoaded = useCallback(() => {
 		SplashScreen.hideAsync()
 	}, [])
+	useSetupTrackPlayer({
+		onLoad: handleTrackPlayerLoaded,
+	})
 	const { setToken } = useSpotofyAuthToken()
 	const { runAsync } = useRequest(getAccessToken, {
 		pollingInterval: 3000,
@@ -29,9 +32,6 @@ const App = () => {
 			setToken(`${el.token_type} ${el.access_token}`)
 		})
 	}, [])
-	useSetupTrackPlayer({
-		onLoad: handleTrackPlayerLoaded,
-	})
 
 	useLogTrackPlayerState()
 

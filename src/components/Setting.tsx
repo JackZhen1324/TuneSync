@@ -11,7 +11,7 @@ type SettingProps = {
 } & Partial<FlatListProps<menu>>
 
 const ItemDivider = () => (
-	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 0, marginVertical: 8 }} />
+	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 40, marginVertical: 8 }} />
 )
 
 export const Setting = ({
@@ -19,12 +19,6 @@ export const Setting = ({
 	onMenuPress: handleMenuPress,
 	...flatListProps
 }: SettingProps) => {
-	// const search = useNavigationSearch({
-	// 	searchBarOptions: {
-	// 		placeholder: 'Find in playlist',
-	// 	},
-	// })
-
 	return (
 		<FlatList
 			contentContainerStyle={{ paddingTop: 10, paddingBottom: 128 }}

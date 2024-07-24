@@ -14,7 +14,7 @@ type MediaCenterProps = {
 } & Partial<FlatListProps<Playlist>>
 
 const ItemDivider = () => (
-	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 80, marginVertical: 12 }} />
+	<View style={{ ...utilsStyles.itemSeparator, marginLeft: 40, marginVertical: 12 }} />
 )
 
 export const MediaCenter = memo(
@@ -52,7 +52,12 @@ export const MediaCenter = memo(
 				renderItem={({ item }: any) => {
 					const isPinned = (pinnedList || []).some((el: any) => el.dir === item.filename)
 					return (
-						<DirectoryItem pinned={isPinned} data={item} onPress={(dir) => handleDirPress(item)} />
+						<DirectoryItem
+							mode="edit"
+							pinned={isPinned}
+							data={item}
+							onPress={(dir) => handleDirPress(item)}
+						/>
 					)
 				}}
 				{...flatListProps}

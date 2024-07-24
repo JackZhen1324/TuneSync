@@ -2,12 +2,12 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { fetchLibrary } from '@/helpers/indexMusic'
 import { Artist, Playlist, TrackWithPlaylist } from '@/helpers/types'
+import { SimpleLineIcons } from '@expo/vector-icons'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { storage } from './mkkv'
-
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
 	setTracks: any
@@ -232,16 +232,20 @@ export const useAlbums = () => {
 export const useSetting = () => {
 	return [
 		{
-			title: 'add source',
+			title: 'Add source',
 			icon: <AntDesign name="plus" size={24} color="#E76F51" />,
 		},
 		// {
 		// 	title: 'general',
 		// 	icon: <SimpleLineIcons name="settings" size={24} color="#E76F51" />,
 		// },
-		// {
-		// 	title: 'media library',
-		// 	icon: <MaterialIcons name="my-library-music" size={24} color="#E76F51" />,
-		// },
+		{
+			title: 'Folder',
+			icon: <AntDesign name="folder1" size={24} color="#E76F51" />,
+		},
+		{
+			title: 'About',
+			icon: <SimpleLineIcons name="info" size={24} color="#E76F51" />,
+		},
 	]
 }
