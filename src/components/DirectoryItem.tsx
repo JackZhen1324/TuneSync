@@ -1,7 +1,6 @@
 import { colors } from '@/constants/tokens'
 import useThemeColor from '@/hooks/useThemeColor'
-import { useCurrentClientStore } from '@/store/library'
-import { storage } from '@/store/mkkv'
+import { useCurrentClientStore, useIndexStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { AntDesign } from '@expo/vector-icons'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
@@ -15,9 +14,11 @@ type DirectoryItemProps = {
 } & TouchableHighlightProps
 
 export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemProps) => {
-	const { basename, type } = data
+	const { basename, type, from } = data
+
 	const { client: config } = useCurrentClientStore()
 	const [isPinned, setIsPinned] = useState(pinned)
+	const { indexingList, setIndexingList, setNeedUpdate } = useIndexStore((state) => state)
 	useEffect(() => {
 		setIsPinned(pinned)
 	}, [pinned])
@@ -26,12 +27,22 @@ export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemPro
 	const renderIcon = useCallback((el: { mime: string | string[]; type: string }) => {
 		if (el?.mime?.includes('audio')) {
 			return (
-				<MaterialCommunityIcons name="folder-music-outline" size={24} color={theme.colors.text} />
+				<MaterialCommunityIcons
+					name="folder-music-outline"
+					size={24}
+					color={theme.colors.primary}
+				/>
 			)
 		} else if (el.type === 'directory') {
 			return <MaterialCommunityIcons name="folder-outline" size={24} color={theme.colors.text} />
 		}
-		return <MaterialCommunityIcons name="file-chart-outline" size={24} color={theme.colors.text} />
+		return (
+			<MaterialCommunityIcons
+				name="file-chart-outline"
+				size={24}
+				color={theme.colors.placeholder}
+			/>
+		)
 	}, [])
 	return (
 		<TouchableHighlight key={basename} activeOpacity={0.8} {...props}>
@@ -54,7 +65,7 @@ export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemPro
 					>
 						{renderIcon(data)}
 						<Text numberOfLines={1} style={styles.dirNameText}>
-							{data?.basename}
+							{data?.basename || data?.name}
 						</Text>
 					</View>
 					{type === 'directory' && mode === 'edit' ? (
@@ -62,18 +73,22 @@ export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemPro
 							onPress={async (e) => {
 								e.stopPropagation()
 								setIsPinned(!isPinned)
-								let el = storage.getString('indexList') as any
-								el = JSON.parse(el || '[]')
+								let el = indexingList || []
+
 								if (!isPinned) {
 									if (el) {
-										el.push({ dir: data.filename, config })
-										storage.set('indexList', JSON.stringify(el))
+										el.push({ dir: data.filename, config, from: from })
+										setIndexingList(el)
+										// storage.set('indexList', JSON.stringify(el))
 									} else {
-										storage.set('indexList', JSON.stringify([{ dir: data.filename, config }]))
+										setIndexingList([{ dir: data.filename, config, from: from }])
 									}
+									setNeedUpdate(true)
 								} else {
 									el = el.filter((e: { dir: any }) => e.dir !== data.filename)
-									storage.set('indexList', JSON.stringify(el))
+									setIndexingList(el)
+									setNeedUpdate(true)
+									// storage.set('indexList', JSON.stringify(el))
 								}
 							}}
 						>

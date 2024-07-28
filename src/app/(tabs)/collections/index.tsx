@@ -2,7 +2,7 @@ import { AlbumsList } from '@/components/AblumList'
 import { playlistNameFilter } from '@/helpers/filter'
 import { Playlist } from '@/helpers/types'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { useAlbums } from '@/store/library'
+import { useAlbums, usePlaylists, useTracks } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useMemo } from 'react'
@@ -13,18 +13,21 @@ const AlbumsScreen = () => {
 
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in ablums',
+			placeholder: 'Find in collections',
 		},
 	})
+	const { tracks } = useTracks()
 
-	const { albums } = useAlbums()
-
+	const { albums } = useAlbums(tracks)
+	const { playlist, setPlaylist } = usePlaylists((state) => state)
 	const filteredAlbums = useMemo(() => {
-		return albums?.filter(playlistNameFilter(search)) || []
-	}, [albums, search])
+		return [...playlist, ...(albums?.filter(playlistNameFilter(search)) || [])]
+	}, [albums, playlist, search])
 
-	const handleAlbumsPress = (playlist: Playlist) => {
-		router.push(`/(tabs)/albums/${playlist.name}`)
+	const handleAlbumsPress = (playlist: Playlist, type: string) => {
+		console.log('type', type)
+
+		router.push(`/(tabs)/collections/${playlist.name}::${type}`)
 	}
 
 	return (

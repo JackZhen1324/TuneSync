@@ -2,7 +2,7 @@ import { unknownArtistImageUri } from '@/constants/images'
 import { screenPadding } from '@/constants/tokens'
 import { artistNameFilter } from '@/helpers/filter'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { useArtists } from '@/store/library'
+import { useArtists, useTracks } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { Link } from 'expo-router'
 import { useMemo } from 'react'
@@ -19,15 +19,14 @@ const ArtistsScreen = () => {
 			placeholder: 'Find in artists',
 		},
 	})
-
-	const artists = useArtists()
+	const { tracks } = useTracks()
+	const artists = useArtists(tracks)
 
 	const filteredArtists = useMemo(() => {
 		if (!search) return artists
 
 		return artists.filter(artistNameFilter(search))
 	}, [artists, search])
-	console.log('filteredArtists', filteredArtists)
 
 	return (
 		<View style={defaultStyles.container}>

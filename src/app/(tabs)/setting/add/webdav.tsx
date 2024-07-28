@@ -1,6 +1,6 @@
 import { colors } from '@/constants/tokens'
 import useThemeColor from '@/hooks/useThemeColor'
-import { storage } from '@/store/mkkv'
+import { useDatasourceConfig, useIndexStore } from '@/store/library'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, ScrollView, StyleSheet } from 'react-native'
@@ -23,14 +23,15 @@ const ConfigScreen = () => {
 	const [errors, setErrors] = useState({})
 	const { selected } = useLocalSearchParams()
 	const [hidePassword, setHidePassword] = React.useState(true)
+	const { setIndexingList, indexingList, setNeedUpdate } = useIndexStore((state) => state)
+	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
 
 	const loadConfig = useCallback(async () => {
 		try {
-			const config = storage.getString('dataSourceConfig') || ''
-			console.log('config', config)
+			const config = datasourceConfig || ''
 
 			if (config !== null) {
-				const parsedConfig = JSON.parse(config)
+				const parsedConfig = config
 				const getMatchedConfig = parsedConfig.find(
 					(el: { location: string | string[] }) => el.location === selected,
 				)
@@ -43,8 +44,7 @@ const ConfigScreen = () => {
 		} catch (error) {
 			Alert.alert('Error', 'Failed to load config')
 		}
-	}, [selected])
-	console.log('selected', selected)
+	}, [datasourceConfig, selected])
 
 	useEffect(() => {
 		if (selected) {
@@ -68,13 +68,14 @@ const ConfigScreen = () => {
 		return Object.keys(newErrors).length === 0
 	}
 	const deleteConfig = useCallback(async () => {
-		const config = JSON.parse(storage.getString('dataSourceConfig') || '[]')
-		storage.set(
-			'dataSourceConfig',
+		const config = datasourceConfig
+		setDatasourceConfig(
 			(config || [])?.filter((el: { location: string | string[] }) => el.location !== selected),
 		)
+		setIndexingList(indexingList.filter((el) => el?.config?.location === config.location))
+		setNeedUpdate(true)
 		router.back()
-	}, [selected])
+	}, [datasourceConfig, selected, setDatasourceConfig])
 	const saveConfig = async () => {
 		if (!validate()) {
 			return
@@ -87,8 +88,8 @@ const ConfigScreen = () => {
 				username,
 				password,
 			}
-			const configData = storage.getString('dataSourceConfig')
-			let newConfig = JSON.parse(configData || '[]')
+			const configData = datasourceConfig
+			let newConfig = configData || []
 			const isDuplicate = newConfig.some((el: { location: string }) => {
 				return el.location === config.location
 			})
@@ -104,7 +105,9 @@ const ConfigScreen = () => {
 				} else {
 					newConfig.push(config)
 				}
-				storage.set('dataSourceConfig', JSON.stringify(newConfig))
+
+				setDatasourceConfig(newConfig)
+				setNeedUpdate(true)
 				router.back()
 			} else {
 				Alert.alert('Error', 'config exist!')

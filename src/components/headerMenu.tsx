@@ -18,11 +18,11 @@ export const HeaderMemu = ({ refreshLibrary, children }: TrackShortcutsMenuProps
 		<MenuView
 			onPressAction={({ nativeEvent: { event } }) => handlePressAction(event)}
 			actions={[
-				{
-					id: 'refresh-metadata',
-					title: 'Refresh metadata',
-					image: 'load',
-				},
+				// {
+				// 	id: 'refresh-metadata',
+				// 	title: 'Refresh metadata',
+				// 	image: 'load',
+				// },
 				{
 					id: 'refresh-library',
 					title: 'Refresh library',

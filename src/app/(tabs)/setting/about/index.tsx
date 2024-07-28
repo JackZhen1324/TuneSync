@@ -1,3 +1,4 @@
+import logo from '@/assets/icon.png'
 import { router } from 'expo-router'
 import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -13,15 +14,15 @@ const AboutPage = () => {
 		<ScrollView contentContainerStyle={styles.container}>
 			<View style={styles.content}>
 				<Image
-					source={{ uri: 'https://example.com/logo.png' }} // Replace with your logo URL
+					source={logo} // Replace with your logo URL
 					style={styles.logo}
 				/>
-				<Text style={styles.appName}>TrackSync</Text>
-				<Text style={styles.subtitle}>连接你的音乐</Text>
+				<Text style={styles.appName}>TuneSync</Text>
+				<Text style={styles.subtitle}>Sync everything</Text>
 
 				<View style={styles.option}>
 					<Text style={styles.optionText}>当前版本</Text>
-					<Text style={styles.optionValue}>1.2.9</Text>
+					<Text style={styles.optionValue}>0.1.0</Text>
 				</View>
 				<TouchableOpacity style={styles.option}>
 					<Text style={styles.optionText}>检查更新</Text>
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
 		width: 80,
 		height: 80,
 		marginBottom: 10,
+		borderRadius: 20,
 	},
 	appName: {
 		fontSize: 24,

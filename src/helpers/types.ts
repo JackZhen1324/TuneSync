@@ -4,6 +4,7 @@ export type Playlist = {
 	name: string
 	tracks: Track[]
 	artworkPreview: string
+	type?: string
 }
 export type menu = {
 	title: string

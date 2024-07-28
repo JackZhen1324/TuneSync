@@ -28,7 +28,18 @@ const PlaylistsScreenLayout = () => {
 					}}
 				/>
 				<Stack.Screen
-					name="media/[index]"
+					name="media/webdav/[index]"
+					options={{
+						headerTitle: '',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="media/local/[index]"
 					options={{
 						headerTitle: '',
 						headerBackVisible: true,
@@ -52,7 +63,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/index"
 					options={{
-						headerTitle: '',
+						headerTitle: '文件夹',
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,
@@ -63,7 +74,29 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/[nest]"
 					options={{
-						headerTitle: '文件',
+						headerTitle: '文件夹',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="folder/local/[nest]"
+					options={{
+						headerTitle: '文件夹',
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="folder/webdav/[nest]"
+					options={{
+						headerTitle: '文件夹',
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,

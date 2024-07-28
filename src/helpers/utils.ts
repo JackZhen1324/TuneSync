@@ -26,9 +26,11 @@ export function titleFormater(title: string) {
 	}
 
 	titleTemp = titleTemp.trim()
+
 	return titleTemp
 }
 export const truncateFileName = (name, maxLength) => {
+	if (!name) return ''
 	if (name.length <= maxLength) return name
 	return name.slice(0, maxLength - 3) + '...'
 }

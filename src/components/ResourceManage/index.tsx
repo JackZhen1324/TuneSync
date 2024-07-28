@@ -1,43 +1,184 @@
 import davIcon from '@/assets/icons/dav.png'
+import { colors } from '@/constants/tokens'
 import useThemeColor from '@/hooks/useThemeColor'
-import { useCurrentClientStore } from '@/store/library'
-import { storage } from '@/store/mkkv'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
+import { useCurrentClientStore, useDatasourceConfig, useIndexStore } from '@/store/library'
+import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
+
 import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import DocumentPicker from 'react-native-document-picker'
+
+import RNFS from 'react-native-fs'
 import { List, TouchableRipple } from 'react-native-paper'
+export function getContentAfterFirstDocuments(filePath: string) {
+	const keyword = 'Documents'
+	const keywordIndex = filePath.indexOf(keyword)
+
+	if (keywordIndex === -1) {
+		return null
+	}
+
+	const startIndex = keywordIndex + keyword.length
+	const result = filePath.substring(startIndex)
+
+	// URL decode the result
+	const decodedResult = decodeURIComponent(result)
+
+	return decodedResult
+}
+
 const ResourceManage = () => {
 	const [added, setAdded] = useState([] as any)
 	const { client, setClient } = useCurrentClientStore()
 	const isFocused = useIsFocused()
-	const onPressOut = useCallback((item: string, mode: string, selected?: string) => {
-		switch (item) {
-			case 'webdav':
-				mode === 'create'
-					? router.push('/setting/add/webdav')
-					: router.push({
-							pathname: '/setting/add/webdav',
-							params: {
-								selected: selected || '',
-							},
+	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
+	const { setIndexingList, indexingList } = useIndexStore((state) => state)
+
+	const pickDirectory = async () => {
+		try {
+			const result = await DocumentPicker.pickDirectory()
+			setIndexingList([])
+			if (result) {
+				const directoryUri = decodeURIComponent(result.uri)
+				const savingPath = 'myDevice' + getContentAfterFirstDocuments(directoryUri)
+				const configs = datasourceConfig || ([] as any)
+				const currentLocal = configs?.find((el: { protocol: string }) => el.protocol === 'file')
+				let newChildren = [] as any
+				if (currentLocal) {
+					if (!currentLocal.children.includes(savingPath)) {
+						newChildren = [...currentLocal.children, savingPath]
+						const localConfig = {
+							configName: 'my device',
+							protocol: 'file',
+							location: 'file',
+							children: newChildren,
+						}
+
+						await readDirectoryFiles(directoryUri)
+						const newConfig = configs.map((el: { protocol: string }) => {
+							if (el.protocol === 'file') {
+								return localConfig
+							}
+							return el
 						})
+						setDatasourceConfig(newConfig)
+					}
+				} else {
+					newChildren = [savingPath]
+					const localConfig = {
+						from: 'local',
+						configName: 'my device',
+						protocol: 'file',
+						children: newChildren,
+					}
+
+					const newConfig = [...configs, localConfig] as any
+
+					await readDirectoryFiles(directoryUri)
+					setDatasourceConfig(newConfig)
+				}
+				const finalIndxingList = newChildren.map((el: string) => {
+					return {
+						basename: el.split('/').slice(0, -1).pop(),
+						filename: el,
+						dir: el,
+						type: 'directory',
+						from: 'local',
+						title: el.split('/').slice(0, -1).pop(),
+					}
+				})
+
+				setIndexingList([...finalIndxingList, ...indexingList])
+			}
+		} catch (err) {
+			if (DocumentPicker.isCancel(err)) {
+				console.log('User cancelled the picker')
+			} else {
+				console.log('Unknown error: ', err)
+			}
 		}
-	}, [])
+	}
+
+	const readDirectoryFiles = async (directoryUri: string) => {
+		try {
+			const files = await RNFS.readDir(directoryUri)
+
+			for (const file of files) {
+				const pickedFilePath = file.path
+
+				try {
+					const folderName = directoryUri.split('/').slice(0, -1).pop()
+
+					const destinationPath = `${RNFS.DocumentDirectoryPath}/myDevice/${folderName}/${file.name}`
+					const exists = await RNFS.exists(`${RNFS.DocumentDirectoryPath}/myDevice/${folderName}/`)
+
+					if (!exists) {
+						await RNFS.mkdir(`${RNFS.DocumentDirectoryPath}/myDevice/${folderName}/`)
+						await RNFS.copyFile(pickedFilePath, destinationPath)
+					} else {
+						await RNFS.copyFile(pickedFilePath, destinationPath)
+					}
+				} catch (error) {
+					console.error('Error ensuring directory exists:', error)
+				}
+			}
+		} catch (error) {
+			console.error('Error reading directory files:', error)
+		}
+	}
+
+	const onPressOut = useCallback(
+		(item: string, mode: string, selected?: string) => {
+			switch (item) {
+				case 'webdav':
+					mode === 'create'
+						? router.push('/setting/add/webdav')
+						: router.push({
+								pathname: '/setting/add/webdav',
+								params: {
+									selected: selected || '',
+								},
+							})
+					break
+				case 'local':
+					if (mode === 'create') {
+						pickDirectory()
+					} else {
+						const currentLocal = datasourceConfig?.find(
+							(el: { protocol: string }) => el.protocol === 'file',
+						)
+
+						for (const child of currentLocal.children) {
+							const pendingRemove = RNFS.DocumentDirectoryPath + '/' + child
+
+							setIndexingList(
+								indexingList.filter((indexItem) => {
+									return indexItem.filename !== child
+								}),
+							)
+							RNFS.unlink(pendingRemove)
+						}
+						setDatasourceConfig(
+							datasourceConfig.filter((el: { protocol: string }) => el.protocol !== 'file'),
+						)
+					}
+			}
+		},
+		[datasourceConfig, indexingList, setDatasourceConfig, setIndexingList],
+	)
 
 	useEffect(() => {
 		if (isFocused) {
-			const config = storage.getString('dataSourceConfig')
-			setAdded(JSON.parse(config || '[]') || [])
+			const config = datasourceConfig
+			setAdded(config || [])
 		}
-		return () => {}
-	}, [isFocused])
+	}, [datasourceConfig, isFocused])
 
 	const theme = useThemeColor()
-	const renderAddedResource = useMemo(() => {
-		console.log('added', added)
-		return added?.map((el: any) => {
+	const renderAddedResource = () => {
+		return datasourceConfig?.map((el: any) => {
 			const { location } = el
 
 			return (
@@ -46,62 +187,101 @@ const ResourceManage = () => {
 					style={{ borderRadius: 4 }}
 					borderless
 					onPress={() => {
-						// debugger
-						setClient(el)
-						router.push({
-							pathname: `/(tabs)/setting/media/${encodeURIComponent('/')}`,
-						})
+						if (el.protocol === 'webdav') {
+							setClient(el)
+							router.push({
+								pathname: `/(tabs)/setting/media/webdav/${encodeURIComponent('/')}`,
+							})
+						} else if (el.protocol === 'file') {
+							router.push({
+								pathname: `/(tabs)/setting/media/local/${encodeURIComponent('/')}`,
+							})
+						}
 					}}
 					rippleColor="rgba(0, 0, 0, .32)"
 				>
 					<List.Item
-						// onPressOut={() => {
-						// 	onPressOut('webdav', 'edit', el.location)
-						// }}
 						style={styles.itemSolo}
 						theme={theme}
 						title={el.configName}
-						right={() => (
-							<TouchableRipple
-								key={el.location}
-								style={{ borderRadius: 4 }}
-								borderless
-								onPress={(e) => {
-									e.stopPropagation()
-									onPressOut('webdav', 'edit', el.location)
-								}}
-								rippleColor="rgba(0, 0, 0, .32)"
-							>
-								<FontAwesome6
-									style={{ paddingTop: 6 }}
-									color={theme.colors.primary}
-									name="edit"
-									size={16}
-								/>
-							</TouchableRipple>
-						)}
-						left={() => <List.Icon icon={davIcon} />}
+						right={() => {
+							if (el.protocol === 'file') {
+								return (
+									<TouchableRipple
+										key={el.location}
+										style={{ borderRadius: 4 }}
+										borderless
+										onPress={(e) => {
+											e.stopPropagation()
+											onPressOut('local', 'remove', el.location)
+										}}
+										rippleColor="rgba(0, 0, 0, .32)"
+									>
+										<MaterialIcons
+											style={{ paddingTop: 6 }}
+											name="delete-outline"
+											size={20}
+											color={theme.colors.primary}
+										/>
+									</TouchableRipple>
+								)
+							}
+							return (
+								<TouchableRipple
+									key={el.location}
+									style={{ borderRadius: 4 }}
+									borderless
+									onPress={(e) => {
+										e.stopPropagation()
+										onPressOut('webdav', 'edit', el.location)
+									}}
+									rippleColor="rgba(0, 0, 0, .32)"
+								>
+									<FontAwesome6
+										style={{ paddingTop: 6 }}
+										color={theme.colors.primary}
+										name="edit"
+										size={16}
+									/>
+								</TouchableRipple>
+							)
+						}}
+						left={() => {
+							if (el.protocol === 'file') {
+								return (
+									<MaterialIcons
+										style={{ paddingTop: 3 }}
+										name="phone-iphone"
+										size={26}
+										color={colors.primary}
+									/>
+								)
+							} else {
+								return <List.Icon icon={davIcon} />
+							}
+						}}
 					/>
 				</TouchableRipple>
 			)
 		})
-	}, [added, onPressOut, setClient, theme])
+	}
+
 	return (
 		<SafeAreaView style={styles.container}>
 			<List.Section theme={theme}>
-				<List.Subheader theme={theme}>local resource</List.Subheader>
+				<List.Subheader theme={theme}>Local resource</List.Subheader>
 				<TouchableRipple borderless style={{ borderRadius: 4 }} rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
-							onPressOut('local resource', 'create')
+							onPressOut('local', 'create')
 						}}
 						style={styles.itemSolo}
 						theme={theme}
-						title="local"
+						title="Local"
 						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				<List.Subheader theme={theme}>remote resource</List.Subheader>
+				<List.Subheader theme={theme}>Remote resource</List.Subheader>
 				<TouchableRipple style={{ borderRadius: 4 }} borderless rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
@@ -109,12 +289,12 @@ const ResourceManage = () => {
 						}}
 						style={styles.itemSolo}
 						theme={theme}
-						title="webdav resource"
+						title="Webdav resource"
 						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				{added?.length > 0 && <List.Subheader theme={theme}>added resource</List.Subheader>}
-				{renderAddedResource}
+				{added?.length > 0 && <List.Subheader theme={theme}>Added resource</List.Subheader>}
+				{renderAddedResource()}
 			</List.Section>
 		</SafeAreaView>
 	)
@@ -126,62 +306,12 @@ const styles = StyleSheet.create({
 		paddingTop: StatusBar.currentHeight,
 		marginHorizontal: 8,
 	},
-	item: {
-		padding: 16,
-		paddingHorizontal: 26,
-		// marginVertical: 8,
-		marginBottom: 0,
-		backgroundColor: 'rgba(28,28,30,1)',
-
-		// marginBottom: 20,
-	},
 	itemSolo: {
 		padding: 16,
 		paddingHorizontal: 26,
-		// marginVertical: 8,
 		borderRadius: 6,
 		marginBottom: 4,
 		backgroundColor: 'rgba(28,28,30,1)',
-	},
-	itemFirst: {
-		padding: 16,
-		paddingHorizontal: 26,
-		borderTopRightRadius: 6,
-		borderTopLeftRadius: 6,
-		// marginVertical: 8,
-		marginBottom: 0,
-		backgroundColor: 'rgba(28,28,30,1)',
-	},
-	itemLast: {
-		padding: 16,
-		paddingHorizontal: 26,
-		// marginVertical: 8,
-		borderBottomLeftRadius: 6,
-		borderBottomRightRadius: 6,
-		marginBottom: 0,
-		backgroundColor: 'rgba(28,28,30,1)',
-	},
-	header: {
-		paddingLeft: 20,
-		fontSize: 15,
-		color: 'rgba(110,110,115,1)',
-		paddingVertical: 8,
-	},
-	title: {
-		padding: 0,
-		fontSize: 16,
-		color: 'white',
-	},
-	deleteButton: {
-		backgroundColor: 'red',
-		justifyContent: 'center',
-		alignItems: 'flex-end',
-		paddingHorizontal: 20,
-	},
-	deleteText: {
-		color: 'white',
-		fontSize: 16,
-		fontWeight: 'bold',
 	},
 })
 

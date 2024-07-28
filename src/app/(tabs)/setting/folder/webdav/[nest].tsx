@@ -1,4 +1,4 @@
-import { MediaCenter } from '@/components/MediaCenterGridview'
+import { MediaCenter } from '@/components/MediaCenter'
 import useWebdavClient from '@/hooks/useWebdavClient'
 import { useCurrentClientStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
@@ -7,35 +7,32 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
-const FolderNest = memo(() => {
-	const { nest: index }: { nest: string } = useLocalSearchParams()
-	const path = decodeURIComponent(index)
+const Media = memo(() => {
+	const { nest }: { nest: string } = useLocalSearchParams()
+	const path = decodeURIComponent(nest)
 	const [directories, setDirectories] = useState([])
 	const { client } = useCurrentClientStore()
 	const webdavClient = useWebdavClient(client)
 	const { loading, runAsync } = useRequest(webdavClient.getDirectoryContents, {
 		manual: true,
 	})
-
 	const router = useRouter()
 	useEffect(() => {
-		if (path) {
-			runAsync(path).then((el: any) => {
-				setDirectories(el)
-			})
-		}
+		runAsync(path).then((el: any) => {
+			setDirectories(
+				el.map((item: any) => {
+					return {
+						...item,
+						from: 'webdav',
+					}
+				}),
+			)
+		})
 	}, [path, runAsync])
 
 	const onDirPress = useCallback((item: { filename: any; type: any }) => {
-		console.log('222item', item)
-		const { filename, type, from } = item
-		console.log('222item', item)
+		const { filename, type } = item
 
-		if (from === 'local' && from.isDirectory) {
-			router.push({
-				pathname: `/(tabs)/setting/media/local/${encodeURIComponent(filename)}`,
-			})
-		}
 		if (type === 'directory') {
 			router.push({
 				pathname: `/(tabs)/setting/media/webdav/${encodeURIComponent(filename)}`,
@@ -63,4 +60,4 @@ const FolderNest = memo(() => {
 	)
 })
 
-export default FolderNest
+export default Media

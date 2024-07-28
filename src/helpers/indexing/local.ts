@@ -1,12 +1,16 @@
-import getWebdavClient from '@/hooks/useWebdavClient'
 import { getSongInfo, searchSongs } from '@/service/metadata'
 import { searchSongsViaSpotify } from '@/service/spotifyMetadata'
-import { storage } from '@/store/mkkv'
-import { WebDAVClient } from 'webdav'
-import { getBitRate } from './getBitRate'
-import { titleFormater } from './utils'
-
-export async function indexingDb(
+import RNFS from 'react-native-fs'
+import * as mime from 'react-native-mime-types'
+import { getBitRate } from '../getBitRate'
+import { titleFormater } from '../utils'
+export const checkIsAudioFile = (path: string) => {
+	const match = path.match(/\.([^.]+)$/)
+	const fileExtension = match ? match[1] : ''
+	const mimeType = mime.lookup(fileExtension) || ''
+	return mimeType.includes('audio')
+}
+export async function indexingLocal(
 	configs: any[],
 	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void,
 	refresh: any,
@@ -23,39 +27,44 @@ export async function indexingDb(
 
 	for (let i = 0; i < configs.length; i++) {
 		const element = configs[i]
-		const { dir, config } = element
-		const webdavClient = getWebdavClient(config)
-		const music = await webdavClient.getDirectoryContents(dir)
+		const { dir } = element
+		const music = await RNFS.readDir(RNFS.DocumentDirectoryPath + '/' + dir)
 		const percentageForNestSection = percertageOfEachConfig / (music.length || 1)
 
-		const filteredMusicPromises = music
-			?.filter((el: { mime: string | string[] }) => el?.mime?.includes('audio'))
-			.map(async (el: { filename: any; basename: any }) => {
-				currentPercentage += percentageForNestSection
-				setLoading({
-					loading: true,
-					percentage: currentPercentage,
-				})
+		const filteredMusic = music?.filter((el) => {
+			// const fileInfo = await RNFS.stat(el?.path);
+			return checkIsAudioFile(el.path)
+		})
 
-				const downloadLink: string = webdavClient.getFileDownloadLink(el.filename)
-				const metadata = await fetchMetadata({ title: el.basename }, token, singerInfoCache)
-				return {
-					url: downloadLink,
-					title: el.basename,
-					playlist: el?.album?.title || [],
-					bitrate: getBitRate(el.size, metadata.duration),
-					...el,
-					...metadata,
-				}
+		const filteredMusicPromises = filteredMusic.map(async (el) => {
+			const path = el.path
+			const name = el.name
+
+			currentPercentage += percentageForNestSection
+			setLoading({
+				loading: true,
+				percentage: currentPercentage,
 			})
 
-		const filteredMusic = await Promise.all(filteredMusicPromises)
-		total.push(...filteredMusic)
+			const downloadLink: string = path
+			const metadata = await fetchMetadata({ title: name }, token, singerInfoCache)
+			return {
+				url: downloadLink,
+				title: el.name,
+				playlist: metadata?.album?.title || [],
+				bitrate: getBitRate(el.size, metadata.duration),
+				...el,
+				...metadata,
+			}
+		})
 
-		const dirs = music?.filter((el: { type: string }) => el.type === 'directory')
+		const formatedMusic = await Promise.all(filteredMusicPromises)
+		total.push(...formatedMusic)
+
+		const dirs = music?.filter((el) => el.isDirectory())
 
 		for (const dir of dirs) {
-			const nestedMusic = await getNestMusic(dir, webdavClient, token, singerInfoCache)
+			const nestedMusic = await getNestMusic(dir, RNFS, token, singerInfoCache)
 			currentPercentage += percentageForNestSection
 			setLoading({
 				loading: true,
@@ -66,39 +75,35 @@ export async function indexingDb(
 	}
 
 	try {
-		storage.set('musicLibrary', JSON.stringify(total))
-		refresh()
+		// storage.set('musicLibrary', JSON.stringify(total))
+
+		// refresh()
 		// TrackPlayer.reset()
 		setLoading({
 			loading: false,
 			percentage: 100,
 		})
+		return total
 	} catch (error) {
 		// Error saving data
 		console.error('Error saving data:', error)
+		return []
 	}
 }
 
-async function getNestMusic(
-	dir: { filename: any },
-	webdavClient: WebDAVClient,
-	token: string,
-	singerInfoCache: any,
-) {
-	const { filename } = dir
-	const dirs = await webdavClient.getDirectoryContents(filename)
-	const filteredDirs = dirs?.filter((el: { mime: string | string[] }) =>
-		el?.mime?.includes('audio'),
-	)
+async function getNestMusic(dir: { path: string }, RNFS: any, token: string, singerInfoCache: any) {
+	const { path } = dir
+	const dirs = await RNFS.readDir(path)
+	const filteredDirs = dirs?.filter((el) => checkIsAudioFile(el.path))
 	let nestedMusic: any[] = []
 
 	for (const element of filteredDirs) {
 		if (element.type === 'directory') {
-			const deeperNestedMusic = await getNestMusic(element, webdavClient, token, singerInfoCache)
+			const deeperNestedMusic = await getNestMusic(element, RNFS, token, singerInfoCache)
 			nestedMusic = nestedMusic.concat(deeperNestedMusic)
 		} else {
-			const downloadLink: string = webdavClient.getFileDownloadLink(element.filename)
-			const metadata = await fetchMetadata({ title: element.basename }, token, singerInfoCache)
+			const downloadLink: string = element.path
+			const metadata = await fetchMetadata({ title: element.name }, token, singerInfoCache)
 			const formattedElement = {
 				bitrate: getBitRate(element.size, metadata.duration),
 				url: downloadLink,
@@ -106,17 +111,13 @@ async function getNestMusic(
 				playlist: element?.album?.title || [],
 				...element,
 				...metadata,
+				from: 'local',
 			}
 			nestedMusic.push(formattedElement)
 		}
 	}
 
 	return nestedMusic
-}
-
-export async function fetchLibrary() {
-	const result = storage.getString('musicLibrary') || '[]'
-	return JSON.parse(result)
 }
 
 export async function fetchMetadata(params: { title: any }, token: string, singerInfoCache: any) {
@@ -127,12 +128,17 @@ export async function fetchMetadata(params: { title: any }, token: string, singe
 		const { results }: any = await searchSongs({
 			track: formatedTitle,
 		})
+
 		const matchedTrack = results?.trackmatches?.track?.filter((el) => el.mbid)
+
 		const { mbid, image, artist } = matchedTrack?.[0] || results?.trackmatches?.track?.[0] || {}
+
 		const songInfo: any = await getSongInfo({
 			mbid: mbid,
 		})
+
 		const { url, album, artist: artistObj, duration, ...res } = songInfo?.track ?? {}
+
 		if (!singerInfoCache?.[artist] && artist) {
 			const { artists } = await searchSongsViaSpotify(
 				{ q: artist, type: 'artist' },
@@ -156,9 +162,12 @@ export async function fetchMetadata(params: { title: any }, token: string, singe
 			album: album,
 			playlist: [album?.title || 'unknown'],
 			duration,
+			from: 'local',
 			// ...res,
 		}
 	} catch (errir) {
+		console.log('errir', errir)
+
 		return {}
 	}
 }

@@ -1,17 +1,21 @@
-import { useFavorateStore } from '@/store/library'
+import { useFavorateStore, usePlaylists } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { MenuView } from '@react-native-menu/menu'
 import { useRouter } from 'expo-router'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import TrackPlayer, { Track } from 'react-native-track-player'
 import { match } from 'ts-pattern'
 
-type TrackShortcutsMenuProps = PropsWithChildren<{ track: Track }>
+type TrackShortcutsMenuProps = PropsWithChildren<{ track: Track; from?: string }>
 
-export const TrackShortcutsMenu = ({ track, children }: TrackShortcutsMenuProps) => {
+export const TrackShortcutsMenu = ({ track, children, from }: TrackShortcutsMenuProps) => {
 	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
-	const router = useRouter()
 
+	const router = useRouter()
+	const { playlist, setPlaylist } = usePlaylists()
+	const isFromPlaylist = useMemo(() => {
+		return from?.includes('playlist')
+	}, [from])
 	const isFavorite = favorateTracks.some(
 		(el: { title: string | undefined }) => el.title === track.title,
 	)
@@ -49,7 +53,20 @@ export const TrackShortcutsMenu = ({ track, children }: TrackShortcutsMenuProps)
 			.with('add-to-playlist', () => {
 				// it opens the addToPlaylist modal
 				// @ts-expect-error it should work
-				router.push({ pathname: '(modals)/addToPlaylist', params: { trackUrl: track.url } })
+				router.push({ pathname: '(modals)/addToPlaylist', params: { trackUrl: track.title } })
+			})
+			.with('remove-from-playlist', () => {
+				const [albumName] = (from || '').split('::')
+				const newPlaylist = playlist.map((el) => {
+					if (el.name === albumName) {
+						return {
+							...el,
+							tracks: el.tracks.filter((el) => el.title !== track.title),
+						}
+					}
+					return el
+				})
+				setPlaylist(newPlaylist)
 			})
 			.otherwise(() => console.warn(`Unknown menu action ${id}`))
 	}
@@ -57,18 +74,38 @@ export const TrackShortcutsMenu = ({ track, children }: TrackShortcutsMenuProps)
 	return (
 		<MenuView
 			onPressAction={({ nativeEvent: { event } }) => handlePressAction(event)}
-			actions={[
-				{
-					id: isFavorite ? 'remove-from-favorites' : 'add-to-favorites',
-					title: isFavorite ? 'Remove from favorites' : 'Add to favorites',
-					image: isFavorite ? 'star.fill' : 'star',
-				},
-				// {
-				// 	id: 'add-to-playlist',
-				// 	title: 'Add to playlist',
-				// 	image: 'plus',
-				// },
-			]}
+			actions={
+				isFromPlaylist
+					? [
+							{
+								id: isFavorite ? 'remove-from-favorites' : 'add-to-favorites',
+								title: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+								image: isFavorite ? 'star.fill' : 'star',
+							},
+							{
+								id: 'add-to-playlist',
+								title: 'Add to playlist',
+								image: 'plus',
+							},
+							{
+								id: 'remove-from-playlist',
+								title: 'Remove from playlist',
+								image: 'trash',
+							},
+						]
+					: [
+							{
+								id: isFavorite ? 'remove-from-favorites' : 'add-to-favorites',
+								title: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+								image: isFavorite ? 'star.fill' : 'star',
+							},
+							{
+								id: 'add-to-playlist',
+								title: 'Add to playlist',
+								image: 'plus',
+							},
+						]
+			}
 		>
 			{children}
 		</MenuView>

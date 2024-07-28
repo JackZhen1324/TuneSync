@@ -90,7 +90,7 @@ const PrivacyPolicy = () => {
 			</View>
 			<View style={styles.content}>
 				{content.sections.map((section, index) => (
-					<View key={index}>
+					<View key={index} style={styles.sectionContainer}>
 						<Text style={styles.sectionTitle}>{section.sectionTitle}</Text>
 						<Text style={styles.text}>{section.text}</Text>
 					</View>
@@ -107,32 +107,34 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		padding: 16,
+		backgroundColor: 'black',
 	},
 	header: {
-		color: 'white',
 		marginBottom: 16,
 	},
 	title: {
-		color: 'white',
-		fontSize: 24,
+		color: '#FFFFFF',
+		fontSize: 26,
 		fontWeight: 'bold',
 	},
 	content: {
-		color: 'white',
 		flex: 1,
 		paddingBottom: 200,
 	},
+	sectionContainer: {
+		marginBottom: 24,
+	},
 	sectionTitle: {
-		color: 'white',
-		fontSize: 20,
-		fontWeight: 'bold',
+		color: '#F2F2F7',
+		fontSize: 22,
+		fontWeight: '600',
 		marginTop: 16,
 		marginBottom: 8,
 	},
 	text: {
-		color: 'white',
-		fontSize: 16,
-		lineHeight: 24,
+		color: '#F2F2F7',
+		fontSize: 18,
+		lineHeight: 26,
 	},
 })
 

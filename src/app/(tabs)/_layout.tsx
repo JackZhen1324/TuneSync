@@ -44,9 +44,9 @@ const TabsNavigation = () => {
 					}}
 				/>
 				<Tabs.Screen
-					name="albums"
+					name="collections"
 					options={{
-						title: 'albums',
+						title: 'Collections',
 						tabBarIcon: ({ color }) => (
 							<MaterialIcons name="library-music" size={24} color={color} />
 						),

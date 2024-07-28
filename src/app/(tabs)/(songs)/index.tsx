@@ -2,7 +2,6 @@ import { TracksList } from '@/components/TracksList'
 import { screenPadding } from '@/constants/tokens'
 import { trackTitleFilter } from '@/helpers/filter'
 import { generateTracksListId } from '@/helpers/miscellaneous'
-import usePaganation from '@/helpers/usePaganation'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { useActiveTrack, useLibraryStore } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
@@ -19,18 +18,16 @@ const SongsScreen = () => {
 	})
 
 	const { setTracks, tracks } = useLibraryStore((state) => state)
-
-	const [data, setPage, currentPage] = usePaganation({ data: tracks })
 	const { queueListWithContent, activeQueueId } = useQueueStore((state) => state)
 	const { activeTrackId } = useActiveTrack((state) => state)
 
 	const loadQueue = async () => {
 		await TrackPlayer.setQueue(queueListWithContent[activeQueueId])
-		await TrackPlayer.skip(activeTrackId)
+		await TrackPlayer.skip(activeTrackId || 0)
 		init = 1
 	}
 	useEffect(() => {
-		setTracks()
+		setTracks(tracks)
 
 		return () => {}
 	}, [])
@@ -39,11 +36,6 @@ const SongsScreen = () => {
 			loadQueue()
 		}
 	})
-
-	// console.log(
-	// 	'queueListWithContent',
-	// 	queueListWithContent[activeQueueId].map((el) => el.title),
-	// )
 
 	const filteredTracks = useMemo(() => {
 		if (!search) return tracks

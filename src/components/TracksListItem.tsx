@@ -11,31 +11,33 @@ import LoaderKit from 'react-native-loader-kit'
 import { Track, useIsPlaying } from 'react-native-track-player'
 
 export type TracksListItemProps = {
+	from?: string
 	activeTrack: string
 	track: Track
 	onTrackSelect: (track: Track) => void
 }
 
 const TracksListItemComponent = ({
+	from,
 	activeTrack,
 	track,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
 	const isAtive = useMemo(() => {
-		return activeTrack === track.title
-	}, [activeTrack, track.title])
+		return activeTrack === track?.title
+	}, [activeTrack, track])
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track)
 	}, [handleTrackSelect, track])
 	const { playing } = useIsPlaying()
-
+	if (!track) return null
 	return (
 		<TouchableHighlight onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
 				<View>
 					<FastImage
 						source={{
-							uri: track.artwork || unknownTrackImageUri,
+							uri: track?.artwork || unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
 						style={{
@@ -43,7 +45,6 @@ const TracksListItemComponent = ({
 							opacity: isAtive ? 0.6 : 1,
 						}}
 					/>
-
 					{isAtive && playing && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
@@ -62,7 +63,7 @@ const TracksListItemComponent = ({
 								color: isAtive ? colors.primary : colors.text,
 							}}
 						>
-							{track.formatedTitle || track.basename}
+							{track.formatedTitle || track.basename || track.title || track.name}
 						</Text>
 
 						{track.artist && (
@@ -73,7 +74,7 @@ const TracksListItemComponent = ({
 					</View>
 
 					<StopPropagation>
-						<TrackShortcutsMenu track={track}>
+						<TrackShortcutsMenu from={from} track={track}>
 							<Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
 						</TrackShortcutsMenu>
 					</StopPropagation>

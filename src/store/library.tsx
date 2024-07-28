@@ -1,7 +1,7 @@
 // import library from '@/assets/data/library.json'
 import { unknownTrackImageUri } from '@/constants/images'
-import { fetchLibrary } from '@/helpers/indexMusic'
-import { Artist, Playlist, TrackWithPlaylist } from '@/helpers/types'
+import { debounce } from '@/helpers/debounce'
+import { Artist, TrackWithPlaylist } from '@/helpers/types'
 import { SimpleLineIcons } from '@expo/vector-icons'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { Track } from 'react-native-track-player'
@@ -15,60 +15,101 @@ interface LibraryState {
 	addToPlaylist: (track: Track, playlistName: string) => void
 }
 interface IndexState {
+	setNeedUpdate: any
+	setIndexingList: any
+	indexingList: []
+	needUpdate: boolean
 	percentage: number
 	loading: boolean
 	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void
 }
-export const useLibraryStore = create<LibraryState>()((set) => {
-	return {
-		tracks: [],
-		setTracks: async () => {
-			const tracks = await fetchLibrary()
-			set({
-				tracks: tracks,
-			})
-		},
-		toggleTrackFavorite: (track) =>
-			set((state) => ({
-				tracks: state.tracks.map((currentTrack) => {
-					if (currentTrack.url === track.url) {
-						return {
-							...currentTrack,
-							rating: currentTrack.rating === 1 ? 0 : 1,
-						}
-					}
+export const useLibraryStore = create<LibraryState>()(
+	persist(
+		(set) => {
+			return {
+				tracks: [],
+				setTracks: async (tracks: any) => {
+					set({
+						tracks: tracks,
+					})
+				},
+				toggleTrackFavorite: (track) =>
+					set((state) => ({
+						tracks: state.tracks.map((currentTrack) => {
+							if (currentTrack.url === track.url) {
+								return {
+									...currentTrack,
+									rating: currentTrack.rating === 1 ? 0 : 1,
+								}
+							}
 
-					return currentTrack
-				}),
-			})),
-		addToPlaylist: (track, playlistName) =>
-			set((state) => ({
-				tracks: state.tracks.map((currentTrack) => {
-					if (currentTrack.url === track.url) {
-						return {
-							...currentTrack,
-							playlist: [...(currentTrack.playlist ?? []), playlistName],
-						}
-					}
+							return currentTrack
+						}),
+					})),
+				addToPlaylist: (track, playlistName) =>
+					set((state) => ({
+						tracks: state.tracks.map((currentTrack) => {
+							if (currentTrack.url === track.url) {
+								return {
+									...currentTrack,
+									playlist: [...(currentTrack.playlist ?? []), playlistName],
+								}
+							}
 
-					return currentTrack
-				}),
-			})),
-	}
-})
-export const useIndexStore = create<IndexState>()((set) => {
-	return {
-		loading: false,
-		percentage: 0,
-		setLoading: (props) => {
-			const { loading, percentage } = props
-			set({
-				loading,
-				percentage,
-			})
+							return currentTrack
+						}),
+					})),
+			}
 		},
-	}
-})
+		{
+			name: 'musicLibrary', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: (name) => {
+					const value = storage.getString(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name, value) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name) => storage.delete(name),
+			},
+		},
+	),
+)
+export const useIndexStore = create<IndexState>()(
+	persist(
+		(set) => {
+			return {
+				needUpdate: false,
+				setNeedUpdate: (needUpdate: any) => set({ needUpdate: needUpdate }),
+				indexingList: [],
+				loading: false,
+				setIndexingList: (list: any) => {
+					set({
+						indexingList: list,
+					})
+				},
+				percentage: 0,
+				setLoading: (props) => {
+					const { loading, percentage } = props
+					set({
+						loading,
+						percentage,
+					})
+				},
+			}
+		},
+		{
+			name: 'indexList', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: (name) => {
+					const value = storage.getString(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name, value) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name) => storage.delete(name),
+			},
+		},
+	),
+)
 export const useCurrentClientStore = create<any>()((set) => {
 	return {
 		client: false,
@@ -89,6 +130,31 @@ export const useSpotofyAuthToken = create<any>()((set) => {
 		},
 	}
 })
+export const useDatasourceConfig = create<any>()(
+	persist(
+		(set) => {
+			return {
+				datasourceConfig: [],
+				setDatasourceConfig: (configs: any) => {
+					set({
+						datasourceConfig: configs,
+					})
+				},
+			}
+		},
+		{
+			name: 'datasourceConfig', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: (name: string) => {
+					const value = storage.getString(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name: string, value: any) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name: string) => storage.delete(name),
+			},
+		},
+	),
+)
 export const useActiveTrack = create<any>()(
 	persist(
 		(set) => {
@@ -96,7 +162,7 @@ export const useActiveTrack = create<any>()(
 				activeTrackId: 0,
 				activeTrack: '',
 				activeTrackObj: {},
-				setActiveTrack: (track: any, index: number) => {
+				setActiveTrack: debounce((track: any, index: number) => {
 					if (!track) {
 						set({
 							activeTrack: '',
@@ -110,7 +176,7 @@ export const useActiveTrack = create<any>()(
 							activeTrackId: index,
 						})
 					}
-				},
+				}, 150),
 			}
 		},
 		{
@@ -126,7 +192,7 @@ export const useActiveTrack = create<any>()(
 		},
 	),
 )
-export const useTracks = () => useLibraryStore((state) => state.tracks)
+export const useTracks = () => useLibraryStore((state) => state)
 
 export const useFavorateStore = create<any>()(
 	persist(
@@ -153,10 +219,13 @@ export const useFavorateStore = create<any>()(
 	),
 )
 
-export const useArtists = () =>
-	useLibraryStore((state) => {
-		return state?.tracks?.reduce((acc, track) => {
-			const existingArtist = acc.find((artist) => artist.name === track.artist)
+export const useArtists = (tracks: any[] | undefined) => {
+	return tracks?.reduce(
+		(
+			acc: { name: any; tracks: any[]; artistInfo?: any }[],
+			track: { artist: any; artistInfo: any },
+		) => {
+			const existingArtist = acc.find((artist: { name: any }) => artist.name === track.artist)
 
 			if (existingArtist) {
 				existingArtist.tracks.push(track)
@@ -168,7 +237,7 @@ export const useArtists = () =>
 						artistInfo: track?.artistInfo,
 					})
 				} else {
-					const index = acc.findIndex((el) => el.name === 'Unknown')
+					const index = acc.findIndex((el: { name: string }) => el.name === 'Unknown')
 
 					if (index === -1) {
 						acc.push({
@@ -182,40 +251,51 @@ export const useArtists = () =>
 			}
 
 			return acc
-		}, [] as Artist[])
-	})
-
-export const usePlaylists = () => {
-	const playlists = useLibraryStore((state) => {
-		return state?.tracks?.reduce((acc, track) => {
-			track.playlist?.forEach((playlistName) => {
-				const existingPlaylist = acc.find((playlist) => playlist.name === playlistName)
-				if (existingPlaylist) {
-					existingPlaylist.tracks.push(track)
-				} else {
-					acc.push({
-						name: playlistName,
-						tracks: [track],
-						artworkPreview: track.artwork ?? unknownTrackImageUri,
-					})
-				}
-			})
-			return acc
-		}, [] as Playlist[])
-	})
-	const addToPlaylist = useLibraryStore((state) => state.addToPlaylist)
-
-	return { playlists, addToPlaylist }
+		},
+		[] as Artist[],
+	)
 }
-export const useAlbums = () => {
-	const albums = useLibraryStore((state) => {
-		return state?.tracks?.reduce((acc, track) => {
-			track.playlist?.forEach((playlistName) => {
-				const existingPlaylist = acc.find((playlist) => playlist.name === playlistName)
+
+export const usePlaylists = create<any>()(
+	persist(
+		(set) => {
+			return {
+				playlist: [],
+				setPlaylist: (playlist: any[]) => {
+					set({
+						playlist: playlist,
+					})
+				},
+			}
+		},
+		{
+			name: 'playlist', // 存储在 AsyncStorage 中的键名
+			storage: {
+				getItem: (name: string) => {
+					const value = storage.getString(name)
+					return value ? JSON.parse(value) : null
+				},
+				setItem: (name: string, value: any) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name: string) => storage.delete(name),
+			},
+		},
+	),
+)
+export const useAlbums = (tracks: any[]) => {
+	const albums = tracks?.reduce(
+		(
+			acc: { name: string; tracks: any[]; artworkPreview: any; type: string }[],
+			track: { playlist: any[]; artwork: any },
+		) => {
+			track.playlist?.forEach((playlistName: any) => {
+				const existingPlaylist = acc.find(
+					(playlist: { name: any }) => playlist.name === playlistName,
+				)
 				if (existingPlaylist) {
 					existingPlaylist.tracks.push(track)
 				} else {
 					acc.push({
+						type: 'album',
 						name: playlistName,
 						tracks: [track],
 						artworkPreview: track.artwork ?? unknownTrackImageUri,
@@ -223,8 +303,10 @@ export const useAlbums = () => {
 				}
 			})
 			return acc
-		}, [] as any[])
-	})
+		},
+		[] as any[],
+	)
+
 	const addToPlaylist = useLibraryStore((state) => state.addToPlaylist)
 
 	return { albums, addToPlaylist }

@@ -12,7 +12,8 @@ const PlaylistsScreenLayout = () => {
 					name="index"
 					options={{
 						...StackScreenWithSearchBar,
-						headerTitle: 'Albums',
+						headerTitle: 'Collections',
+						headerRight: () => {},
 					}}
 				/>
 
@@ -20,6 +21,7 @@ const PlaylistsScreenLayout = () => {
 					name="[name]"
 					options={{
 						headerTitle: '',
+
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,

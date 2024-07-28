@@ -19,7 +19,14 @@ const Media = memo(() => {
 	const router = useRouter()
 	useEffect(() => {
 		runAsync(path).then((el: any) => {
-			setDirectories(el)
+			setDirectories(
+				el.map((item: any) => {
+					return {
+						...item,
+						from: 'webdav',
+					}
+				}),
+			)
 		})
 	}, [path, runAsync])
 
@@ -28,7 +35,7 @@ const Media = memo(() => {
 
 		if (type === 'directory') {
 			router.push({
-				pathname: `/(tabs)/setting/media/${encodeURIComponent(filename)}`,
+				pathname: `/(tabs)/setting/media/webdav/${encodeURIComponent(filename)}`,
 			})
 		}
 	}, [])

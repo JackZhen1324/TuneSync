@@ -8,18 +8,17 @@ import { PlaylistsList } from '@/components/PlaylistsList'
 import PlaylistToggle from '@/components/PlaylistToggle'
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize, screenPadding } from '@/constants/tokens'
+import useModalView from '@/hooks/useModalView'
 import { usePlayerBackground } from '@/hooks/usePlayerBackground'
 import { searchLyricViaNetease, searchSongsViaNetease } from '@/service/neteaseData'
 import { useActiveTrack, useFavorateStore } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
-import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import { BlurView } from 'expo-blur'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
 	ActivityIndicator,
 	Dimensions,
-	Pressable,
 	PressableAndroidRippleConfig,
 	StyleProp,
 	StyleSheet,
@@ -40,8 +39,6 @@ import {
 	TabView,
 } from 'react-native-tab-view'
 import { Event, Scene } from 'react-native-tab-view/lib/typescript/src/types'
-
-import SlidingUpPanel from 'rn-sliding-up-panel'
 
 const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
@@ -151,8 +148,6 @@ const LyricsRoute = ({ lyrics }: any) => (
 
 const PlayerScreen = () => {
 	const { activeTrack, activeTrackObj } = useActiveTrack()
-	console.log('activeTrackObj', activeTrackObj.title)
-
 	const { imageColors } = usePlayerBackground(activeTrackObj?.artwork ?? unknownTrackImageUri)
 	const { top, bottom } = useSafeAreaInsets()
 	const [lyricsInfo, setLyrics] = useState([])
@@ -161,8 +156,12 @@ const PlayerScreen = () => {
 		{ key: 'songInfo', title: '歌曲' },
 		{ key: 'lyrics', title: '歌词' },
 	])
-	const panelRef = useRef(null)
-
+	// const panelRef = useRef(null)
+	const [panelRef, render] = useModalView({
+		content: () => {
+			return <PlaylistsList></PlaylistsList>
+		},
+	})
 	useEffect(() => {
 		if (!activeTrackObj?.formatedTitle) return
 		const params = {
@@ -200,8 +199,6 @@ const PlayerScreen = () => {
 	}, [activeTrackObj])
 
 	const renderScene = ({ route }) => {
-		console.log('key', route.key)
-
 		switch (route.key) {
 			case 'songInfo':
 				return (
@@ -287,39 +284,7 @@ const PlayerScreen = () => {
 					style={{ marginTop: top + 20, marginBottom: top }}
 				/>
 			</View>
-
-			<SlidingUpPanel
-				allowDragging={false}
-				ref={panelRef}
-				draggableRange={{ top: Dimensions.get('window').height * 0.7, bottom: 0 }}
-				backdropOpacity={0.5}
-				friction={0.5}
-			>
-				<BlurView
-					intensity={95}
-					style={{
-						...StyleSheet.absoluteFillObject,
-						overflow: 'hidden',
-						...styles.panelContainer,
-					}}
-				>
-					<View
-						style={{
-							display: 'flex',
-							flexDirection: 'row',
-							justifyContent: 'space-between',
-							alignContent: 'center',
-						}}
-					>
-						<Text style={styles.panelTitle}>播放列表</Text>
-						{/* Add your playlist component here */}
-						<Pressable style={styles.closeButton} onPress={() => panelRef.current.hide()}>
-							<MaterialCommunityIcons name="window-close" size={24} color="white" />
-						</Pressable>
-					</View>
-					<PlaylistsList></PlaylistsList>
-				</BlurView>
-			</SlidingUpPanel>
+			{render()}
 		</LinearGradient>
 	)
 }

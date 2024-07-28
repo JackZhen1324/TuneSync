@@ -10,7 +10,7 @@ import FastImage from 'react-native-fast-image'
 import { QueueControls } from './QueueControls'
 import { TracksList } from './TracksList'
 
-export const PlaylistTracksList = ({ playlist }: { playlist: Playlist }) => {
+export const PlaylistTracksList = ({ playlist, from }: { playlist: Playlist; from?: string }) => {
 	const search = useNavigationSearch({
 		searchBarOptions: {
 			hideWhenScrolling: true,
@@ -24,6 +24,7 @@ export const PlaylistTracksList = ({ playlist }: { playlist: Playlist }) => {
 
 	return (
 		<TracksList
+			from={from}
 			id={generateTracksListId(playlist.name, search)}
 			scrollEnabled={false}
 			hideQueueControls={true}

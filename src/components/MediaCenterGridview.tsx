@@ -1,6 +1,6 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { Playlist } from '@/helpers/types'
-import { storage } from '@/store/mkkv'
+import { useIndexStore } from '@/store/library'
 import { utilsStyles } from '@/styles'
 import { useIsFocused } from '@react-navigation/native'
 import { memo, useEffect, useState } from 'react'
@@ -21,13 +21,14 @@ export const MediaCenter = memo(
 	({ data, onDirPress: handleDirPress, ...flatListProps }: MediaCenterProps) => {
 		const [pinnedList, setPinnedList] = useState(undefined)
 		const isFocused = useIsFocused()
+		const { indexingList } = useIndexStore((state) => state)
 		useEffect(() => {
 			if (isFocused) {
-				const el = storage.getString('indexList')
-				setPinnedList(JSON.parse(el || '[]'))
+				const el = indexingList || []
+				setPinnedList(el)
 			}
 			return () => {}
-		}, [isFocused])
+		}, [indexingList, isFocused])
 		return (
 			<FlatList
 				style={{
