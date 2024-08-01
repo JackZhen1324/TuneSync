@@ -109,7 +109,7 @@ const ConfigScreen = () => {
 				}
 
 				setDatasourceConfig(newConfig)
-				setNeedUpdate(true)
+				// setNeedUpdate(true)
 				router.back()
 			} else {
 				Alert.alert('Error', 'config exist!')
