@@ -6,14 +6,15 @@ import { useAlbums, usePlaylists, useTracks } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
 const AlbumsScreen = () => {
 	const router = useRouter()
-
+	const { t } = useTranslation()
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in collections',
+			placeholder: t('collections.search'),
 		},
 	})
 	const { tracks } = useTracks()
@@ -25,8 +26,6 @@ const AlbumsScreen = () => {
 	}, [albums, playlist, search])
 
 	const handleAlbumsPress = (playlist: Playlist, type: string) => {
-		console.log('type', type)
-
 		router.push(`/(tabs)/collections/${playlist.name}::${type}`)
 	}
 

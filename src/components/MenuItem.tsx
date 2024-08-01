@@ -1,17 +1,24 @@
 import { colors } from '@/constants/tokens'
 import { menu } from '@/helpers/types'
+import { useLanguageStore } from '@/store/language'
 import { defaultStyles } from '@/styles'
 import { AntDesign } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
 import { StyleSheet, Text, TouchableHighlight, TouchableHighlightProps, View } from 'react-native'
+import { languageMap } from '../locales/languageMap'
 
 type MenuItemProps = {
 	menu: menu
 } & TouchableHighlightProps
 
 export const MenuItem = ({ menu, ...props }: MenuItemProps) => {
+	const { t, i18n } = useTranslation()
+
+	const { language } = useLanguageStore((state) => state)
+
 	return (
 		<TouchableHighlight activeOpacity={0.8} {...props}>
-			<View style={styles.playlistItemContainer}>
+			<View style={styles.menuItemContainer}>
 				<View
 					style={{
 						flexDirection: 'row',
@@ -29,8 +36,11 @@ export const MenuItem = ({ menu, ...props }: MenuItemProps) => {
 						}}
 					>
 						{menu.icon}
-						<Text numberOfLines={1} style={styles.playlistNameText}>
+						<Text numberOfLines={1} style={styles.menuNameText}>
 							{menu.title}
+						</Text>
+						<Text style={styles.languageContent}>
+							{menu.id === 'language' && languageMap[language]}
 						</Text>
 					</View>
 					<View>
@@ -43,20 +53,28 @@ export const MenuItem = ({ menu, ...props }: MenuItemProps) => {
 }
 
 const styles = StyleSheet.create({
-	playlistItemContainer: {
+	menuItemContainer: {
 		flexDirection: 'row',
 		columnGap: 14,
 		alignItems: 'center',
 		justifyContent: 'flex-start',
 		paddingRight: 20,
 	},
-	playlistArtworkImage: {
+	menuArtworkImage: {
 		borderRadius: 8,
 		width: 70,
 		height: 70,
 	},
-	playlistNameText: {
+	languageContent: {
+		right: 20,
+		position: 'absolute',
+		fontSize: 17,
+		fontWeight: '600',
+		color: 'white',
+	},
+	menuNameText: {
 		...defaultStyles.text,
+
 		paddingLeft: 16,
 		fontSize: 17,
 		fontWeight: '600',

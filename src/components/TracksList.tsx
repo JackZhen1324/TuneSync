@@ -1,14 +1,13 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
-import { debounce } from '@/helpers/debounce'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
 import { useCallback } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TrackPlayer, { Event, Track, useTrackPlayerEvents } from 'react-native-track-player'
+import TrackPlayer, { Track } from 'react-native-track-player'
 import { QueueControls } from './QueueControls'
 export type TracksListProps = Partial<FlatListProps<Track>> & {
 	id: string
@@ -32,16 +31,6 @@ export const TracksList = ({
 		useQueueStore((state) => state)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
 
-	useTrackPlayerEvents(
-		[Event.PlaybackState],
-		debounce(async (event: { state: string }) => {
-			if (event.state === 'playing') {
-				const track = await TrackPlayer.getActiveTrack()
-				const activeIndex = await TrackPlayer.getActiveTrackIndex()
-				setActiveTrack(track, activeIndex)
-			}
-		}, 10),
-	)
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
 			setActiveTrack(selectedTrack)

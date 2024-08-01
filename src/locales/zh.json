@@ -1,0 +1,74 @@
+{
+	"routes": {
+		"favorites": "喜欢的歌曲",
+		"collections": "合集",
+		"songs": "歌曲",
+		"artists": "歌手",
+		"setting": "设置"
+	},
+	"favorites": {
+		"header": "喜欢的歌曲",
+		"search": "在喜欢的歌曲中查找"
+	},
+	"collections": {
+		"header": "合集",
+		"search": "在合集中查找",
+		"addPLaylsit": "添加播放列表"
+	},
+	"songs": {
+		"header": "歌曲",
+		"search": "在歌曲中查找"
+	},
+	"artists": {
+		"header": "歌手",
+		"search": "在歌手中查找"
+	},
+	"setting": {
+		"header": "设置",
+		"addSource": "添加数据源",
+		"local": "本地",
+		"localResource": "本地资源",
+		"remoteResource": "远程资源",
+		"webdavResource": "Webdav资源",
+		"addedResource": "已添加的资源",
+		"folder": "文件夹",
+		"about": "关于",
+		"language": "语言"
+	},
+	"webdavAdd": {
+		"configName": "资源名称",
+		"location": "资源位置(域名 或 ip)",
+		"username": "用户名",
+		"password": "密码",
+		"saveBtn": "保存",
+		"deleteBtn": "删除"
+	},
+	"about": {
+		"version": "当前版本",
+		"checkUpdate": "检查更新",
+		"report": "反馈问题",
+		"website": "官网",
+		"privacy": "隐私声明"
+	},
+	"player": {
+		"tabs": {
+			"song": "歌曲",
+			"lyric": "歌词"
+		},
+		"playlist": {
+			"header": "播放列表"
+		}
+	},
+	"playlistAdd": {
+		"header": "添加播放列表",
+		"title": "播放列表标题",
+		"save": "创建"
+	},
+	"global": {
+		"refreshLib": "刷新资料库",
+		"addTofavorite": "添加到我喜欢的",
+		"deleteFromfavorite": "从我喜欢的里删除",
+		"addToPlayList": "添加到播放列表",
+		"deleteFromPlayList": "从播放列表里删除"
+	}
+}

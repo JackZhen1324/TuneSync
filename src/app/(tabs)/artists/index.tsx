@@ -6,17 +6,18 @@ import { useArtists, useTracks } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { Link } from 'expo-router'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-
 const ItemSeparatorComponent = () => {
 	return <View style={[utilsStyles.itemSeparator, { marginLeft: 50, marginVertical: 12 }]} />
 }
 
 const ArtistsScreen = () => {
+	const { t } = useTranslation()
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in artists',
+			placeholder: t('artists.search'),
 		},
 	})
 	const { tracks } = useTracks()

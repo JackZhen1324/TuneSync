@@ -16,6 +16,13 @@ import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useMemo, useState } from 'react'
+
+import {
+	showRoutePicker,
+	useAirplayConnectivity,
+	useAvAudioSessionRoutes,
+	useExternalPlaybackAvailability,
+} from 'react-airplay'
 import {
 	ActivityIndicator,
 	Dimensions,
@@ -41,6 +48,11 @@ import {
 import { Event, Scene } from 'react-native-tab-view/lib/typescript/src/types'
 
 const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
+	const isAirplayConnected = useAirplayConnectivity()
+	const isExternalPlaybackAvailable = useExternalPlaybackAvailability()
+	const routes = useAvAudioSessionRoutes()
+	console.log('routes222', routes)
+
 	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
 	const isFavorite = useMemo(() => {
 		if (activeTrack) {
@@ -123,18 +135,30 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 				<PlayerVolumeBar style={{ marginTop: 'auto', marginBottom: 30 }} />
 
 				<View style={utilsStyles.centeredRow}>
-					<MaterialIcons
-						onPress={() => {
-							setIndex(1)
-						}}
-						style={{ marginBottom: 6, flex: 1 }}
-						name="lyrics"
-						size={24}
-						color="white"
-					/>
-					<PlayerRepeatToggle size={30} style={{ marginBottom: 6, flex: 1, textAlign: 'center' }} />
+					<PlayerRepeatToggle size={30} style={{ marginBottom: 6, flex: 1 }} />
+					{isExternalPlaybackAvailable && (
+						<MaterialIcons
+							onPress={() => showRoutePicker({ prioritizesVideoDevices: true })}
+							style={{ marginBottom: 6, flex: 1, textAlign: 'center' }}
+							name="airplay"
+							size={24}
+							color={isAirplayConnected ? colors.primary : 'white'}
+						/>
+					)}
 					<PlaylistToggle isPlaylistEnable={false} onPress={togglePlaylist} />
 				</View>
+				{isAirplayConnected && (
+					<View style={styles.footer}>
+						<Text>
+							{routes.length && (
+								<Text style={styles.footer.content}>
+									iPhone{` -> `}
+									{routes.map((route) => route.portName).join(', ')}
+								</Text>
+							)}
+						</Text>
+					</View>
+				)}
 			</View>
 		</View>
 	)
@@ -159,7 +183,7 @@ const PlayerScreen = () => {
 	// const panelRef = useRef(null)
 	const [panelRef, render] = useModalView({
 		content: () => {
-			return <PlaylistsList></PlaylistsList>
+			return <PlaylistsList />
 		},
 	})
 	useEffect(() => {
@@ -260,12 +284,6 @@ const PlayerScreen = () => {
 			labelStyle={{ color: 'white' }}
 		/>
 	)
-
-	const logo = {
-		uri: 'https://reactnative.dev/img/tiny_logo.png',
-		width: 64,
-		height: 64,
-	}
 
 	return (
 		<LinearGradient
@@ -388,6 +406,14 @@ const styles = StyleSheet.create({
 	closeButtonText: {
 		color: 'white',
 		fontSize: 16,
+	},
+	footer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+
+		content: {
+			color: colors.text,
+		},
 	},
 })
 

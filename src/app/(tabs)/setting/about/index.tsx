@@ -1,9 +1,10 @@
 import logo from '@/assets/icon.png'
 import { router } from 'expo-router'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-
 const AboutPage = () => {
+	const { t } = useTranslation()
 	const handlePress = (menu) => {
 		switch (menu) {
 			case 'privacy':
@@ -21,21 +22,21 @@ const AboutPage = () => {
 				<Text style={styles.subtitle}>Sync everything</Text>
 
 				<View style={styles.option}>
-					<Text style={styles.optionText}>当前版本</Text>
+					<Text style={styles.optionText}>{t('about.version')}</Text>
 					<Text style={styles.optionValue}>0.1.0</Text>
 				</View>
 				<TouchableOpacity style={styles.option}>
-					<Text style={styles.optionText}>检查更新</Text>
+					<Text style={styles.optionText}>{t('about.checkUpdate')}</Text>
 					<Text style={styles.optionValue}>已是最新版本 </Text>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.option}>
-					<Text style={styles.optionText}>反馈与建议</Text>
+					<Text style={styles.optionText}>{t('about.report')}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.option}>
-					<Text style={styles.optionText}>官网</Text>
+					<Text style={styles.optionText}>{t('about.website')}</Text>
 				</TouchableOpacity>
 				<TouchableOpacity onPress={() => handlePress('privacy')} style={styles.option}>
-					<Text style={styles.optionText}>隐私声明</Text>
+					<Text style={styles.optionText}>{t('about.privacy')}</Text>
 				</TouchableOpacity>
 			</View>
 		</ScrollView>

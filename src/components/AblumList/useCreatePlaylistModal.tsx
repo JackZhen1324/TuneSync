@@ -3,10 +3,11 @@ import { colors } from '@/constants/tokens'
 import { usePlaylists } from '@/store/library'
 import { AntDesign } from '@expo/vector-icons'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
-
 export default ({ onClose, setSubmitDisable }) => {
+	const { t } = useTranslation()
 	const [playlistName, setPlaylistName] = useState('')
 	const [iconUri, setIconUri] = useState('')
 	const { playlist, setPlaylist } = usePlaylists((state) => state)
@@ -35,8 +36,6 @@ export default ({ onClose, setSubmitDisable }) => {
 	}
 	const handleSubmit = () => {
 		// Handle form submission logic here
-		console.log('Playlist Name:', playlistName)
-		console.log('Selected Icon URI:', iconUri)
 
 		try {
 			const curentItem = {
@@ -45,7 +44,6 @@ export default ({ onClose, setSubmitDisable }) => {
 				tracks: [],
 				artworkPreview: iconUri || unknownTrackImageUri,
 			}
-			console.log('curentItem', curentItem)
 
 			setPlaylist([...playlist, curentItem])
 			handleReset()
@@ -57,16 +55,6 @@ export default ({ onClose, setSubmitDisable }) => {
 	const render = () => {
 		return (
 			<View style={styles.modalContent}>
-				{/* <View style={styles.header}>
-					<TouchableOpacity onPress={onClose}>
-						<Text style={styles.cancelButton}>取消</Text>
-					</TouchableOpacity>
-					<Text style={styles.modalTitle}>新建播放列表</Text>
-					<TouchableOpacity onPress={handleSubmit}>
-						<Text style={styles.createButton}>创建</Text>
-					</TouchableOpacity>
-				</View> */}
-
 				<TouchableOpacity onPress={selectIcon} style={styles.iconPicker}>
 					{iconUri ? (
 						<Image source={{ uri: iconUri }} style={styles.iconPreview} />
@@ -79,7 +67,7 @@ export default ({ onClose, setSubmitDisable }) => {
 
 				<TextInput
 					style={styles.input}
-					placeholder="播放列表标题"
+					placeholder={t('playlistAdd.title')}
 					placeholderTextColor="#888"
 					value={playlistName}
 					onChangeText={handleChange}

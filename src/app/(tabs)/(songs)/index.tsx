@@ -7,13 +7,15 @@ import { useActiveTrack, useLibraryStore } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 let init = 0
 const SongsScreen = () => {
+	const { t } = useTranslation()
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in songs',
+			placeholder: t('songs.search'),
 		},
 	})
 

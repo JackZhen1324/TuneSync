@@ -2,9 +2,10 @@ import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
 import { Stack } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-
 const PlaylistsScreenLayout = () => {
+	const { t } = useTranslation()
 	return (
 		<View style={defaultStyles.container}>
 			<Stack>
@@ -12,7 +13,7 @@ const PlaylistsScreenLayout = () => {
 					name="index"
 					options={{
 						...StackScreenWithSearchBar,
-						headerTitle: 'Setting',
+						headerTitle: t('routes.setting'),
 					}}
 				/>
 
@@ -63,7 +64,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/index"
 					options={{
-						headerTitle: '文件夹',
+						headerTitle: t('setting.folder'),
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,
@@ -74,7 +75,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/[nest]"
 					options={{
-						headerTitle: '文件夹',
+						headerTitle: t('setting.folder'),
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,
@@ -85,7 +86,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/local/[nest]"
 					options={{
-						headerTitle: '文件夹',
+						headerTitle: t('setting.folder'),
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,
@@ -96,7 +97,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/webdav/[nest]"
 					options={{
-						headerTitle: '文件夹',
+						headerTitle: t('setting.folder'),
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,

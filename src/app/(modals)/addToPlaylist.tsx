@@ -6,7 +6,6 @@ import { StyleSheet, View } from 'react-native'
 const AddToPlaylistModal = () => {
 	const router = useGlobalSearchParams()
 	const targetTrack = router.trackUrl
-	console.log('router', router.trackUrl)
 
 	return (
 		<View style={[styles.modalContainer, { paddingTop: 0 }]}>

@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
 import React, { ReactNode, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 type useModalView = {
@@ -10,13 +11,14 @@ type useModalView = {
 	allowDragging: boolean
 }
 const useModalView = (props: useModalView) => {
-	const { content, headerLeft, headerRight, ...res } = props
+	const { content, headerLeft, headerRight, allowDragging = false, ...res } = props
 	// const [modalVisible, setModalVisible] = useState(false)
 	const panelRef = useRef(null)
+	const { t } = useTranslation()
 	const render = () => {
 		return (
 			<SlidingUpPanel
-				allowDragging={false}
+				allowDragging={allowDragging}
 				ref={panelRef}
 				draggableRange={{ top: Dimensions.get('window').height * 0.7, bottom: 0 }}
 				backdropOpacity={0.5}
@@ -39,7 +41,9 @@ const useModalView = (props: useModalView) => {
 							alignContent: 'center',
 						}}
 					>
-						<Text style={styles.panelTitle}>{headerLeft ? headerLeft : '播放列表'}</Text>
+						<Text style={styles.panelTitle}>
+							{headerLeft ? headerLeft : t('player.playlist.header')}
+						</Text>
 						{/* Add your playlist component here */}
 						{headerRight ? (
 							headerRight()

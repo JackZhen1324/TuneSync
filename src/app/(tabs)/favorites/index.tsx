@@ -5,12 +5,13 @@ import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { useFavorateStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-
 const FavoritesScreen = () => {
+	const { t } = useTranslation()
 	const search = useNavigationSearch({
 		searchBarOptions: {
-			placeholder: 'Find in songs',
+			placeholder: t('favorites.search'),
 		},
 	})
 

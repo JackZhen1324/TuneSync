@@ -4,11 +4,13 @@ import { colors, screenPadding } from '@/constants/tokens'
 import { playlistNameFilter } from '@/helpers/filter'
 import useModalView from '@/hooks/useModalView'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
+import { usePlaylists } from '@/store/library'
 import { utilsStyles } from '@/styles'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import FastImage from 'react-native-fast-image'
-
 import { AblumListItem } from './AblumListItem'
 import useCreatePlaylistModal from './useCreatePlaylistModal'
 
@@ -31,7 +33,10 @@ export const AlbumsList = ({
 			placeholder: 'Find in Albums',
 		},
 	})
+	const { t } = useTranslation()
+	const { removePlayList } = usePlaylists((state) => state)
 	const [isSubmitDisable, setSubmitDisable] = useState(true)
+
 	const [handleSubmit, renderCreatePlaylist] = useCreatePlaylistModal({
 		setSubmitDisable,
 		onClose: () => {
@@ -40,22 +45,25 @@ export const AlbumsList = ({
 	})
 	const [panelRef, render] = useModalView({
 		content: renderCreatePlaylist,
-		headerLeft: '新建播放列表',
+		headerLeft: t('playlistAdd.header'),
 		headerRight: () => (
 			<TouchableOpacity onPress={handleSubmit} disabled={isSubmitDisable}>
-				<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>创建</Text>
+				<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
+					{t('playlistAdd.save')}
+				</Text>
 			</TouchableOpacity>
 		),
 		allowDragging: true,
 	})
 	const addItem = () => {
 		return {
-			name: 'add playlist',
+			name: t('collections.addPLaylsit'),
 			tracks: [],
 			type: 'add',
 			artworkPreview: unknownTrackImageUri,
 		}
 	}
+
 	const filteredAlbums = useMemo(() => {
 		return [addItem(), ...albums.filter(playlistNameFilter(search))]
 	}, [albums, search])
@@ -80,19 +88,45 @@ export const AlbumsList = ({
 					</View>
 				}
 				data={filteredAlbums}
-				renderItem={({ item: playlist }) => (
-					<AblumListItem
-						playlist={playlist}
-						onPress={() => {
-							const type = playlist.type
-							if (type === 'add') {
-								panelRef.current.show()
-							} else {
-								handleAlbumPress(playlist, type)
-							}
-						}}
-					/>
-				)}
+				renderItem={({ item: playlist }) => {
+					if (playlist.type === 'playlist') {
+						return (
+							<ContextMenu
+								actions={[{ title: '删除', systemIcon: 'trash' }]}
+								onPress={(e) => {
+									if (e.nativeEvent.name === '删除') {
+										removePlayList(playlist.name)
+									}
+								}}
+							>
+								<AblumListItem
+									playlist={playlist}
+									onPress={() => {
+										const type = playlist.type
+										if (type === 'add') {
+											panelRef.current.show()
+										} else {
+											handleAlbumPress(playlist, type)
+										}
+									}}
+								/>
+							</ContextMenu>
+						)
+					}
+					return (
+						<AblumListItem
+							playlist={playlist}
+							onPress={() => {
+								const type = playlist.type
+								if (type === 'add') {
+									panelRef.current.show()
+								} else {
+									handleAlbumPress(playlist, type)
+								}
+							}}
+						/>
+					)
+				}}
 				{...flatListProps}
 			/>
 			{render()}

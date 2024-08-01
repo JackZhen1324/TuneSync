@@ -1,28 +1,40 @@
 import { playbackService } from '@/constants/playbackService'
 import { colors } from '@/constants/tokens'
+import { debounce } from '@/helpers/debounce'
 import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState'
 import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer'
 import { getAccessToken } from '@/service/auth'
-import { useSpotofyAuthToken } from '@/store/library'
+import { useActiveTrack, useSpotofyAuthToken } from '@/store/library'
 import { useRequest } from 'ahooks'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import 'intl-pluralrules'
 import { useCallback, useEffect } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { Event, useTrackPlayerEvents } from 'react-native-track-player'
+import i18n from '../locales/i18n'
 
 SplashScreen.preventAutoHideAsync()
 
 TrackPlayer.registerPlaybackService(() => playbackService)
 
 const App = () => {
+	const { setActiveTrack } = useActiveTrack((state) => state)
+
 	const handleTrackPlayerLoaded = useCallback(() => {
 		SplashScreen.hideAsync()
 	}, [])
 	useSetupTrackPlayer({
 		onLoad: handleTrackPlayerLoaded,
 	})
+
+	const changeLanguage = (lang) => {
+		i18n.changeLanguage(lang)
+	}
+	useEffect(() => {
+		changeLanguage('zh')
+	}, [])
 	const { setToken } = useSpotofyAuthToken()
 	const { runAsync } = useRequest(getAccessToken, {
 		pollingInterval: 3000,
@@ -34,7 +46,16 @@ const App = () => {
 	}, [])
 
 	useLogTrackPlayerState()
-
+	useTrackPlayerEvents(
+		[Event.PlaybackState, Event.PlaybackTrackChanged],
+		debounce(async (event: { state: string }) => {
+			if (event.state === 'playing') {
+				const track = await TrackPlayer.getActiveTrack()
+				const activeIndex = await TrackPlayer.getActiveTrackIndex()
+				setActiveTrack(track, activeIndex)
+			}
+		}, 10),
+	)
 	return (
 		<SafeAreaProvider>
 			<GestureHandlerRootView style={{ flex: 1 }}>

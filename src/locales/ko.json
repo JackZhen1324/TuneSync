@@ -1,0 +1,74 @@
+{
+	"routes": {
+		"favorites": "즐겨찾기",
+		"collections": "컬렉션",
+		"songs": "노래",
+		"artists": "아티스트",
+		"setting": "설정"
+	},
+	"favorites": {
+		"header": "즐겨찾는 노래",
+		"search": "즐겨찾는 노래에서 검색"
+	},
+	"collections": {
+		"header": "컬렉션",
+		"search": "컬렉션에서 검색",
+		"addPLaylsit": "재생목록 추가"
+	},
+	"songs": {
+		"header": "노래",
+		"search": "노래에서 검색"
+	},
+	"artists": {
+		"header": "아티스트",
+		"search": "아티스트에서 검색"
+	},
+	"setting": {
+		"header": "설정",
+		"addSource": "소스 추가",
+		"local": "로컬",
+		"localResource": "로컬 리소스",
+		"remoteResource": "원격 리소스",
+		"webdavResource": "WebDAV 리소스",
+		"addedResource": "추가된 리소스",
+		"folder": "폴더",
+		"about": "정보",
+		"language": "Language"
+	},
+	"webdavAdd": {
+		"configName": "리소스 이름",
+		"location": "리소스 위치 (도메인 또는 IP)",
+		"username": "사용자 이름",
+		"password": "비밀번호",
+		"saveBtn": "저장",
+		"deleteBtn": "삭제"
+	},
+	"about": {
+		"version": "현재 버전",
+		"checkUpdate": "업데이트 확인",
+		"report": "문제 보고",
+		"website": "공식 웹사이트",
+		"privacy": "개인정보 보호정책"
+	},
+	"player": {
+		"tabs": {
+			"song": "노래",
+			"lyric": "가사"
+		},
+		"playlist": {
+			"header": "재생목록"
+		}
+	},
+	"playlistAdd": {
+		"header": "재생목록 추가",
+		"title": "재생목록 제목",
+		"save": "생성"
+	},
+	"global": {
+		"refreshLib": "라이브러리 새로고침",
+		"addTofavorite": "즐겨찾기에 추가",
+		"deleteFromfavorite": "즐겨찾기에서 삭제",
+		"addToPlayList": "재생목록에 추가",
+		"deleteFromPlayList": "재생목록에서 삭제"
+	}
+}

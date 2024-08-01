@@ -1,9 +1,10 @@
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { defaultStyles } from '@/styles'
 import { Stack } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-
 const FavoritesScreenLayout = () => {
+	const { t } = useTranslation()
 	return (
 		<View style={defaultStyles.container}>
 			<Stack>
@@ -11,7 +12,7 @@ const FavoritesScreenLayout = () => {
 					name="index"
 					options={{
 						...StackScreenWithSearchBar,
-						headerTitle: 'Favorites',
+						headerTitle: t('routes.favorites'),
 					}}
 				/>
 			</Stack>

@@ -1,4 +1,5 @@
 import { colors } from '@/constants/tokens'
+import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { Ionicons } from '@expo/vector-icons'
 import { StyleSheet, Text, View, ViewProps } from 'react-native'
@@ -10,14 +11,17 @@ type QueueControlsProps = {
 } & ViewProps
 
 export const QueueControls = ({ tracks, style, ...viewProps }: QueueControlsProps) => {
+	const { activeQueueId, queueListWithContent, setQueueListContent, setActiveQueueId } =
+		useQueueStore((state) => state)
 	const handlePlay = async () => {
 		await TrackPlayer.setQueue(tracks)
+		setQueueListContent(tracks, activeQueueId, queueListWithContent)
 		await TrackPlayer.play()
 	}
 
 	const handleShufflePlay = async () => {
 		const shuffledTracks = [...tracks].sort(() => Math.random() - 0.5)
-
+		setQueueListContent(shuffledTracks, activeQueueId, queueListWithContent)
 		await TrackPlayer.setQueue(shuffledTracks)
 		await TrackPlayer.play()
 	}

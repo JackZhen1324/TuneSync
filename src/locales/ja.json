@@ -1,0 +1,74 @@
+{
+	"routes": {
+		"favorites": "お気に入り",
+		"collections": "コレクション",
+		"songs": "曲",
+		"artists": "アーティスト",
+		"setting": "設定"
+	},
+	"favorites": {
+		"header": "お気に入りの曲",
+		"search": "お気に入りの曲を検索"
+	},
+	"collections": {
+		"header": "コレクション",
+		"search": "コレクションを検索",
+		"addPLaylsit": "プレイリストを追加"
+	},
+	"songs": {
+		"header": "曲",
+		"search": "曲を検索"
+	},
+	"artists": {
+		"header": "アーティスト",
+		"search": "アーティストを検索"
+	},
+	"setting": {
+		"header": "設定",
+		"addSource": "ソースを追加",
+		"local": "ローカル",
+		"localResource": "ローカルリソース",
+		"remoteResource": "リモートリソース",
+		"webdavResource": "WebDAVリソース",
+		"addedResource": "追加されたリソース",
+		"folder": "フォルダ",
+		"about": "情報",
+		"language": "Language"
+	},
+	"webdavAdd": {
+		"configName": "リソース名",
+		"location": "リソースの場所（ドメインまたはIP）",
+		"username": "ユーザー名",
+		"password": "パスワード",
+		"saveBtn": "保存",
+		"deleteBtn": "削除"
+	},
+	"about": {
+		"version": "現在のバージョン",
+		"checkUpdate": "更新を確認",
+		"report": "問題を報告",
+		"website": "公式ウェブサイト",
+		"privacy": "プライバシーポリシー"
+	},
+	"player": {
+		"tabs": {
+			"song": "曲",
+			"lyric": "歌詞"
+		},
+		"playlist": {
+			"header": "プレイリスト"
+		}
+	},
+	"playlistAdd": {
+		"header": "プレイリストを追加",
+		"title": "プレイリストのタイトル",
+		"save": "作成"
+	},
+	"global": {
+		"refreshLib": "ライブラリを更新",
+		"addTofavorite": "お気に入りに追加",
+		"deleteFromfavorite": "お気に入りから削除",
+		"addToPlayList": "プレイリストに追加",
+		"deleteFromPlayList": "プレイリストから削除"
+	}
+}

@@ -8,7 +8,7 @@ const PlaylistScreen = () => {
 	const { name } = useLocalSearchParams<{ name: string }>()
 
 	const [albumName, type] = name.split('::')
-	console.log('albumName', name)
+
 	const { tracks } = useTracks()
 
 	const { albums } = useAlbums(tracks)

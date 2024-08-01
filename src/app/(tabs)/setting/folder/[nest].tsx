@@ -27,9 +27,7 @@ const FolderNest = memo(() => {
 	}, [path, runAsync])
 
 	const onDirPress = useCallback((item: { filename: any; type: any }) => {
-		console.log('222item', item)
 		const { filename, type, from } = item
-		console.log('222item', item)
 
 		if (from === 'local' && from.isDirectory) {
 			router.push({

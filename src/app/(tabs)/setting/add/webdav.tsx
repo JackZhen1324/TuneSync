@@ -3,6 +3,7 @@ import useThemeColor from '@/hooks/useThemeColor'
 import { useDatasourceConfig, useIndexStore } from '@/store/library'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Alert, ScrollView, StyleSheet } from 'react-native'
 import {
 	Button,
@@ -15,6 +16,7 @@ import {
 PaperDarkTheme.colors.primary = colors.primary
 PaperDarkTheme.colors.background = 'black'
 const ConfigScreen = () => {
+	const { t } = useTranslation()
 	const [configName, setConfigName] = useState('my webdav')
 	const [protocol, setProtocol] = useState('webdav')
 	const [location, setlocation] = useState('https://')
@@ -129,7 +131,7 @@ const ConfigScreen = () => {
 				<Text style={[styles.title, { color: theme.colors.text }]}>WebDAV</Text>
 				<TextInput
 					autoCapitalize="none"
-					label="Config Name"
+					label={t('webdavAdd.configName')}
 					value={configName}
 					onChangeText={setConfigName}
 					mode="flat"
@@ -138,7 +140,7 @@ const ConfigScreen = () => {
 				/>
 				<TextInput
 					autoCapitalize="none"
-					label="location"
+					label={t('webdavAdd.location')}
 					value={location}
 					onChangeText={setlocation}
 					mode="flat"
@@ -149,7 +151,7 @@ const ConfigScreen = () => {
 				{errors.location ? <Text style={styles.errorText}>{errors.location}</Text> : null}
 				<TextInput
 					autoCapitalize="none"
-					label="Username"
+					label={t('webdavAdd.username')}
 					value={username}
 					onChangeText={setUsername}
 					mode="flat"
@@ -160,7 +162,7 @@ const ConfigScreen = () => {
 				{errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
 				<TextInput
 					autoCapitalize="none"
-					label="Password"
+					label={t('webdavAdd.password')}
 					value={password}
 					onChangeText={setPassword}
 					mode="flat"
@@ -179,13 +181,13 @@ const ConfigScreen = () => {
 				{errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 				<TouchableRipple centered={true} rippleColor="rgba(0, 0, 0, .32)">
 					<Button mode="contained" onPress={saveConfig} style={styles.button}>
-						<Text style={{ color: theme.colors.text }}>Save Configuration</Text>
+						<Text style={{ color: theme.colors.text }}>{t('webdavAdd.saveBtn')}</Text>
 					</Button>
 				</TouchableRipple>
 				{selected && (
-					<TouchableRipple centered={true} rippleColor="rgba(0	, 0, 0, .32)">
+					<TouchableRipple centered={true} rippleColor="rgba(0, 0, 0, .32)">
 						<Button mode="contained" onPress={deleteConfig} style={styles.delButton}>
-							<Text style={{ color: colors.errorColor }}>Delete Configuration</Text>
+							<Text style={{ color: colors.errorColor }}>{t('webdavAdd.deleteBtn')}</Text>
 						</Button>
 					</TouchableRipple>
 				)}

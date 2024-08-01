@@ -1,0 +1,74 @@
+{
+	"routes": {
+		"favorites": "Favorites",
+		"collections": "Collections",
+		"songs": "Songs",
+		"artists": "Artists",
+		"setting": "Settings"
+	},
+	"favorites": {
+		"header": "Favorite Songs",
+		"search": "Search in Favorite Songs"
+	},
+	"collections": {
+		"header": "Collections",
+		"search": "Search in Collections",
+		"addPLaylsit": "Add Playlist"
+	},
+	"songs": {
+		"header": "Songs",
+		"search": "Search in Songs"
+	},
+	"artists": {
+		"header": "Artists",
+		"search": "Search in Artists"
+	},
+	"setting": {
+		"header": "Settings",
+		"addSource": "Add Source",
+		"local": "Local",
+		"localResource": "Local Resource",
+		"remoteResource": "Remote Resource",
+		"webdavResource": "WebDAV Resource",
+		"addedResource": "Added Resources",
+		"folder": "Folder",
+		"about": "About",
+		"language": "Language"
+	},
+	"webdavAdd": {
+		"configName": "Resource Name",
+		"location": "Resource Location (Domain or IP)",
+		"username": "Username",
+		"password": "Password",
+		"saveBtn": "Save",
+		"deleteBtn": "Delete"
+	},
+	"about": {
+		"version": "Current Version",
+		"checkUpdate": "Check for Updates",
+		"report": "Report Issue",
+		"website": "Official Website",
+		"privacy": "Privacy Statement"
+	},
+	"player": {
+		"tabs": {
+			"song": "Song",
+			"lyric": "Lyric"
+		},
+		"playlist": {
+			"header": "Playlist"
+		}
+	},
+	"playlistAdd": {
+		"header": "Add Playlist",
+		"title": "Playlist Title",
+		"save": "Create"
+	},
+	"global": {
+		"refreshLib": "Refresh Library",
+		"addTofavorite": "Add to Favorites",
+		"deleteFromfavorite": "Remove from Favorites",
+		"addToPlayList": "Add to Playlist",
+		"deleteFromPlayList": "Remove from Playlist"
+	}
+}

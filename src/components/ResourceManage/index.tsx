@@ -1,17 +1,17 @@
 import davIcon from '@/assets/icons/dav.png'
-import { colors } from '@/constants/tokens'
+import localIcon from '@/assets/icons/local.png'
 import useThemeColor from '@/hooks/useThemeColor'
 import { useCurrentClientStore, useDatasourceConfig, useIndexStore } from '@/store/library'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
-
 import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
-
 import RNFS from 'react-native-fs'
 import { List, TouchableRipple } from 'react-native-paper'
+
 export function getContentAfterFirstDocuments(filePath: string) {
 	const keyword = 'Documents'
 	const keywordIndex = filePath.indexOf(keyword)
@@ -30,6 +30,7 @@ export function getContentAfterFirstDocuments(filePath: string) {
 }
 
 const ResourceManage = () => {
+	const { t } = useTranslation()
 	const [added, setAdded] = useState([] as any)
 	const { client, setClient } = useCurrentClientStore()
 	const isFocused = useIsFocused()
@@ -179,8 +180,6 @@ const ResourceManage = () => {
 	const theme = useThemeColor()
 	const renderAddedResource = () => {
 		return datasourceConfig?.map((el: any) => {
-			const { location } = el
-
 			return (
 				<TouchableRipple
 					key={el.location}
@@ -248,14 +247,7 @@ const ResourceManage = () => {
 						}}
 						left={() => {
 							if (el.protocol === 'file') {
-								return (
-									<MaterialIcons
-										style={{ paddingTop: 3 }}
-										name="phone-iphone"
-										size={26}
-										color={colors.primary}
-									/>
-								)
+								return <List.Icon icon={localIcon} />
 							} else {
 								return <List.Icon icon={davIcon} />
 							}
@@ -269,7 +261,9 @@ const ResourceManage = () => {
 	return (
 		<SafeAreaView style={styles.container}>
 			<List.Section theme={theme}>
-				<List.Subheader theme={theme}>Local resource</List.Subheader>
+				<List.Subheader theme={theme}>
+					{t('setting.localResource') || 'Local resource'}
+				</List.Subheader>
 				<TouchableRipple borderless style={{ borderRadius: 4 }} rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
@@ -281,7 +275,9 @@ const ResourceManage = () => {
 						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				<List.Subheader theme={theme}>Remote resource</List.Subheader>
+				<List.Subheader theme={theme}>
+					{t('setting.remoteResource') || 'Remote resource'}
+				</List.Subheader>
 				<TouchableRipple style={{ borderRadius: 4 }} borderless rippleColor="rgba(0, 0, 0, .32)">
 					<List.Item
 						onPressOut={() => {
@@ -289,11 +285,13 @@ const ResourceManage = () => {
 						}}
 						style={styles.itemSolo}
 						theme={theme}
-						title="Webdav resource"
+						title={t('setting.webdavResource') || 'Webdav resource'}
 						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				{added?.length > 0 && <List.Subheader theme={theme}>Added resource</List.Subheader>}
+				{added?.length > 0 && (
+					<List.Subheader theme={theme}>{t('setting.addedResource')}</List.Subheader>
+				)}
 				{renderAddedResource()}
 			</List.Section>
 		</SafeAreaView>

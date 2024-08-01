@@ -3,6 +3,7 @@ import { useQueueStore } from '@/store/queue'
 import { MenuView } from '@react-native-menu/menu'
 import { useRouter } from 'expo-router'
 import { PropsWithChildren, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import TrackPlayer, { Track } from 'react-native-track-player'
 import { match } from 'ts-pattern'
 
@@ -10,7 +11,7 @@ type TrackShortcutsMenuProps = PropsWithChildren<{ track: Track; from?: string }
 
 export const TrackShortcutsMenu = ({ track, children, from }: TrackShortcutsMenuProps) => {
 	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
-
+	const { t } = useTranslation()
 	const router = useRouter()
 	const { playlist, setPlaylist } = usePlaylists()
 	const isFromPlaylist = useMemo(() => {
@@ -79,29 +80,29 @@ export const TrackShortcutsMenu = ({ track, children, from }: TrackShortcutsMenu
 					? [
 							{
 								id: isFavorite ? 'remove-from-favorites' : 'add-to-favorites',
-								title: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+								title: isFavorite ? t('global.deleteFromfavorite') : t('global.addTofavorite'),
 								image: isFavorite ? 'star.fill' : 'star',
 							},
 							{
 								id: 'add-to-playlist',
-								title: 'Add to playlist',
+								title: t('global.addToPlayList'),
 								image: 'plus',
 							},
 							{
 								id: 'remove-from-playlist',
-								title: 'Remove from playlist',
+								title: t('global.deleteFromPlayList'),
 								image: 'trash',
 							},
 						]
 					: [
 							{
 								id: isFavorite ? 'remove-from-favorites' : 'add-to-favorites',
-								title: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+								title: isFavorite ? t('global.deleteFromfavorite') : t('global.addTofavorite'),
 								image: isFavorite ? 'star.fill' : 'star',
 							},
 							{
 								id: 'add-to-playlist',
-								title: 'Add to playlist',
+								title: t('global.addToPlayList'),
 								image: 'plus',
 							},
 						]

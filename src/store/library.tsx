@@ -2,8 +2,10 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { debounce } from '@/helpers/debounce'
 import { Artist, TrackWithPlaylist } from '@/helpers/types'
-import { SimpleLineIcons } from '@expo/vector-icons'
+import { MaterialIcons, SimpleLineIcons } from '@expo/vector-icons'
 import AntDesign from '@expo/vector-icons/AntDesign'
+import { uniqBy } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
@@ -261,9 +263,14 @@ export const usePlaylists = create<any>()(
 		(set) => {
 			return {
 				playlist: [],
+				removePlayList: (name: string) => {
+					set((state: { playlist: any[] }) => ({
+						playlist: state.playlist.filter((item: { name: string }) => item.name !== name),
+					}))
+				},
 				setPlaylist: (playlist: any[]) => {
 					set({
-						playlist: playlist,
+						playlist: uniqBy(playlist, 'name'),
 					})
 				},
 			}
@@ -312,22 +319,27 @@ export const useAlbums = (tracks: any[]) => {
 	return { albums, addToPlaylist }
 }
 export const useSetting = () => {
+	const { t } = useTranslation()
 	return [
 		{
-			title: 'Add source',
+			title: t('setting.addSource'),
+			id: 'add',
 			icon: <AntDesign name="plus" size={24} color="#E76F51" />,
 		},
-		// {
-		// 	title: 'general',
-		// 	icon: <SimpleLineIcons name="settings" size={24} color="#E76F51" />,
-		// },
 		{
-			title: 'Folder',
+			id: 'folder',
+			title: t('setting.folder'),
 			icon: <AntDesign name="folder1" size={24} color="#E76F51" />,
 		},
 		{
-			title: 'About',
+			id: 'about',
+			title: t('setting.about'),
 			icon: <SimpleLineIcons name="info" size={24} color="#E76F51" />,
+		},
+		{
+			id: 'language',
+			title: t('setting.language'),
+			icon: <MaterialIcons name="language" size={24} color="#E76F51" />,
 		},
 	]
 }

@@ -16,10 +16,12 @@ import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
 import { Stack } from 'expo-router'
 import { useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 
 const SongsScreenLayout = () => {
+	const { t } = useTranslation()
 	const { loading, percentage, setLoading, indexingList, setNeedUpdate, needUpdate } =
 		useIndexStore()
 	const { token, setToken } = useSpotofyAuthToken()
@@ -89,7 +91,7 @@ const SongsScreenLayout = () => {
 					options={{
 						...StackScreenWithSearchBar,
 						headerLargeTitle: true,
-						headerTitle: 'Songs',
+						headerTitle: t('songs.header'),
 						headerRight: () => {
 							return (
 								<StopPropagation>
