@@ -36,16 +36,16 @@ TuneSync is currently under early access stage. While some features are operatio
 - [x] Manage audio queue
 - [x] Searching songs from added library
 - [x] Airplay support
-- [ ] Voice searching songs from added library
-- [ ] Karaoke mode
-- [ ] Metadata editing
-- [ ] Custom metadata api
-- [ ] Custom lyrics api
-- [ ] Listen to audio from synology audio station
-- [ ] Listen to audio from Jellyin
-- [ ] Listen to audio from Plex
-- [ ] Listen to audio from Emby
-- [ ] And more...
+- [] Voice searching songs from added library
+- [] Karaoke mode
+- [] Metadata editing
+- [] Custom metadata api
+- [] Custom lyrics api
+- [] Listen to audio from synology audio station
+- [] Listen to audio from Jellyin
+- [] Listen to audio from Plex
+- [] Listen to audio from Emby
+- [] And more...
 
 ## Quick Start
 
