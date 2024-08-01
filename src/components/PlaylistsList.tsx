@@ -23,10 +23,6 @@ export const PlaylistsList = () => {
 
 	const onDelete = useCallback(
 		async (item: { title: any }) => {
-			const targetIndex = queueListWithContent[activeQueueId].findIndex(
-				(track: { title: any }) => track.title === item.title,
-			)
-
 			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
 				(el) => el.title !== item.title,
 			)
@@ -37,32 +33,13 @@ export const PlaylistsList = () => {
 				router.back()
 				return
 			}
-			// await TrackPlayer.remove([targetIndex])
+
 			if (activeTrack === item.title) {
-				setActiveTrack(filteredQueueListWithContent[targetIndex])
-				await TrackPlayer.skip(targetIndex)
+				await TrackPlayer.skipToNext()
 				TrackPlayer.play()
 			} else {
 				setNeedUpdate(true)
 			}
-
-			// Update active track if the deleted item was the active track
-			// if (item.title === activeTrack) {
-			// 	debounce(async () => {
-			// 		const nextTrack =
-			// 			filteredQueueListWithContent[targetIndex] ||
-			// 			filteredQueueListWithContent[targetIndex - 1]
-
-			// 		if (nextTrack) {
-			// 			// setActiveTrack(nextTrack)
-			// 			await TrackPlayer.skip(0)
-			// 			TrackPlayer.play()
-			// 		} else {
-			// 			setActiveTrack(undefined)
-			// 			router.back()
-			// 		}
-			// 	}, 200)
-			// }
 		},
 		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
