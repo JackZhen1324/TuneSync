@@ -1,9 +1,10 @@
 import { unknownTrackImageUri } from '@/constants/images'
+import { debounce } from '@/helpers/debounce'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
 import { router } from 'expo-router'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer from 'react-native-track-player'
@@ -17,6 +18,7 @@ export const PlaylistsList = () => {
 	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
 		(state) => state,
 	)
+	const [needUpdate, setNeedUpdate] = useState(false)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
 
 	const onDelete = useCallback(
@@ -24,30 +26,65 @@ export const PlaylistsList = () => {
 			const targetIndex = queueListWithContent[activeQueueId].findIndex(
 				(track: { title: any }) => track.title === item.title,
 			)
+
 			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
 				(el) => el.title !== item.title,
 			)
-
-			await TrackPlayer.remove([targetIndex])
-
 			setQueueListContent(filteredQueueListWithContent, activeQueueId, queueListWithContent)
+			if (filteredQueueListWithContent.length < 1) {
+				TrackPlayer.reset()
+				setActiveTrack(undefined)
+				router.back()
+				return
+			}
+			// await TrackPlayer.remove([targetIndex])
+			if (activeTrack === item.title) {
+				setActiveTrack(filteredQueueListWithContent[targetIndex])
+				await TrackPlayer.skip(targetIndex)
+				TrackPlayer.play()
+			} else {
+				setNeedUpdate(true)
+			}
 
 			// Update active track if the deleted item was the active track
-			if (item.title === activeTrack) {
-				const nextTrack =
-					filteredQueueListWithContent[targetIndex] || filteredQueueListWithContent[targetIndex - 1]
-				if (nextTrack) {
-					setActiveTrack(nextTrack)
-					await TrackPlayer.skip(targetIndex)
-					await TrackPlayer.play()
-				} else {
-					setActiveTrack(undefined)
-					router.back()
-				}
-			}
+			// if (item.title === activeTrack) {
+			// 	debounce(async () => {
+			// 		const nextTrack =
+			// 			filteredQueueListWithContent[targetIndex] ||
+			// 			filteredQueueListWithContent[targetIndex - 1]
+
+			// 		if (nextTrack) {
+			// 			// setActiveTrack(nextTrack)
+			// 			await TrackPlayer.skip(0)
+			// 			TrackPlayer.play()
+			// 		} else {
+			// 			setActiveTrack(undefined)
+			// 			router.back()
+			// 		}
+			// 	}, 200)
+			// }
 		},
 		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
+	useEffect(() => {
+		const sync = debounce(async () => {
+			const has = queueListWithContent[activeQueueId].map((el) => el.title)
+			const queue = await TrackPlayer.getQueue()
+			const deletePending = queue
+				.map((el, index) => {
+					if (has.includes(el.title)) {
+						return -1
+					}
+					return index
+				})
+				.filter((el) => el > 0)
+			await TrackPlayer.remove(deletePending)
+			setNeedUpdate(false)
+		}, 300)
+		if (needUpdate) {
+			sync()
+		}
+	}, [activeQueueId, queueListWithContent, setActiveTrack, needUpdate])
 
 	const renderItem = useCallback(
 		({ item: track }: any) => {
@@ -57,14 +94,14 @@ export const PlaylistsList = () => {
 					activeSong={activeTrack}
 					key={track.filename}
 					track={track}
-					onTrackSelect={() => {
+					onTrackSelect={debounce(async () => {
 						setActiveTrack(track)
 						const index = queueListWithContent[activeQueueId].findIndex(
 							(el: { title: any }) => el.title === track.title,
 						)
-						TrackPlayer.skip(index)
+						await TrackPlayer.skip(index)
 						TrackPlayer.play()
-					}}
+					}, 100)}
 				/>
 			)
 		},

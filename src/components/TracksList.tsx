@@ -1,10 +1,11 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
+import { debounce } from '@/helpers/debounce'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, { Track } from 'react-native-track-player'
@@ -30,11 +31,10 @@ export const TracksList = ({
 	const { activeQueueId, queueListWithContent, setQueueListContent, setActiveQueueId } =
 		useQueueStore((state) => state)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
-
+	const [needUpdate, setNeedUpdate] = useState(false)
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
 			setActiveTrack(selectedTrack)
-
 			const index = queueListWithContent[activeQueueId].findIndex(
 				(el: { title: string | undefined }) => el.title === selectedTrack.title,
 			)
@@ -43,9 +43,7 @@ export const TracksList = ({
 					(el: { title: string | undefined }) => el.title !== selectedTrack.title,
 				)
 				setQueueListContent([...filteredList, selectedTrack], activeQueueId, queueListWithContent)
-				await TrackPlayer.setQueue([...filteredList, selectedTrack])
-				await TrackPlayer.skip(filteredList.length || 0)
-				TrackPlayer.play()
+				setNeedUpdate(true)
 			} else {
 				await TrackPlayer.skip(index || 0)
 				TrackPlayer.play()
@@ -53,6 +51,18 @@ export const TracksList = ({
 		},
 		[activeQueueId, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
+	useEffect(() => {
+		const sync = debounce(async () => {
+			await TrackPlayer.setQueue(queueListWithContent[activeQueueId])
+			await TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
+
+			TrackPlayer.play()
+			setNeedUpdate(false)
+		}, 500)
+		if (needUpdate) {
+			sync()
+		}
+	}, [queueListWithContent, activeQueueId, needUpdate])
 	const renderItem = useCallback(
 		({ item: track, index }: any) => {
 			return (
