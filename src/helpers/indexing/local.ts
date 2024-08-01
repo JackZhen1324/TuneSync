@@ -75,14 +75,6 @@ export async function indexingLocal(
 	}
 
 	try {
-		// storage.set('musicLibrary', JSON.stringify(total))
-
-		// refresh()
-		// TrackPlayer.reset()
-		setLoading({
-			loading: false,
-			percentage: 100,
-		})
 		return total
 	} catch (error) {
 		// Error saving data

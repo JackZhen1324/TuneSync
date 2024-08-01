@@ -77,7 +77,14 @@ const ConfigScreen = () => {
 		setIndexingList(indexingList.filter((el) => el?.config?.location === config.location))
 		setNeedUpdate(true)
 		router.back()
-	}, [datasourceConfig, selected, setDatasourceConfig])
+	}, [
+		datasourceConfig,
+		indexingList,
+		selected,
+		setDatasourceConfig,
+		setIndexingList,
+		setNeedUpdate,
+	])
 	const saveConfig = async () => {
 		if (!validate()) {
 			return
@@ -109,8 +116,8 @@ const ConfigScreen = () => {
 				}
 
 				setDatasourceConfig(newConfig)
-				// setNeedUpdate(true)
 				router.back()
+				setNeedUpdate(true)
 			} else {
 				Alert.alert('Error', 'config exist!')
 			}

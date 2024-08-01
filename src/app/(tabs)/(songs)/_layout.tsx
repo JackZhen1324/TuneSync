@@ -2,6 +2,7 @@ import { HeaderMemu } from '@/components/headerMenu'
 import { StopPropagation } from '@/components/utils/StopPropagation'
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
+import { debounce } from '@/helpers/debounce'
 import { indexingLocal } from '@/helpers/indexing/local'
 import { indexingWebdav } from '@/helpers/indexing/webdav'
 import useThemeColor from '@/hooks/useThemeColor'
@@ -14,6 +15,7 @@ import {
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
+import { useIsFocused } from '@react-navigation/native'
 import { Stack } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +24,7 @@ import TrackPlayer from 'react-native-track-player'
 
 const SongsScreenLayout = () => {
 	const { t } = useTranslation()
+	const isFocused = useIsFocused()
 	const { loading, percentage, setLoading, indexingList, setNeedUpdate, needUpdate } =
 		useIndexStore()
 	const { token, setToken } = useSpotofyAuthToken()
@@ -58,6 +61,8 @@ const SongsScreenLayout = () => {
 			await TrackPlayer.setQueue(filteredQueue)
 			setNeedUpdate(false)
 		} catch (error) {
+			console.log('error', error)
+
 			setLoading({ loading: false, percentage: 0 })
 			setNeedUpdate(false)
 		}
@@ -74,15 +79,21 @@ const SongsScreenLayout = () => {
 		setTracks,
 		token,
 	])
+	const debouncedRefreshLibrary = useCallback(debounce(refreshLibrary, 300), [refreshLibrary])
 	useEffect(() => {
 		setLoading({ loading: false, percentage: 0 })
 	}, [])
 
 	useEffect(() => {
-		if (needUpdate) {
-			refreshLibrary()
+		if (isFocused && needUpdate) {
+			try {
+				debouncedRefreshLibrary()
+				setNeedUpdate(false)
+			} catch (error) {
+				console.log('error', error)
+			}
 		}
-	}, [needUpdate, refreshLibrary])
+	}, [needUpdate, debouncedRefreshLibrary, isFocused, setNeedUpdate])
 	return (
 		<View style={defaultStyles.container}>
 			<Stack>

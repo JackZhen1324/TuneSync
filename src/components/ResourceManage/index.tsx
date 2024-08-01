@@ -36,7 +36,7 @@ const ResourceManage = () => {
 	const isFocused = useIsFocused()
 	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
 	const { setIndexingList, indexingList } = useIndexStore((state) => state)
-
+	const { setNeedUpdate } = useIndexStore()
 	const pickDirectory = async () => {
 		try {
 			const result = await DocumentPicker.pickDirectory()
@@ -92,8 +92,10 @@ const ResourceManage = () => {
 				})
 
 				setIndexingList([...finalIndxingList, ...indexingList])
+				setNeedUpdate(true)
 			}
 		} catch (err) {
+			setNeedUpdate(false)
 			if (DocumentPicker.isCancel(err)) {
 				console.log('User cancelled the picker')
 			} else {

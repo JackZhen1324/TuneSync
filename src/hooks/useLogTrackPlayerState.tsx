@@ -1,4 +1,4 @@
-import { Event, useTrackPlayerEvents } from 'react-native-track-player'
+import TrackPlayer, { Event, useTrackPlayerEvents } from 'react-native-track-player'
 
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged]
 
@@ -9,6 +9,9 @@ export const useLogTrackPlayerState = () => {
 		}
 
 		if (event.type === Event.PlaybackState) {
+			if (event.state === 'ready') {
+				TrackPlayer.play()
+			}
 			console.log('Playback state: ', event.state)
 		}
 
