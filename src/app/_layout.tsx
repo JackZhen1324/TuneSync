@@ -4,6 +4,7 @@ import { debounce } from '@/helpers/debounce'
 import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState'
 import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer'
 import { getAccessToken } from '@/service/auth'
+import { useLanguageStore } from '@/store/language'
 import { useActiveTrack, useSpotofyAuthToken } from '@/store/library'
 import { useRequest } from 'ahooks'
 import { SplashScreen, Stack } from 'expo-router'
@@ -21,6 +22,7 @@ TrackPlayer.registerPlaybackService(() => playbackService)
 
 const App = () => {
 	const { setActiveTrack } = useActiveTrack((state) => state)
+	const { language } = useLanguageStore()
 
 	const handleTrackPlayerLoaded = useCallback(() => {
 		SplashScreen.hideAsync()
@@ -33,7 +35,7 @@ const App = () => {
 		i18n.changeLanguage(lang)
 	}
 	useEffect(() => {
-		changeLanguage('zh')
+		changeLanguage(language)
 	}, [])
 	const { setToken } = useSpotofyAuthToken()
 	const { runAsync } = useRequest(getAccessToken, {

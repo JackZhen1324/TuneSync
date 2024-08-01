@@ -1,4 +1,5 @@
 // import library from '@/assets/data/library.json'
+import * as RNLocalize from 'react-native-localize'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { storage } from './mkkv'
@@ -12,7 +13,7 @@ export const useLanguageStore = create<languageState>()(
 	persist(
 		(set) => {
 			return {
-				language: 'en',
+				language: RNLocalize.getLocales()[0].languageTag,
 				setLanguage: (lan) => set({ language: lan }),
 			}
 		},
