@@ -1,5 +1,6 @@
 <p align="center">
-  <img style="width:100px; height:100px; border-radius:20%;" class="rounded-image" src="./assets/icon.png" alt="logo" height="150"/>
+<kbd>
+  <img style="width:100px; height:100px; border-radius:20%;" class="rounded-image" src="./assets/icon.png" alt="logo" height="150"/></kbd>
 </p>
 
 <h2 align="center">
