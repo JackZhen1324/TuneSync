@@ -1,14 +1,13 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
-import { debounce } from '@/helpers/debounce'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TrackPlayer, { Track } from 'react-native-track-player'
+import TrackPlayer, { Track, useIsPlaying } from 'react-native-track-player'
 import { QueueControls } from './QueueControls'
 export type TracksListProps = Partial<FlatListProps<Track>> & {
 	id: string
@@ -28,10 +27,11 @@ export const TracksList = ({
 	hideQueueControls = false,
 	...flatlistProps
 }: TracksListProps) => {
-	const { activeQueueId, queueListWithContent, setQueueListContent, setActiveQueueId } =
-		useQueueStore((state) => state)
+	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
+		(state) => state,
+	)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
-	const [needUpdate, setNeedUpdate] = useState(false)
+	const isPLaying = useIsPlaying()
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
 			setActiveTrack(selectedTrack)
@@ -43,39 +43,33 @@ export const TracksList = ({
 					(el: { title: string | undefined }) => el.title !== selectedTrack.title,
 				)
 				setQueueListContent([...filteredList, selectedTrack], activeQueueId, queueListWithContent)
-				setNeedUpdate(true)
+				await TrackPlayer.add([selectedTrack])
+
+				await TrackPlayer.pause()
+				TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
 			} else {
+				await TrackPlayer.pause()
 				await TrackPlayer.skip(index || 0)
 				TrackPlayer.play()
 			}
 		},
 		[activeQueueId, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
-	useEffect(() => {
-		const sync = debounce(async () => {
-			await TrackPlayer.setQueue(queueListWithContent[activeQueueId])
-			await TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
-
-			TrackPlayer.play()
-			setNeedUpdate(false)
-		}, 500)
-		if (needUpdate) {
-			sync()
-		}
-	}, [queueListWithContent, activeQueueId, needUpdate])
 	const renderItem = useCallback(
-		({ item: track, index }: any) => {
+		({ item: track }: any) => {
+			const isActive = track.title === activeTrack
 			return (
 				<TracksListItem
 					from={from}
-					activeTrack={activeTrack}
+					isPLaying={isPLaying.playing}
+					isActive={isActive}
 					key={track?.filename}
 					track={track}
 					onTrackSelect={handleTrackSelect}
 				/>
 			)
 		},
-		[handleTrackSelect, activeTrack, from],
+		[handleTrackSelect, activeTrack, from, isPLaying],
 	)
 
 	return (

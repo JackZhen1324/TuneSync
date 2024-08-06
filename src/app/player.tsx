@@ -51,7 +51,6 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 	const isAirplayConnected = useAirplayConnectivity()
 	const isExternalPlaybackAvailable = useExternalPlaybackAvailability()
 	const routes = useAvAudioSessionRoutes()
-	console.log('routes222', routes)
 
 	const { favorateTracks, addTracks, setFavorateTracks } = useFavorateStore()
 	const isFavorite = useMemo(() => {

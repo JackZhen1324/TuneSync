@@ -26,7 +26,6 @@ export const PlaylistTracksList = ({ playlist, from }: { playlist: Playlist; fro
 		<TracksList
 			from={from}
 			id={generateTracksListId(playlist.name, search)}
-			scrollEnabled={false}
 			hideQueueControls={true}
 			ListHeaderComponentStyle={styles.playlistHeaderContainer}
 			ListHeaderComponent={

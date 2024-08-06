@@ -4,33 +4,33 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
-import { Track, useIsPlaying } from 'react-native-track-player'
+import { Track } from 'react-native-track-player'
 
 export type TracksListItemProps = {
 	from?: string
-	activeTrack: string
+	isPLaying?: boolean
+	isActive: boolean
 	track: Track
 	onTrackSelect: (track: Track) => void
 }
 
 const TracksListItemComponent = ({
 	from,
-	activeTrack,
 	track,
+	isActive,
+	isPLaying,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
-	const isAtive = useMemo(() => {
-		return activeTrack === track?.title
-	}, [activeTrack, track])
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track)
 	}, [handleTrackSelect, track])
-	const { playing } = useIsPlaying()
+
 	if (!track) return null
+
 	return (
 		<TouchableHighlight onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
@@ -42,10 +42,10 @@ const TracksListItemComponent = ({
 						}}
 						style={{
 							...styles.trackArtworkImage,
-							opacity: isAtive ? 0.6 : 1,
+							opacity: isActive ? 0.6 : 1,
 						}}
 					/>
-					{isAtive && playing && (
+					{isActive && isPLaying && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
 							name="LineScaleParty"
@@ -60,7 +60,7 @@ const TracksListItemComponent = ({
 							numberOfLines={1}
 							style={{
 								...styles.trackTitleText,
-								color: isAtive ? colors.primary : colors.text,
+								color: isActive ? colors.primary : colors.text,
 							}}
 						>
 							{track.formatedTitle || track.basename || track.title || track.name}

@@ -3,7 +3,7 @@ import TrackPlayer, { Capability, RatingType, RepeatMode } from 'react-native-tr
 
 const setupPlayer = async () => {
 	await TrackPlayer.setupPlayer({
-		maxCacheSize: 2048 * 10,
+		maxCacheSize: 2048 * 200,
 	})
 
 	await TrackPlayer.updateOptions({
