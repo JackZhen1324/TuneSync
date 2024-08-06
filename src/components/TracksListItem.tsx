@@ -28,9 +28,7 @@ const TracksListItemComponent = ({
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track)
 	}, [handleTrackSelect, track])
-
 	if (!track) return null
-
 	return (
 		<TouchableHighlight onPress={handlePress}>
 			<View style={styles.trackItemContainer}>

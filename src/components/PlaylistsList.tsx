@@ -43,7 +43,6 @@ export const PlaylistsList = () => {
 		},
 		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
-
 	useEffect(() => {
 		const sync = debounce(async () => {
 			const has = queueListWithContent[activeQueueId].map((el) => el.title)

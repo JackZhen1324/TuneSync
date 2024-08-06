@@ -23,7 +23,16 @@ interface IndexState {
 	needUpdate: boolean
 	percentage: number
 	loading: boolean
-	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void
+	current: string
+	setLoading: ({
+		loading,
+		percentage,
+		current,
+	}: {
+		loading: boolean
+		percentage: number
+		current: string
+	}) => void
 }
 export const useLibraryStore = create<LibraryState>()(
 	persist(
@@ -80,6 +89,7 @@ export const useIndexStore = create<IndexState>()(
 	persist(
 		(set) => {
 			return {
+				current: '',
 				needUpdate: false,
 				setNeedUpdate: (needUpdate: any) => set({ needUpdate: needUpdate }),
 				indexingList: [],
@@ -91,10 +101,11 @@ export const useIndexStore = create<IndexState>()(
 				},
 				percentage: 0,
 				setLoading: (props) => {
-					const { loading, percentage } = props
+					const { loading, percentage, current } = props
 					set({
 						loading,
 						percentage,
+						current,
 					})
 				},
 			}

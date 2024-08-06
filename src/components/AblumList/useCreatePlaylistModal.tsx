@@ -4,7 +4,7 @@ import { usePlaylists } from '@/store/library'
 import { AntDesign } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, Keyboard, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
 export default ({ onClose, setSubmitDisable }) => {
 	const { t } = useTranslation()
@@ -33,6 +33,8 @@ export default ({ onClose, setSubmitDisable }) => {
 	}
 	const handleReset = () => {
 		setPlaylistName(''), setIconUri('')
+		setSubmitDisable(true)
+		Keyboard.dismiss()
 	}
 	const handleSubmit = () => {
 		// Handle form submission logic here

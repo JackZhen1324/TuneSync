@@ -46,7 +46,8 @@ export const TracksList = ({
 				await TrackPlayer.add([selectedTrack])
 
 				await TrackPlayer.pause()
-				TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
+				await TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
+				TrackPlayer.play()
 			} else {
 				await TrackPlayer.pause()
 				await TrackPlayer.skip(index || 0)

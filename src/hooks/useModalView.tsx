@@ -21,8 +21,6 @@ const useModalView = (props: useModalView) => {
 				allowDragging={allowDragging}
 				ref={panelRef}
 				draggableRange={{ top: Dimensions.get('window').height * 0.7, bottom: 0 }}
-				backdropOpacity={0.5}
-				friction={1}
 				{...res}
 			>
 				<BlurView

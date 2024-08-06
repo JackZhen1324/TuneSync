@@ -2,7 +2,6 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, screenPadding } from '@/constants/tokens'
 import { playlistNameFilter } from '@/helpers/filter'
-import useModalView from '@/hooks/useModalView'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { usePlaylists } from '@/store/library'
 import { utilsStyles } from '@/styles'
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import FastImage from 'react-native-fast-image'
+import BottomUpPanel from '../BottomUpPanel'
 import { AblumListItem } from './AblumListItem'
 import useCreatePlaylistModal from './useCreatePlaylistModal'
 
@@ -36,25 +36,27 @@ export const AlbumsList = ({
 	const { t } = useTranslation()
 	const { removePlayList } = usePlaylists((state) => state)
 	const [isSubmitDisable, setSubmitDisable] = useState(true)
-
+	const [isPanelVisible, setPanelVisible] = useState(false)
 	const [handleSubmit, renderCreatePlaylist] = useCreatePlaylistModal({
 		setSubmitDisable,
 		onClose: () => {
-			panelRef.current.hide()
+			// panelRef.current.hide()
+			setSubmitDisable(true)
+			setPanelVisible(false)
 		},
 	})
-	const [panelRef, render] = useModalView({
-		content: renderCreatePlaylist,
-		headerLeft: t('playlistAdd.header'),
-		headerRight: () => (
-			<TouchableOpacity onPress={handleSubmit} disabled={isSubmitDisable}>
-				<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
-					{t('playlistAdd.save')}
-				</Text>
-			</TouchableOpacity>
-		),
-		allowDragging: true,
-	})
+	// const [panelRef, render] = useModalView({
+	// 	content: renderCreatePlaylist,
+	// 	headerLeft: t('playlistAdd.header'),
+	// 	headerRight: () => (
+	// 		<TouchableOpacity onPress={handleSubmit} disabled={isSubmitDisable}>
+	// 			<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
+	// 				{t('playlistAdd.save')}
+	// 			</Text>
+	// 		</TouchableOpacity>
+	// 	),
+	// 	allowDragging: true,
+	// })
 	const addItem = () => {
 		return {
 			name: t('collections.addPLaylsit'),
@@ -104,7 +106,7 @@ export const AlbumsList = ({
 									onPress={() => {
 										const type = playlist.type
 										if (type === 'add') {
-											panelRef.current.show()
+											setPanelVisible(true)
 										} else {
 											handleAlbumPress(playlist, type)
 										}
@@ -119,7 +121,7 @@ export const AlbumsList = ({
 							onPress={() => {
 								const type = playlist.type
 								if (type === 'add') {
-									panelRef.current.show()
+									setPanelVisible(true)
 								} else {
 									handleAlbumPress(playlist, type)
 								}
@@ -129,7 +131,29 @@ export const AlbumsList = ({
 				}}
 				{...flatListProps}
 			/>
-			{render()}
+			<BottomUpPanel
+				header={
+					<TouchableOpacity
+						onPress={() => {
+							handleSubmit()
+						}}
+						style={{
+							width: 20,
+							height: 20,
+						}}
+						disabled={isSubmitDisable}
+					>
+						<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
+							{t('playlistAdd.save')}
+						</Text>
+					</TouchableOpacity>
+				}
+				isVisible={isPanelVisible}
+				onClose={() => setPanelVisible(false)}
+				height={600}
+			>
+				{renderCreatePlaylist()}
+			</BottomUpPanel>
 		</>
 	)
 }
@@ -156,16 +180,33 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 	},
 	createButton: {
-		padding: 8,
+		// padding: 8,
 		color: colors.primary,
 		fontSize: 16,
 		fontWeight: 'bold',
+		position: 'absolute',
+		height: 30,
+		width: 30,
+		top: 10,
+		right: 0,
+		paddingTop: 5,
+		paddingRight: 0,
+		// zIndex: 100,
 	},
 	createButtonDisable: {
-		padding: 8,
-		color: '#333',
+		// padding: 8,
+		// zIndex: 100,
+		color: 'gray',
 		fontSize: 16,
 		fontWeight: 'bold',
+		position: 'absolute',
+		height: 30,
+		width: 30,
+		top: 10,
+		right: 0,
+		borderRadius: 15,
+		paddingTop: 5,
+		paddingRight: 0,
 	},
 	iconPicker: {
 		marginBottom: 20,
@@ -192,5 +233,12 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		// backgroundColor: '#333',
 		textAlign: 'center',
+	},
+	panelContainer: {
+		flex: 1,
+		// backgroundColor: 'white',
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
+		padding: 16,
 	},
 })

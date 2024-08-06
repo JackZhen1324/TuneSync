@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 		padding: 20,
 		paddingHorizontal: 20,
 		paddingTop: 0,
-		backgroundColor: '#333',
+		backgroundColor: '#202020',
 	},
 	header: {
 		fontSize: 24,

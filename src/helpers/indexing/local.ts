@@ -12,13 +12,21 @@ export const checkIsAudioFile = (path: string) => {
 }
 export async function indexingLocal(
 	configs: any[],
-	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void,
+	setLoading: ({
+		loading,
+		percentage,
+	}: {
+		loading: boolean
+		percentage: number
+		current: string
+	}) => void,
 	refresh: any,
 	token: string,
 ) {
 	setLoading({
 		loading: true,
 		percentage: 0,
+		current: '',
 	})
 	const singerInfoCache = {}
 	const percertageOfEachConfig = Math.floor(100 / (configs.length || 1))
@@ -44,6 +52,7 @@ export async function indexingLocal(
 			setLoading({
 				loading: true,
 				percentage: currentPercentage,
+				current: el.name,
 			})
 
 			const downloadLink: string = path
@@ -64,12 +73,8 @@ export async function indexingLocal(
 		const dirs = music?.filter((el) => el.isDirectory())
 
 		for (const dir of dirs) {
-			const nestedMusic = await getNestMusic(dir, RNFS, token, singerInfoCache)
+			const nestedMusic = await getNestMusic(dir, RNFS, token, singerInfoCache, setLoading)
 			currentPercentage += percentageForNestSection
-			setLoading({
-				loading: true,
-				percentage: currentPercentage,
-			})
 			total.push(...nestedMusic)
 		}
 	}
@@ -83,7 +88,13 @@ export async function indexingLocal(
 	}
 }
 
-async function getNestMusic(dir: { path: string }, RNFS: any, token: string, singerInfoCache: any) {
+async function getNestMusic(
+	dir: { path: string },
+	RNFS: any,
+	token: string,
+	singerInfoCache: any,
+	setLoading: any,
+) {
 	const { path } = dir
 	const dirs = await RNFS.readDir(path)
 	const filteredDirs = dirs
@@ -91,9 +102,20 @@ async function getNestMusic(dir: { path: string }, RNFS: any, token: string, sin
 
 	for (const element of filteredDirs) {
 		if (element.type === 'directory') {
-			const deeperNestedMusic = await getNestMusic(element, RNFS, token, singerInfoCache)
+			const deeperNestedMusic = await getNestMusic(
+				element,
+				RNFS,
+				token,
+				singerInfoCache,
+				setLoading,
+			)
 			nestedMusic = nestedMusic.concat(deeperNestedMusic)
 		} else {
+			setLoading({
+				loading: true,
+				percentage: 100,
+				current: element.name,
+			})
 			const downloadLink: string = element.path
 			const metadata = await fetchMetadata({ title: element.name }, token, singerInfoCache)
 			const formattedElement = {

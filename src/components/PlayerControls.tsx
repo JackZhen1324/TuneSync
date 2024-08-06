@@ -1,6 +1,6 @@
 import { colors } from '@/constants/tokens'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 import Animated, {
 	Easing,
@@ -10,7 +10,7 @@ import Animated, {
 	withSpring,
 	withTiming,
 } from 'react-native-reanimated'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { useIsPlaying } from 'react-native-track-player'
 
 type PlayerControlsProps = {
 	style?: ViewStyle
@@ -37,20 +37,20 @@ export const PlayerControls = memo(({ style }: PlayerControlsProps) => {
 
 export const PlayPauseButton = memo(
 	({ style, iconSize = 48, onPress }: PlayerButtonProps & { onPress?: () => void }) => {
-		const [localPlaying, setLocalPlaying] = useState(true)
+		const { playing } = useIsPlaying()
+		const [localPlaying, setLocalPlaying] = useState(playing)
 		const animation = useSharedValue(1)
 		const shadowAnimation = useSharedValue(0)
 
-		useEffect(() => {
-			if (localPlaying) {
-				TrackPlayer.play()
-			} else {
-				TrackPlayer.pause()
-			}
-		}, [localPlaying])
-
 		const togglePlayingState = () => {
-			setLocalPlaying((prev) => !prev)
+			setLocalPlaying((prev) => {
+				if (!prev) {
+					TrackPlayer.play()
+				} else {
+					TrackPlayer.pause()
+				}
+				return !prev
+			})
 		}
 
 		const handlePress = () => {

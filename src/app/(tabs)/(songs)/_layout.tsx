@@ -25,7 +25,7 @@ import TrackPlayer from 'react-native-track-player'
 const SongsScreenLayout = () => {
 	const { t } = useTranslation()
 	const isFocused = useIsFocused()
-	const { loading, percentage, setLoading, indexingList, setNeedUpdate, needUpdate } =
+	const { loading, percentage, current, setLoading, indexingList, setNeedUpdate, needUpdate } =
 		useIndexStore()
 	const { token, setToken } = useSpotofyAuthToken()
 
@@ -63,7 +63,7 @@ const SongsScreenLayout = () => {
 		} catch (error) {
 			console.log('error', error)
 
-			setLoading({ loading: false, percentage: 0 })
+			setLoading({ loading: false, percentage: 0, current: '' })
 			setNeedUpdate(false)
 		}
 	}, [
@@ -81,7 +81,7 @@ const SongsScreenLayout = () => {
 	])
 	const debouncedRefreshLibrary = useCallback(debounce(refreshLibrary, 300), [refreshLibrary])
 	useEffect(() => {
-		setLoading({ loading: false, percentage: 0 })
+		setLoading({ loading: false, percentage: 0, current: '' })
 	}, [])
 
 	useEffect(() => {
@@ -108,14 +108,23 @@ const SongsScreenLayout = () => {
 								<StopPropagation>
 									{loading ? (
 										<View>
-											<ActivityIndicator size="small" />
+											<ActivityIndicator
+												style={{
+													position: 'absolute',
+													right: 0,
+												}}
+												size="small"
+											/>
 											<Text
 												style={{
 													color: theme.colors.text,
 													fontSize: 12,
+													position: 'absolute',
+													right: 0,
+													top: 24,
 												}}
 											>
-												{percentage.toFixed(1)}%
+												{current}
 											</Text>
 										</View>
 									) : (

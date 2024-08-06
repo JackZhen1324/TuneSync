@@ -7,13 +7,21 @@ import { titleFormater } from '../utils'
 
 export async function indexingWebdav(
 	configs: any[],
-	setLoading: ({ loading, percentage }: { loading: boolean; percentage: number }) => void,
+	setLoading: ({
+		loading,
+		percentage,
+	}: {
+		loading: boolean
+		percentage: number
+		current: string
+	}) => void,
 	refresh: any,
 	token: string,
 ) {
 	setLoading({
 		loading: true,
 		percentage: 0,
+		current: '',
 	})
 	const singerInfoCache = {}
 	const percertageOfEachConfig = Math.floor(100 / (configs.length || 1))
@@ -34,6 +42,7 @@ export async function indexingWebdav(
 				setLoading({
 					loading: true,
 					percentage: currentPercentage,
+					current: el.basename,
 				})
 
 				const downloadLink: string = webdavClient.getFileDownloadLink(el.filename)
@@ -55,12 +64,9 @@ export async function indexingWebdav(
 		const dirs = music?.filter((el: { type: string }) => el.type === 'directory')
 
 		for (const dir of dirs) {
-			const nestedMusic = await getNestMusic(dir, webdavClient, token, singerInfoCache)
+			const nestedMusic = await getNestMusic(dir, webdavClient, token, singerInfoCache, setLoading)
 			currentPercentage += percentageForNestSection
-			setLoading({
-				loading: true,
-				percentage: currentPercentage,
-			})
+
 			total.push(...nestedMusic)
 		}
 	}
@@ -69,6 +75,7 @@ export async function indexingWebdav(
 		setLoading({
 			loading: false,
 			percentage: 100,
+			current: '',
 		})
 		return total
 	} catch (error) {
@@ -83,6 +90,7 @@ async function getNestMusic(
 	webdavClient: WebDAVClient,
 	token: string,
 	singerInfoCache: any,
+	setLoading: any,
 ) {
 	const { filename } = dir
 	const filteredDirs = await webdavClient.getDirectoryContents(filename)
@@ -90,11 +98,22 @@ async function getNestMusic(
 
 	for (const element of filteredDirs) {
 		if (element.type === 'directory') {
-			const deeperNestedMusic = await getNestMusic(element, webdavClient, token, singerInfoCache)
+			const deeperNestedMusic = await getNestMusic(
+				element,
+				webdavClient,
+				token,
+				singerInfoCache,
+				setLoading,
+			)
 			nestedMusic = nestedMusic.concat(deeperNestedMusic)
 		} else {
 			const downloadLink: string = webdavClient.getFileDownloadLink(element.filename)
 			const metadata = await fetchMetadata({ title: element.basename }, token, singerInfoCache)
+			setLoading({
+				loading: true,
+				percentage: 100,
+				current: element.basename,
+			})
 			const formattedElement = {
 				bitrate: getBitRate(element.size, metadata.duration),
 				url: downloadLink,
