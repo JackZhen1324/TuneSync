@@ -66,10 +66,6 @@ export async function indexingWebdav(
 	}
 
 	try {
-		// storage.set('musicLibrary', JSON.stringify(total))
-		// refresh()
-		// TrackPlayer.reset()
-
 		setLoading({
 			loading: false,
 			percentage: 100,
@@ -89,10 +85,7 @@ async function getNestMusic(
 	singerInfoCache: any,
 ) {
 	const { filename } = dir
-	const dirs = await webdavClient.getDirectoryContents(filename)
-	const filteredDirs = dirs?.filter((el: { mime: string | string[] }) =>
-		el?.mime?.includes('audio'),
-	)
+	const filteredDirs = await webdavClient.getDirectoryContents(filename)
 	let nestedMusic: any[] = []
 
 	for (const element of filteredDirs) {

@@ -86,7 +86,7 @@ export async function indexingLocal(
 async function getNestMusic(dir: { path: string }, RNFS: any, token: string, singerInfoCache: any) {
 	const { path } = dir
 	const dirs = await RNFS.readDir(path)
-	const filteredDirs = dirs?.filter((el) => checkIsAudioFile(el.path))
+	const filteredDirs = dirs
 	let nestedMusic: any[] = []
 
 	for (const element of filteredDirs) {
