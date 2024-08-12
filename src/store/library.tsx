@@ -12,7 +12,9 @@ import { persist } from 'zustand/middleware'
 import { storage } from './mkkv'
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
+	tracksMap: any
 	setTracks: any
+	update: any
 	toggleTrackFavorite: (track: Track) => void
 	addToPlaylist: (track: Track, playlistName: string) => void
 }
@@ -39,9 +41,21 @@ export const useLibraryStore = create<LibraryState>()(
 		(set) => {
 			return {
 				tracks: [],
+				tracksMap: {},
+				update: (id, data) => {
+					return set((state) => {
+						const temp = state.tracksMap
+						temp[id] = { ...temp[id], ...data }
+						return {
+							tracksMap: temp,
+							tracks: Object.values(temp),
+						}
+					})
+				},
 				setTracks: async (tracks: any) => {
 					set({
-						tracks: tracks,
+						tracks: Object.values(tracks),
+						tracksMap: tracks,
 					})
 				},
 				toggleTrackFavorite: (track) =>

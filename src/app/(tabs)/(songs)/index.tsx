@@ -19,7 +19,7 @@ const SongsScreen = () => {
 		},
 	})
 
-	const { setTracks, tracks } = useLibraryStore((state) => state)
+	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
 	const { queueListWithContent, activeQueueId } = useQueueStore((state) => state)
 	const { activeTrackId } = useActiveTrack((state) => state)
 
@@ -29,7 +29,7 @@ const SongsScreen = () => {
 		init = 1
 	}
 	useEffect(() => {
-		setTracks(tracks)
+		setTracks(tracksMap)
 
 		return () => {}
 	}, [])
