@@ -19,6 +19,9 @@
 
 </div>
 
+[![Music PLayer](https://github.com/gionathas/music-player/assets/16454253/909c51e2-03f1-4fc8-94e6-56745f67fed8)](https://youtu.be/9CElrkFwiBU?si=PFgwCFDulxJJD2f4)
+
+
 ## What is this ?
 
 TuneSync is a versatile, serverless track player that enables users to effortlessly stream music, meditation tracks, and podcasts from an extensive variety of sources, both local and remote.
