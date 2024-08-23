@@ -16,6 +16,21 @@ export const useQueueStore = create<QueueStore>()(
 			queueListWithContent: {
 				default: [],
 			},
+			updateQueue: (id: string, content: any, setActiveTrack: any) => {
+				return set((state) => {
+					const queue = state?.queueListWithContent
+					const targetIndex = queue['default'].findIndex((el) => el.title === id)
+					if (targetIndex > -1) {
+						queue['default'][targetIndex] = content
+						setActiveTrack(content)
+						return {
+							queueListWithContent: queue,
+						}
+					} else {
+						return {}
+					}
+				})
+			},
 			setActiveQueueId: (id) => set({ activeQueueId: id }),
 			setQueueListContent: (content: any, id: string, queueListWithContent: any) => {
 				const activeQueueId = id || ''

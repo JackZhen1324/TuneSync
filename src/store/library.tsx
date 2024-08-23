@@ -42,20 +42,35 @@ export const useLibraryStore = create<LibraryState>()(
 			return {
 				tracks: [],
 				tracksMap: {},
+				cache: {},
 				update: (id, data) => {
 					return set((state) => {
 						const temp = state.tracksMap
+						const cache = state.cache
 						temp[id] = { ...temp[id], ...data }
+						cache[id] = { ...temp[id], ...data }
 						return {
 							tracksMap: temp,
 							tracks: Object.values(temp),
 						}
 					})
 				},
+				reset: () => {
+					set({
+						tracks: [],
+						tracksMap: {},
+					})
+				},
 				setTracks: async (tracks: any) => {
 					set({
 						tracks: Object.values(tracks),
 						tracksMap: tracks,
+					})
+					set((state: any) => {
+						return {
+							tracks: Object.values(tracks),
+							tracksMap: tracks,
+						}
 					})
 				},
 				toggleTrackFavorite: (track) =>
