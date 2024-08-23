@@ -57,14 +57,14 @@ export const TracksList = ({
 		[activeQueueId, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
 	const renderItem = useCallback(
-		({ item: track }: any) => {
+		({ item: track }: any, index: number) => {
 			const isActive = track.title === activeTrack
 			return (
 				<TracksListItem
 					from={from}
 					isPLaying={isPLaying.playing}
 					isActive={isActive}
-					key={track?.filename}
+					key={`${track?.filename}${track.url}${track.etag}${index}`}
 					track={track}
 					onTrackSelect={handleTrackSelect}
 				/>
@@ -79,11 +79,9 @@ export const TracksList = ({
 			contentInsetAdjustmentBehavior="automatic"
 			data={tracks}
 			renderItem={renderItem}
-			keyExtractor={(item) => item?.filename}
+			keyExtractor={(item, index) => `${item?.filename}${item.url}${item.etag}${index}`}
 			scrollEventThrottle={400}
 			onEndReachedThreshold={0.5}
-			maxToRenderPerBatch={15}
-			initialNumToRender={15}
 			removeClippedSubviews={true}
 			contentContainerStyle={{ paddingBottom: 100 }}
 			ListHeaderComponent={

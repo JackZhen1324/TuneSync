@@ -37,7 +37,7 @@ const ResourceManage = () => {
 	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
 	const { setIndexingList, indexingList } = useIndexStore((state) => state)
 	const { setNeedUpdate } = useIndexStore()
-	const pickDirectory = async () => {
+	const pickDirectory = useCallback(async () => {
 		try {
 			const result = await DocumentPicker.pickDirectory()
 			setIndexingList([])
@@ -102,7 +102,7 @@ const ResourceManage = () => {
 				console.log('Unknown error: ', err)
 			}
 		}
-	}
+	}, [datasourceConfig, indexingList, setDatasourceConfig, setIndexingList, setNeedUpdate])
 
 	const readDirectoryFiles = async (directoryUri: string) => {
 		try {
@@ -158,9 +158,12 @@ const ResourceManage = () => {
 
 							setIndexingList(
 								indexingList.filter((indexItem) => {
-									return indexItem.filename !== child
+									console.log(indexItem, child, 'delete local')
+
+									return indexItem.dir !== child
 								}),
 							)
+							setNeedUpdate(true)
 							RNFS.unlink(pendingRemove)
 						}
 						setDatasourceConfig(
@@ -169,7 +172,14 @@ const ResourceManage = () => {
 					}
 			}
 		},
-		[datasourceConfig, indexingList, setDatasourceConfig, setIndexingList],
+		[
+			datasourceConfig,
+			indexingList,
+			pickDirectory,
+			setDatasourceConfig,
+			setIndexingList,
+			setNeedUpdate,
+		],
 	)
 
 	useEffect(() => {
