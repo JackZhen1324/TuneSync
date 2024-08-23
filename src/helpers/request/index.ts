@@ -26,8 +26,8 @@ instance.interceptors.request.use(
 
 // 响应拦截器
 instance.interceptors.response.use(
-	({ data }) => {
-		return data
+	(res) => {
+		return res.data
 	},
 	(err) => {
 		if (err && err.response) {

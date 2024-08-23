@@ -54,7 +54,7 @@ const ArtistsScreen = () => {
 				data={filteredArtists}
 				renderItem={({ item: artist }) => {
 					return (
-						<Link href={`/artists/${artist.name}`} asChild>
+						<Link href={`/artists/${artist.name.replaceAll('/', '-')}`} asChild>
 							<TouchableHighlight activeOpacity={0.8}>
 								<View style={styles.artistItemContainer}>
 									<View>

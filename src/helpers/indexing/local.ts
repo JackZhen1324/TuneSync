@@ -1,33 +1,15 @@
-import { getSongInfo, searchSongs } from '@/service/metadata'
-import { searchSongsViaSpotify } from '@/service/spotifyMetadata'
 import RNFS from 'react-native-fs'
 import * as mime from 'react-native-mime-types'
-import { getBitRate } from '../getBitRate'
-import { titleFormater } from '../utils'
+
 export const checkIsAudioFile = (path: string) => {
 	const match = path.match(/\.([^.]+)$/)
 	const fileExtension = match ? match[1] : ''
 	const mimeType = mime.lookup(fileExtension) || ''
 	return mimeType.includes('audio')
 }
-export async function indexingLocal(
-	configs: any[],
-	setLoading: ({
-		loading,
-		percentage,
-	}: {
-		loading: boolean
-		percentage: number
-		current: string
-	}) => void,
-	refresh: any,
-	token: string,
-) {
-	setLoading({
-		loading: true,
-		percentage: 0,
-		current: '',
-	})
+export async function indexingLocal(configs: any[], refresh: any) {
+	// console.log('configs', configs)
+
 	const singerInfoCache = {}
 	const percertageOfEachConfig = Math.floor(100 / (configs.length || 1))
 	let currentPercentage = 0
@@ -49,21 +31,12 @@ export async function indexingLocal(
 			const name = el.name
 
 			currentPercentage += percentageForNestSection
-			setLoading({
-				loading: true,
-				percentage: currentPercentage,
-				current: el.name,
-			})
 
 			const downloadLink: string = path
-			const metadata = await fetchMetadata({ title: name }, token, singerInfoCache)
 			return {
 				url: downloadLink,
 				title: el.name,
-				playlist: metadata?.album?.title || [],
-				bitrate: getBitRate(el.size, metadata.duration),
 				...el,
-				...metadata,
 			}
 		})
 
@@ -73,7 +46,7 @@ export async function indexingLocal(
 		const dirs = music?.filter((el) => el.isDirectory())
 
 		for (const dir of dirs) {
-			const nestedMusic = await getNestMusic(dir, RNFS, token, singerInfoCache, setLoading)
+			const nestedMusic = await getNestMusic(dir, RNFS, singerInfoCache)
 			currentPercentage += percentageForNestSection
 			total.push(...nestedMusic)
 		}
@@ -88,13 +61,7 @@ export async function indexingLocal(
 	}
 }
 
-async function getNestMusic(
-	dir: { path: string },
-	RNFS: any,
-	token: string,
-	singerInfoCache: any,
-	setLoading: any,
-) {
+async function getNestMusic(dir: { path: string }, RNFS: any, singerInfoCache: any) {
 	const { path } = dir
 	const dirs = await RNFS.readDir(path)
 	const filteredDirs = dirs
@@ -102,29 +69,15 @@ async function getNestMusic(
 
 	for (const element of filteredDirs) {
 		if (element.type === 'directory') {
-			const deeperNestedMusic = await getNestMusic(
-				element,
-				RNFS,
-				token,
-				singerInfoCache,
-				setLoading,
-			)
+			const deeperNestedMusic = await getNestMusic(element, RNFS, singerInfoCache)
 			nestedMusic = nestedMusic.concat(deeperNestedMusic)
 		} else {
-			setLoading({
-				loading: true,
-				percentage: 100,
-				current: element.name,
-			})
 			const downloadLink: string = element.path
-			const metadata = await fetchMetadata({ title: element.name }, token, singerInfoCache)
 			const formattedElement = {
-				bitrate: getBitRate(element.size, metadata.duration),
 				url: downloadLink,
 				title: element.basename,
 				playlist: element?.album?.title || [],
 				...element,
-				...metadata,
 				from: 'local',
 			}
 			nestedMusic.push(formattedElement)
@@ -132,56 +85,4 @@ async function getNestMusic(
 	}
 
 	return nestedMusic
-}
-
-export async function fetchMetadata(params: { title: any }, token: string, singerInfoCache: any) {
-	try {
-		const { title } = params
-		const formatedTitle = titleFormater(title)
-
-		const { results }: any = await searchSongs({
-			track: formatedTitle,
-		})
-
-		const matchedTrack = results?.trackmatches?.track?.filter((el) => el.mbid)
-
-		const { mbid, image, artist } = matchedTrack?.[0] || results?.trackmatches?.track?.[0] || {}
-
-		const songInfo: any = await getSongInfo({
-			mbid: mbid,
-		})
-
-		const { url, album, artist: artistObj, duration, ...res } = songInfo?.track ?? {}
-
-		if (!singerInfoCache?.[artist] && artist) {
-			const { artists } = await searchSongsViaSpotify(
-				{ q: artist, type: 'artist' },
-				{
-					headers: {
-						Authorization: token,
-						'Content-Type': 'application/json',
-					},
-				},
-			)
-			singerInfoCache[artist] = artists?.items?.[0]
-		}
-
-		return {
-			artwork: album?.image?.[3]?.['#text'] || singerInfoCache?.[artist]?.images?.[0]?.url,
-			artist,
-			artistInfo: singerInfoCache?.[artist] || {},
-			rating: 0,
-			formatedTitle: formatedTitle,
-			genre: formatedTitle,
-			album: album,
-			playlist: [album?.title || 'unknown'],
-			duration,
-			from: 'local',
-			// ...res,
-		}
-	} catch (errir) {
-		console.log('errir', errir)
-
-		return {}
-	}
 }

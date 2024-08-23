@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
 		height: 200,
 	},
 	artistImage: {
-		width: '60%',
-		height: '100%',
+		width: 200,
+		height: 200,
 		resizeMode: 'cover',
-		borderRadius: 128,
+		borderRadius: 100,
 	},
 	artistNameText: {
 		...defaultStyles.text,

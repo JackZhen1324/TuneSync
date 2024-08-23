@@ -39,7 +39,7 @@ const App = () => {
 	}, [])
 	const { setToken } = useSpotofyAuthToken()
 	const { runAsync } = useRequest(getAccessToken, {
-		pollingInterval: 3000,
+		manual: true,
 	})
 	useEffect(() => {
 		runAsync().then((el) => {

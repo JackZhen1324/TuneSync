@@ -16,13 +16,13 @@ import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useMemo, useState } from 'react'
-
 import {
 	showRoutePicker,
 	useAirplayConnectivity,
 	useAvAudioSessionRoutes,
 	useExternalPlaybackAvailability,
 } from 'react-airplay'
+import { useTranslation } from 'react-i18next'
 import {
 	ActivityIndicator,
 	Dimensions,
@@ -175,9 +175,10 @@ const PlayerScreen = () => {
 	const { top, bottom } = useSafeAreaInsets()
 	const [lyricsInfo, setLyrics] = useState([])
 	const [index, setIndex] = useState(0)
+	const { t } = useTranslation()
 	const [routes] = useState([
-		{ key: 'songInfo', title: '歌曲' },
-		{ key: 'lyrics', title: '歌词' },
+		{ key: 'songInfo', title: t('player.tabs.song') },
+		{ key: 'lyrics', title: t('player.tabs.lyric') },
 	])
 	// const panelRef = useRef(null)
 	const [panelRef, render] = useModalView({

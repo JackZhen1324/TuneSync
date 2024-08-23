@@ -137,13 +137,13 @@ export const AlbumsList = ({
 						onPress={() => {
 							handleSubmit()
 						}}
-						style={{
-							width: 20,
-							height: 20,
-						}}
+						style={styles.createButtonContainer}
 						disabled={isSubmitDisable}
 					>
-						<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
+						<Text
+							numberOfLines={1}
+							style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}
+						>
 							{t('playlistAdd.save')}
 						</Text>
 					</TouchableOpacity>
@@ -184,29 +184,20 @@ const styles = StyleSheet.create({
 		color: colors.primary,
 		fontSize: 16,
 		fontWeight: 'bold',
-		position: 'absolute',
-		height: 30,
-		width: 30,
-		top: 10,
-		right: 0,
-		paddingTop: 5,
-		paddingRight: 0,
+
 		// zIndex: 100,
 	},
 	createButtonDisable: {
-		// padding: 8,
-		// zIndex: 100,
 		color: 'gray',
 		fontSize: 16,
 		fontWeight: 'bold',
-		position: 'absolute',
-		height: 30,
-		width: 30,
-		top: 10,
-		right: 0,
 		borderRadius: 15,
-		paddingTop: 5,
-		paddingRight: 0,
+		minWidth: 30,
+		minHeight: 30,
+	},
+	createButtonContainer: {
+		zIndex: 1000,
+		paddingTop: 16,
 	},
 	iconPicker: {
 		marginBottom: 20,

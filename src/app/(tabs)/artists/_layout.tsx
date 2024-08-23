@@ -21,6 +21,7 @@ const ArtistsScreenLayout = () => {
 				<Stack.Screen
 					name="[name]"
 					options={{
+						headerShadowVisible: false,
 						headerTitle: '',
 						headerBackVisible: true,
 						headerStyle: {
