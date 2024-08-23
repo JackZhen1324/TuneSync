@@ -11,7 +11,7 @@ const ArtistDetailScreen = () => {
 	const { tracks } = useTracks()
 	const artists = useArtists(tracks)
 
-	const artist = artists.find((artist) => artist.name === artistName)
+	const artist = artists.find((artist) => artist.name === artistName.replaceAll('-', '/'))
 
 	if (!artist) {
 		console.warn(`Artist ${artistName} not found!`)
