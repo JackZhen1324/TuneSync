@@ -21,7 +21,7 @@ const PlaylistsScreenLayout = () => {
 					name="[name]"
 					options={{
 						headerTitle: '',
-
+						headerShadowVisible: false,
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,

@@ -7,7 +7,7 @@ import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { SafeAreaView } from 'react-native'
 
 const AlbumsScreen = () => {
 	const router = useRouter()
@@ -30,9 +30,9 @@ const AlbumsScreen = () => {
 	}
 
 	return (
-		<View style={defaultStyles.container}>
+		<SafeAreaView style={defaultStyles.container}>
 			<AlbumsList albums={filteredAlbums} onAlbumPress={handleAlbumsPress} />
-		</View>
+		</SafeAreaView>
 	)
 }
 
