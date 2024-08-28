@@ -16,13 +16,14 @@ export const useQueueStore = create<QueueStore>()(
 			queueListWithContent: {
 				default: [],
 			},
-			updateQueue: (id: string, content: any, setActiveTrack: any) => {
+			updateQueue: (id: string, content: any) => {
 				return set((state) => {
-					const queue = state?.queueListWithContent
+					const queue = JSON.parse(JSON.stringify(state?.queueListWithContent || { default: [] }))
+
 					const targetIndex = queue['default'].findIndex((el) => el.title === id)
 					if (targetIndex > -1) {
-						queue['default'][targetIndex] = content
-						setActiveTrack(content)
+						queue['default'][targetIndex] = { ...queue['default'][targetIndex], ...content }
+
 						return {
 							queueListWithContent: queue,
 						}
@@ -31,6 +32,7 @@ export const useQueueStore = create<QueueStore>()(
 					}
 				})
 			},
+
 			setActiveQueueId: (id) => set({ activeQueueId: id }),
 			setQueueListContent: (content: any, id: string, queueListWithContent: any) => {
 				const activeQueueId = id || ''

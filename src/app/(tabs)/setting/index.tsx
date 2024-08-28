@@ -6,7 +6,8 @@ import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { LanguageCode } from '../../../locales/languageMap'
 import LanguageModal from './language'
 
@@ -35,7 +36,7 @@ const SettingScreen = () => {
 
 	return (
 		<>
-			<View style={defaultStyles.container}>
+			<SafeAreaView style={defaultStyles.container}>
 				<ScrollView
 					contentInsetAdjustmentBehavior="automatic"
 					style={{
@@ -44,8 +45,8 @@ const SettingScreen = () => {
 				>
 					<Setting scrollEnabled={false} setting={setting} onMenuPress={handleMenuPress} />
 				</ScrollView>
-			</View>
-			<BottomUpPanel  isVisible={isPanelVisible} onClose={() => setPanelVisible(false)}>
+			</SafeAreaView>
+			<BottomUpPanel isVisible={isPanelVisible} onClose={() => setPanelVisible(false)}>
 				<LanguageModal></LanguageModal>
 			</BottomUpPanel>
 		</>

@@ -16,6 +16,7 @@ import { Stack } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
 let currentAbortController: AbortController | null = null
 const SongsScreenLayout = () => {
@@ -69,11 +70,11 @@ const SongsScreenLayout = () => {
 			})
 
 			const filteredQueue = queueListWithContent[activeQueueId]
-				?.map((el: { formatedTitle: string }, index: number) => {
-					return songTitles.includes(el.formatedTitle) ? -1 : index
+				?.map((el: { title: string }, index: number) => {
+					return songTitles.includes(el.title) ? -1 : index
 				})
 				?.filter((el: number) => el > -1)
-			if (!songTitles.includes(activeTrack.title)) {
+			if (!songTitles.includes(activeTrack)) {
 				setActiveTrack(undefined)
 			}
 
@@ -105,7 +106,18 @@ const SongsScreenLayout = () => {
 
 					if (!signal.aborted) {
 						update(el.title, meta)
-						updateQueue(el.title, meta, setActiveTrack)
+						updateQueue(el.title, meta)
+						console.log(
+							'activeTrack.title === el.title',
+							activeTrack === el.title,
+							activeTrack,
+							el.title,
+							activeTrack,
+						)
+
+						if (activeTrack === el.title) {
+							setActiveTrack(meta)
+						}
 					}
 				} catch (error) {
 					console.error(`Error fetching metadata for ${title}:`, error)
@@ -121,7 +133,7 @@ const SongsScreenLayout = () => {
 		}
 	}, [
 		activeQueueId,
-		activeTrack.title,
+		activeTrack,
 		cache,
 		indexingList,
 		queueListWithContent,
@@ -182,7 +194,7 @@ const SongsScreenLayout = () => {
 		}
 	}, [needUpdate, debouncedRefreshLibrary, isFocused, setNeedUpdate])
 	return (
-		<View style={defaultStyles.container}>
+		<SafeAreaView style={defaultStyles.container}>
 			<Stack>
 				<Stack.Screen
 					name="index"
@@ -225,7 +237,7 @@ const SongsScreenLayout = () => {
 					}}
 				/>
 			</Stack>
-		</View>
+		</SafeAreaView>
 	)
 }
 

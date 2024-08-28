@@ -1012,10 +1012,9 @@ PODS:
     - glog
     - React-debug
   - react-native-awesome-module (0.0.0):
-    - glog
+      - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-blur (4.4.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1307,7 +1306,6 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-awesome-module (from `../node_modules/awesome-module`)
-  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -1462,8 +1460,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-awesome-module:
     :path: "../node_modules/awesome-module"
-  react-native-blur:
-    :path: "../node_modules/@react-native-community/blur"
   react-native-context-menu-view:
     :path: "../node_modules/react-native-context-menu-view"
   react-native-document-picker:
@@ -1601,7 +1597,6 @@ SPEC CHECKSUMS:
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-awesome-module: cb64f9080196dec8da9ed77b6caae07b426c21e9
-  react-native-blur: 799045500f56146afc46245148080e7b7623cb75
   react-native-context-menu-view: 30915369a9b5887904c571b616653acf3f1c8edb
   react-native-document-picker: 5b97e24a7f1a1e4a50a72c540a043f32d29a70a2
   react-native-image-picker: d3db110a3ded6e48c93aef7e8e51afdde8b16ed0
