@@ -1,13 +1,11 @@
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
-import { defaultStyles } from '@/styles'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { SafeAreaView } from 'react-native-safe-area-context'
 const PlaylistsScreenLayout = () => {
 	const { t } = useTranslation()
 	return (
-		<SafeAreaView style={defaultStyles.container}>
+	
 			<Stack>
 				<Stack.Screen
 					name="index"
@@ -128,7 +126,7 @@ const PlaylistsScreenLayout = () => {
 					}}
 				/>
 			</Stack>
-		</SafeAreaView>
+		
 	)
 }
 

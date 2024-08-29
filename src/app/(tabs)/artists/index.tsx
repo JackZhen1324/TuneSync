@@ -9,6 +9,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { SafeAreaView } from 'react-native-safe-area-context'
 const ItemSeparatorComponent = () => {
 	return <View style={[utilsStyles.itemSeparator, { marginLeft: 50, marginVertical: 12 }]} />
 }
@@ -30,7 +31,7 @@ const ArtistsScreen = () => {
 	}, [artists, search])
 
 	return (
-		<View style={defaultStyles.container}>
+		<SafeAreaView style={defaultStyles.container}>
 			<FlatList
 				style={{ paddingHorizontal: screenPadding.horizontal }}
 				contentInsetAdjustmentBehavior="automatic"
@@ -78,7 +79,7 @@ const ArtistsScreen = () => {
 					)
 				}}
 			/>
-		</View>
+		</SafeAreaView>
 	)
 }
 

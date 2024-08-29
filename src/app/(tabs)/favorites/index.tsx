@@ -6,7 +6,7 @@ import { useFavorateStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 const FavoritesScreen = () => {
 	const { t } = useTranslation()
 	const search = useNavigationSearch({
@@ -24,13 +24,13 @@ const FavoritesScreen = () => {
 	}, [search, favorateTracks])
 
 	return (
-		<View style={defaultStyles.container}>
+		<SafeAreaView style={defaultStyles.container}>
 			<TracksList
 				id={generateTracksListId('favorites', search)}
 				scrollEnabled={false}
 				tracks={filteredFavoritesTracks}
 			/>
-		</View>
+		</SafeAreaView>
 	)
 }
 

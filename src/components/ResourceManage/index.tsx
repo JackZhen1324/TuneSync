@@ -1,5 +1,6 @@
 import davIcon from '@/assets/icons/dav.png'
 import localIcon from '@/assets/icons/local.png'
+import { colors } from '@/constants/tokens'
 import useThemeColor from '@/hooks/useThemeColor'
 import { useCurrentClientStore, useDatasourceConfig, useIndexStore } from '@/store/library'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
@@ -7,7 +8,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import DocumentPicker from 'react-native-document-picker'
 import RNFS from 'react-native-fs'
 import { List, TouchableRipple } from 'react-native-paper'
@@ -214,6 +215,7 @@ const ResourceManage = () => {
 					<List.Item
 						style={styles.itemSolo}
 						theme={theme}
+						titleStyle={{color: colors.text}}
 						title={el.configName}
 						right={() => {
 							if (el.protocol === 'file') {
@@ -232,7 +234,7 @@ const ResourceManage = () => {
 											style={{ paddingTop: 6 }}
 											name="delete-outline"
 											size={20}
-											color={theme.colors.primary}
+											color={colors.primary}
 										/>
 									</TouchableRipple>
 								)
@@ -250,7 +252,7 @@ const ResourceManage = () => {
 								>
 									<FontAwesome6
 										style={{ paddingTop: 6 }}
-										color={theme.colors.primary}
+										color={colors.primary}
 										name="edit"
 										size={16}
 									/>
@@ -272,8 +274,8 @@ const ResourceManage = () => {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<List.Section theme={theme}>
-				<List.Subheader theme={theme}>
+			<List.Section >
+				<List.Subheader >
 					{t('setting.localResource') || 'Local resource'}
 				</List.Subheader>
 				<TouchableRipple borderless style={{ borderRadius: 4 }} rippleColor="rgba(0, 0, 0, .32)">
@@ -281,13 +283,14 @@ const ResourceManage = () => {
 						onPressOut={() => {
 							onPressOut('local', 'create')
 						}}
+						titleStyle={{color: colors.text}}
 						style={styles.itemSolo}
 						theme={theme}
 						title="Local"
-						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
+						left={() => <List.Icon color={colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
-				<List.Subheader theme={theme}>
+				<List.Subheader >
 					{t('setting.remoteResource') || 'Remote resource'}
 				</List.Subheader>
 				<TouchableRipple style={{ borderRadius: 4 }} borderless rippleColor="rgba(0, 0, 0, .32)">
@@ -295,14 +298,15 @@ const ResourceManage = () => {
 						onPressOut={() => {
 							onPressOut('webdav', 'create')
 						}}
+						titleStyle={{color: colors.text}}
 						style={styles.itemSolo}
 						theme={theme}
 						title={t('setting.webdavResource') || 'Webdav resource'}
-						left={() => <List.Icon color={theme.colors.primary} icon="plus" />}
+						left={() => <List.Icon color={colors.primary} icon="plus" />}
 					/>
 				</TouchableRipple>
 				{added?.length > 0 && (
-					<List.Subheader theme={theme}>{t('setting.addedResource')}</List.Subheader>
+					<List.Subheader>{t('setting.addedResource')}</List.Subheader>
 				)}
 				{renderAddedResource()}
 			</List.Section>
@@ -313,7 +317,7 @@ const ResourceManage = () => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: StatusBar.currentHeight,
+		// paddingTop: StatusBar.currentHeight,
 		marginHorizontal: 8,
 	},
 	itemSolo: {

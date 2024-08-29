@@ -133,9 +133,9 @@ const ConfigScreen = () => {
 	return (
 		<PaperProvider theme={theme}>
 			<ScrollView
-				contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
+				contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
 			>
-				<Text style={[styles.title, { color: theme.colors.text }]}>WebDAV</Text>
+				<Text style={[styles.title, { color: colors.text }]}>WebDAV</Text>
 				<TextInput
 					autoCapitalize="none"
 					label={t('webdavAdd.configName')}

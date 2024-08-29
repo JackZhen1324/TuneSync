@@ -7,7 +7,7 @@ import {
 PaperDarkTheme.colors.primary = colors.primary
 export default () => {
 	const colorScheme = useColorScheme()
-	const isDarkMode = colorScheme === 'dark'
+	const isDarkMode = true
 	const theme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme
 	return theme
 }

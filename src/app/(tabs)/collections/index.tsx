@@ -7,7 +7,8 @@ import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
 
 const AlbumsScreen = () => {
 	const router = useRouter()

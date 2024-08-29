@@ -7,7 +7,7 @@ const Resouce = () => {
 	const { name: playlistName } = useLocalSearchParams<{ name: string }>()
 
 	return (
-		<View style={defaultStyles.container}>
+		<View style={{...defaultStyles.container, top: 0, paddingTop: 0}}>	
 			<ResourceManage />
 		</View>
 	)

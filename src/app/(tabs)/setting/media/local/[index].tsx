@@ -113,7 +113,7 @@ const LocalMedia = memo(() => {
 	}, [])
 
 	return (
-		<View key={path} style={defaultStyles.container}>
+		<View key={path} style={{...defaultStyles.container, top: 0}}>
 			{loading ? (
 				<View
 					style={{
