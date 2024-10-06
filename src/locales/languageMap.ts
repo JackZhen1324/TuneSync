@@ -4,6 +4,7 @@ export const languageMap = {
 	en: 'English',
 	ja: '日本語',
 	ko: '한국어',
+	no: 'Norsk',
 } as const
 
 export type LanguageCode = keyof typeof languageMap
