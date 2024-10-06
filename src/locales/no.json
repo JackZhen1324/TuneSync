@@ -1,0 +1,74 @@
+{
+	"routes": {
+		"favorites": "Favoritter",
+		"collections": "Samlinger",
+		"songs": "Sanger",
+		"artists": "Artister",
+		"setting": "Innstillinger"
+	},
+	"favorites": {
+		"header": "Favorittsanger",
+		"search": "Søk i Favorittsanger"
+	},
+	"collections": {
+		"header": "Samlinger",
+		"search": "Søk i Samlinger",
+		"addPLaylsit": "Legg til spilleliste"
+	},
+	"songs": {
+		"header": "Sanger",
+		"search": "Søk i Sanger"
+	},
+	"artists": {
+		"header": "Artister",
+		"search": "Søk i Artister"
+	},
+	"setting": {
+		"header": "Innstillinger",
+		"addSource": "Legg til Kilde",
+		"local": "Lokal",
+		"localResource": "Lokal Ressurs",
+		"remoteResource": "Fjernressurs",
+		"webdavResource": "WebDAV Ressurs",
+		"addedResource": "Lagrede Ressurser",
+		"folder": "Mappe",
+		"about": "Om",
+		"language": "Språk"
+	},
+	"webdavAdd": {
+		"configName": "Ressursnavn",
+		"location": "Ressursplassering (Domene eller IP)",
+		"username": "Brukernavn",
+		"password": "Passord",
+		"saveBtn": "Lagre",
+		"deleteBtn": "Slett"
+	},
+	"about": {
+		"version": "Nåværende Versjon",
+		"checkUpdate": "Sjekk for Oppdateringer",
+		"report": "Rapporter Problem",
+		"website": "Offisiell Nettside",
+		"privacy": "Personvernerklæring"
+	},
+	"player": {
+		"tabs": {
+			"song": "Sang",
+			"lyric": "Tekst"
+		},
+		"playlist": {
+			"header": "Spilleliste"
+		}
+	},
+	"playlistAdd": {
+		"header": "Legg til Spilleliste",
+		"title": "Spillelistenavn",
+		"save": "Opprett"
+	},
+	"global": {
+		"refreshLib": "Oppdater Bibliotek",
+		"addTofavorite": "Legg til Favoritter",
+		"deleteFromfavorite": "Fjern fra Favoritter",
+		"addToPlayList": "Legg til Spilleliste",
+		"deleteFromPlayList": "Fjern fra Spilleliste"
+	}
+}
