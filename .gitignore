@@ -42,3 +42,6 @@ expo-env.d.ts
 .expo
 dist/
 web-build/
+
+modules/my-module/android/.gradle/*
+modules/awesome-module/android/.gradle/*

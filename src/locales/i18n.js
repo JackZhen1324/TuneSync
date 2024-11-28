@@ -4,11 +4,15 @@ import * as RNLocalize from 'react-native-localize'
 import en from './en.json'
 import ja from './ja.json' // 日语
 import ko from './ko.json' // 韩语
+import no from './no.json'
 import zh from './zh.json'
 
 const resources = {
 	en: {
 		translation: en,
+	},
+	no: {
+		translation: no,
 	},
 	zh: {
 		translation: zh,

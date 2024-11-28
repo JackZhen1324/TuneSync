@@ -22,9 +22,10 @@ const LanguageModal = () => {
 				onValueChange={(itemValue) => changeLanguage(itemValue)}
 			>
 				<Picker.Item color="white" style={styles.item} label="English" value="en" />
-				<Picker.Item color="white" style={styles.item} label="中文" value="zh" />
+				<Picker.Item color="white" style={styles.item} label="Norsk" value="no" />
 				<Picker.Item color="white" style={styles.item} label="한국어" value="ko" />
 				<Picker.Item color="white" style={styles.item} label="日本語" value="ja" />
+				<Picker.Item color="white" style={styles.item} label="中文" value="zh" />
 			</Picker>
 		</View>
 	)
