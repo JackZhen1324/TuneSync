@@ -43,30 +43,6 @@ export const useLibraryStore = create<LibraryState>()(
 				tracks: [],
 				tracksMap: {},
 				cache: {},
-				batchUpdate: (data) => {
-			
-					set((state) => {
-						// console.log('start batch2', data);
-						
-						const temp = state.tracksMap
-						const cache = state.cache
-						data.forEach((el) => {
-					
-							
-							const id = el.title
-							
-							temp[id] = { ...temp[id], ...el }
-							
-							cache[id] = { ...temp[id], ...el }
-						})
-						
-						
-						return {
-							tracksMap: temp,
-							tracks: Object.values(temp)
-						}})
-					
-				},
 				update: (id, data) => {
 					return set((state) => {
 						const temp = state.tracksMap
