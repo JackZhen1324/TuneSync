@@ -8,7 +8,7 @@ const mockLongRequest = async () => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve('Request completed successfully!')
-		}, 1) // 5-second delay/
+		}, 100) // 01-second delay/
 	})
 }
 export async function fetchMetadata(
@@ -24,8 +24,7 @@ export async function fetchMetadata(
 			return cache[title]
 		}
 		// Download the file using react-native-fs
-		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any
-
+		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any	
 		const artworkRaw = `data:image/jpeg;base64,${rawImage}`
 		const [compressedImage, artwork] = rawImage ? await resizeBase64Image(artworkRaw, 40, 40) : []
 
@@ -84,7 +83,6 @@ export async function fetchMetadata(
 		} else {
 			console.log('metadata error', error)
 		}
-
 		return {
 			pendingMeta: true,
 		}
