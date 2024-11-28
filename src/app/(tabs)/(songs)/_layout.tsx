@@ -18,12 +18,16 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 let currentAbortController: AbortController | null = null
+const BATCH_SIZE = 10;
+let updates: Array<{ title: string; url: string; pendingMeta?: boolean }> = [];
 const SongsScreenLayout = () => {
 	const { t } = useTranslation()
 	const isFocused = useIsFocused()
 	const { loading, current, setLoading, indexingList, setNeedUpdate, needUpdate } = useIndexStore()
-	const { setTracks, tracks, tracksMap, update, cache } = useLibraryStore((state: any) => state)
+	const { setTracks, tracks, tracksMap, update, batchUpdate, cache } = useLibraryStore((state: any) => state)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state: any) => state)
+	console.log('setActiveTrack', activeTrack);
+	
 	const theme = useThemeColor()
 	const {
 		setActiveQueueId,
@@ -31,6 +35,7 @@ const SongsScreenLayout = () => {
 		queueListWithContent,
 		setQueueListContent,
 		updateQueue,
+		batchUpdateQueue,
 	} = useQueueStore((state: any) => state)
 	const refresh = useCallback(() => {
 		setTracks(tracksMap)
@@ -88,6 +93,8 @@ const SongsScreenLayout = () => {
 			const end = performance.now()
 			console.log('cost is', `${end - start}ms`)
 			await TrackPlayer.remove(filteredQueue)
+		
+			
 			for (const [i, el] of musicTotal.entries()) {
 				const { title } = el
 				if (signal.aborted) {
@@ -102,16 +109,32 @@ const SongsScreenLayout = () => {
 				try {
 					// Fetch metadata and await it
 					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal, cache)
-
+					
+					meta.title = title
 					if (!signal.aborted) {
-						update(el.title, meta)
-						updateQueue(el.title, meta, setActiveTrack)
+						updates.push(meta)
+						if(updates.length % BATCH_SIZE === 0) {
+		
+							batchUpdate(updates)
+							batchUpdateQueue(updates)
+							updates = [];
+						}
+						const currentSong  = await TrackPlayer.getActiveTrack();
+						
+						
+						if (currentSong && currentSong.basename === el.title) {
+							setActiveTrack(meta)
+						}
 					}
 				} catch (error) {
 					console.error(`Error fetching metadata for ${title}:`, error)
 				}
 			}
-
+			if(updates.length > 0) { 
+				batchUpdate(updates)
+				batchUpdateQueue(updates)
+			}
+			setLoading({ loading: false, percentage: 0, current: '' })
 			setNeedUpdate(false)
 		} catch (error) {
 			console.log('error', error)
@@ -156,18 +179,35 @@ const SongsScreenLayout = () => {
 				}
 
 				try {
+
 					// Fetch metadata and await it
 					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal, cache)
-
+					updates.push(meta)
 					if (!signal.aborted) {
-						update(el.title, meta)
-						updateQueue(el.title, meta)
+						if(updates.length % BATCH_SIZE === 0) {
+						
+							batchUpdate(updates)
+							batchUpdateQueue(updates)
+							updates = [];
+						}
+						const currentSong  = await TrackPlayer.getActiveTrack();
+						
+						
+						if (currentSong && currentSong.basename === el.title) {
+							setActiveTrack(meta)
+						}
 					}
 				} catch (error) {
 					console.error(`Error fetching metadata for ${title}:`, error)
 				}
 			}
+			if(updates.length > 0) { 
+				batchUpdate(updates)
+				batchUpdateQueue(updates)
+			}
+
 		}
+
 		resumeMetadaExtration()
 	}, [])
 
