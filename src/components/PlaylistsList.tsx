@@ -7,7 +7,7 @@ import { router } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { FlatList, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { useActiveTrack as useActiveTrackAlternative } from 'react-native-track-player'
 import { PlayListItem } from './PlaylistListItem'
 
 const ItemDivider = () => (
@@ -20,7 +20,7 @@ export const PlaylistsList = () => {
 	)
 	const [needUpdate, setNeedUpdate] = useState(false)
 	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
-
+	const currentTrack = useActiveTrackAlternative()
 	const onDelete = useCallback(
 		async (item: { title: any }) => {
 			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
@@ -68,7 +68,7 @@ export const PlaylistsList = () => {
 			return (
 				<PlayListItem
 					onDelete={onDelete}
-					activeSong={activeTrack}
+					activeSong={currentTrack?.basename || ''}
 					key={track.filename}
 					track={track}
 					onTrackSelect={debounce(async () => {
@@ -82,7 +82,7 @@ export const PlaylistsList = () => {
 				/>
 			)
 		},
-		[activeQueueId, activeTrack, onDelete, queueListWithContent, setActiveTrack],
+		[activeQueueId, activeTrack, onDelete, queueListWithContent, setActiveTrack, currentTrack],
 	)
 
 	return (

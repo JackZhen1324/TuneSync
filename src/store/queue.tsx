@@ -1,12 +1,24 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { storage } from './mkkv'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { storage } from './mkkv';
 
-type QueueStore = {
-	activeQueueId: string
-	setActiveQueueId: (id: string) => void
-	queueListWithContent: any
-	setQueueListContent: any
+
+interface Queue {
+	title: string;
+	// Add other properties as needed
+}
+
+interface QueueListWithContent {
+	[key: string]: Queue[];
+}
+
+interface QueueStore {
+	activeQueueId: string;
+	setActiveQueueId: (id: string) => void;
+	queueListWithContent: QueueListWithContent;
+	setQueueListContent: (content: Queue[], id: string, queueListWithContent: QueueListWithContent) => void;
+	batchUpdateQueue: any;
+	updateQueue: (id: string, content: Partial<Queue>) => void;
 }
 
 export const useQueueStore = create<QueueStore>()(
@@ -14,41 +26,63 @@ export const useQueueStore = create<QueueStore>()(
 		(set) => ({
 			activeQueueId: 'default',
 			queueListWithContent: {
-				default: [],
+				default: [] as Queue[],
 			},
-			updateQueue: (id: string, content: any, setActiveTrack: any) => {
+			batchUpdateQueue: (data) => {
+				set((state) => {
+					const queue = JSON.parse(JSON.stringify(state?.queueListWithContent || { default: [] })) as QueueListWithContent;
+					data.map((el) => {
+						const id = el.title
+						const targetIndex = queue['default'].findIndex((el) => el.title === id);
+						queue['default'][targetIndex] = { ...queue['default'][targetIndex], ...el };
+					});
+					return {
+						queueListWithContent: queue
+					};
+				});
+			},
+			updateQueue: (id: string, content: Partial<Queue>) => {
 				return set((state) => {
-					const queue = state?.queueListWithContent
-					const targetIndex = queue['default'].findIndex((el) => el.title === id)
+					const queue = JSON.parse(JSON.stringify(state?.queueListWithContent || { default: [] })) as QueueListWithContent;
+
+					const targetIndex = queue['default'].findIndex((el) => el.title === id);
 					if (targetIndex > -1) {
-						queue['default'][targetIndex] = content
-						setActiveTrack(content)
+						queue['default'][targetIndex] = { ...queue['default'][targetIndex], ...content };
+
 						return {
 							queueListWithContent: queue,
-						}
+						};
 					} else {
-						return {}
+						return {};
 					}
-				})
+				});
 			},
+<<<<<<< HEAD
 			setActiveQueueId: (id) => set({ activeQueueId: id }),
 			setQueueListContent: (content: any, id: string, queueListWithContent: any) => {
 				const activeQueueId = id || ''
 				queueListWithContent[activeQueueId] = content
+=======
+
+			setActiveQueueId: (id: string) => set({ activeQueueId: id }),
+			setQueueListContent: (content: Queue[], id: string, queueListWithContent: QueueListWithContent) => {
+				const activeQueueId = id || '';
+				queueListWithContent[activeQueueId] = content;
+>>>>>>> 7c61371 (improve: improve ui/ux experience)
 				set({
 					queueListWithContent: queueListWithContent,
-				})
+				});
 			},
 		}),
 		{
 			name: 'queueInfo', // 存储在 AsyncStorage 中的键名
 			storage: {
-				getItem: (name) => {
-					const value = storage.getString(name)
-					return value ? JSON.parse(value) : null
+				getItem: (name: string) => {
+					const value = storage.getString(name);
+					return value ? JSON.parse(value) : null;
 				},
-				setItem: (name, value) => storage.set(name, JSON.stringify(value)),
-				removeItem: (name) => storage.delete(name),
+				setItem: (name: string, value: any) => storage.set(name, JSON.stringify(value)),
+				removeItem: (name: string) => storage.delete(name),
 			},
 		},
 	),
