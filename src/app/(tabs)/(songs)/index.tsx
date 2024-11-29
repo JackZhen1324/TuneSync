@@ -8,7 +8,7 @@ import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
 let init = 0
 const SongsScreen = () => {

@@ -57,18 +57,10 @@ export const useQueueStore = create<QueueStore>()(
 					}
 				});
 			},
-<<<<<<< HEAD
 			setActiveQueueId: (id) => set({ activeQueueId: id }),
 			setQueueListContent: (content: any, id: string, queueListWithContent: any) => {
 				const activeQueueId = id || ''
 				queueListWithContent[activeQueueId] = content
-=======
-
-			setActiveQueueId: (id: string) => set({ activeQueueId: id }),
-			setQueueListContent: (content: Queue[], id: string, queueListWithContent: QueueListWithContent) => {
-				const activeQueueId = id || '';
-				queueListWithContent[activeQueueId] = content;
->>>>>>> 7c61371 (improve: improve ui/ux experience)
 				set({
 					queueListWithContent: queueListWithContent,
 				});

@@ -1,5 +1,5 @@
 import { getSongInfo, searchSongs } from '@/service/metadata'
-import { extractMetadataFromURL } from 'awesome-module'
+import { extractMetadataFromURL } from 'tunesyncmodule'
 import { resizeBase64Image } from '../imageTools'
 import { titleFormater } from '../utils'
 
@@ -29,7 +29,8 @@ export async function fetchMetadata(
 		const [compressedImage, artwork] = rawImage ? await resizeBase64Image(artworkRaw, 40, 40) : []
 
 		const formatedMetadata = {
-			title: metadata?.title ?? title,
+			title: title,
+			formatedTitle: metadata?.title ?? title,
 			artist: metadata.artist,
 			playlist: [metadata.albumName || 'Unknown'],
 			album: metadata.albumName,
@@ -72,7 +73,6 @@ export async function fetchMetadata(
 		return {
 			artistInfo: { images: [{ url: artwork }] } || {},
 			rating: 0,
-			formatedTitle: formatedTitle,
 			from: 'webdav',
 			pendingMeta: false,
 			...formatedMetadata,

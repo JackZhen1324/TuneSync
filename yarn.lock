@@ -2968,10 +2968,6 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-"awesome-module@link:./modules/awesome-module":
-  version "0.0.0"
-  uid ""
-
 axios-retry@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/axios-retry/-/axios-retry-4.4.1.tgz#e5d0c851e635fd4de866aec2b9b422f05d661257"
@@ -8491,6 +8487,10 @@ tslib@^2.0.1, tslib@^2.1.0, tslib@^2.4.0, tslib@^2.4.1:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
   integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==
+
+"tunesyncmodule@link:./modules/tunesyncmodule":
+  version "0.0.0"
+  uid ""
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
