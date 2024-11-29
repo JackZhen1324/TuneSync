@@ -1,5 +1,5 @@
 import { getSongInfo, searchSongs } from '@/service/metadata'
-import { extractMetadataFromURL } from 'awesome-module'
+import { extractMetadataFromURL } from 'tunesyncmodule'
 import { resizeBase64Image } from '../imageTools'
 import { titleFormater } from '../utils'
 
@@ -8,7 +8,7 @@ const mockLongRequest = async () => {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve('Request completed successfully!')
-		}, 400) // 5-second delay/
+		}, 100) // 01-second delay/
 	})
 }
 export async function fetchMetadata(
@@ -24,13 +24,13 @@ export async function fetchMetadata(
 			return cache[title]
 		}
 		// Download the file using react-native-fs
-		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any
-
+		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any	
 		const artworkRaw = `data:image/jpeg;base64,${rawImage}`
 		const [compressedImage, artwork] = rawImage ? await resizeBase64Image(artworkRaw, 40, 40) : []
 
 		const formatedMetadata = {
-			title: metadata?.title ?? title,
+			title: title,
+			formatedTitle: metadata?.title ?? title,
 			artist: metadata.artist,
 			playlist: [metadata.albumName || 'Unknown'],
 			album: metadata.albumName,
@@ -73,7 +73,6 @@ export async function fetchMetadata(
 		return {
 			artistInfo: { images: [{ url: artwork }] } || {},
 			rating: 0,
-			formatedTitle: formatedTitle,
 			from: 'webdav',
 			pendingMeta: false,
 			...formatedMetadata,
@@ -84,7 +83,6 @@ export async function fetchMetadata(
 		} else {
 			console.log('metadata error', error)
 		}
-
 		return {
 			pendingMeta: true,
 		}

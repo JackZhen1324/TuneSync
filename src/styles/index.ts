@@ -1,8 +1,19 @@
 import { colors, fontSize } from '@/constants/tokens'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
-export const defaultStyles = StyleSheet.create({
+export const defaultStyles = Platform.OS === "ios" ? StyleSheet.create({
 	container: {
+		flex: 1,
+		backgroundColor: colors.background,
+	},
+	text: {
+		fontSize: fontSize.base,
+		color: colors.text,
+	},
+}) : StyleSheet.create({
+	container: {
+		top: 40,
+		paddingTop:15,
 		flex: 1,
 		backgroundColor: colors.background,
 	},
