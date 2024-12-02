@@ -4,25 +4,13 @@ import { resizeBase64Image } from '../imageTools'
 import { titleFormater } from '../utils'
 
 const singerInfoCache = {} as any
-const mockLongRequest = async () => {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve('Request completed successfully!')
-		}, 100) // 01-second delay/
-	})
-}
 export async function fetchMetadata(
 	params: { title: string; webdavUrl: string },
 	abortSignal: AbortSignal,
-	cache: any,
 ) {
 	try {
 		if (abortSignal.aborted) throw new Error('Aborted1')
 		const { title, webdavUrl } = params
-		if (cache?.[title]) {
-			await mockLongRequest()
-			return cache[title]
-		}
 		// Download the file using react-native-fs
 		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any	
 		const artworkRaw = `data:image/jpeg;base64,${rawImage}`

@@ -1,5 +1,6 @@
 import { playbackService } from '@/constants/playbackService'
 import { colors } from '@/constants/tokens'
+import { initCacheDirectory } from '@/helpers/cache'
 import { debounce } from '@/helpers/debounce'
 import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState'
 import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer'
@@ -35,6 +36,9 @@ const App = () => {
 		i18n.changeLanguage(lang)
 	}
 	useEffect(() => {
+		// initialize cache directory
+		initCacheDirectory()
+		// change language
 		changeLanguage(language)
 	}, [])
 	const { setToken } = useSpotofyAuthToken()

@@ -10,6 +10,7 @@ import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { storage } from './mkkv'
+
 interface LibraryState {
 	tracks: TrackWithPlaylist[]
 	tracksMap: any
@@ -43,11 +44,8 @@ export const useLibraryStore = create<LibraryState>()(
 				tracks: [],
 				tracksMap: {},
 				cache: {},
-				batchUpdate: (data) => {
-			
-					set((state) => {
-						// console.log('start batch2', data);
-						
+				batchUpdate: (data) => {	
+					set((state) => {		
 						const temp = state.tracksMap
 						const cache = state.cache
 						data.forEach((el) => {
@@ -404,6 +402,11 @@ export const useSetting = () => {
 			id: 'language',
 			title: t('setting.language'),
 			icon: <MaterialIcons name="language" size={24} color="#E76F51" />,
+		},
+		{
+			id: 'cache',
+			title: t('setting.cacheManagement') || 'Cache Management',
+			icon: <MaterialIcons name="cached" size={24} color="#E76F51" />,
 		},
 	]
 }

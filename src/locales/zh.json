@@ -33,7 +33,12 @@
 		"addedResource": "已添加的资源",
 		"folder": "文件夹",
 		"about": "关于",
-		"language": "语言"
+		"language": "语言",
+		"cacheManagement": "缓存管理"
+	},
+	"cache": {
+		"size": "缓存大小",
+		"clean": "清空缓存"
 	},
 	"webdavAdd": {
 		"configName": "资源名称",

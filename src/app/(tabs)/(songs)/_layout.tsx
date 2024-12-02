@@ -19,255 +19,280 @@ import { ActivityIndicator, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
 let currentAbortController: AbortController | null = null
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 1;
 let updates: Array<{ title: string; url: string; pendingMeta?: boolean }> = [];
+
+const asyncPool = async (poolLimit, array, iteratorFn) => {
+  const ret = [];   // Array of results
+  const executing = []; // Array of executing promises
+  for (const item of array) {
+    const p = Promise.resolve().then(() => iteratorFn(item));
+    ret.push(p);
+
+    if (poolLimit <= array.length) {
+      const e = p.then(() => executing.splice(executing.indexOf(e), 1));
+      executing.push(e);
+
+      if (executing.length >= poolLimit) {
+        await Promise.race(executing);
+      }
+    }
+  }
+  return Promise.allSettled(ret);
+};
+
 const SongsScreenLayout = () => {
-	const { t } = useTranslation()
-	const isFocused = useIsFocused()
-	const { loading, current, setLoading, indexingList, setNeedUpdate, needUpdate } = useIndexStore()
-	const { setTracks, tracks, tracksMap, update, batchUpdate, cache } = useLibraryStore((state: any) => state)
-	const { setActiveTrack, activeTrack } = useActiveTrack((state: any) => state)
-	console.log('setActiveTrack', activeTrack);
-	
-	const theme = useThemeColor()
-	const {
-		setActiveQueueId,
-		activeQueueId,
-		queueListWithContent,
-		setQueueListContent,
-		updateQueue,
-		batchUpdateQueue,
-	} = useQueueStore((state: any) => state)
-	const refresh = useCallback(() => {
-		setTracks(tracksMap)
-		setActiveQueueId(activeQueueId)
-	}, [activeQueueId, setActiveQueueId, setTracks, tracksMap])
-	const refreshLibrary = useCallback(async () => {
-		try {
-			// 如果之前的请求存在且未完成，取消它
-			if (currentAbortController) {
-				console.log('abording')
-				currentAbortController.abort()
-			}
-			// 创建一个新的 AbortController
-			currentAbortController = new AbortController()
-			const signal = currentAbortController.signal
-			setLoading({ loading: true, percentage: 0, current: '' })
-			const localIndexing = indexingList.filter((el: { from: string }) => el.from === 'local')
-			const webdavIndexing = indexingList.filter((el: { from: string }) => el.from !== 'local')
-			const start = performance.now()
-			const localMusices = await indexingLocal(localIndexing, refresh)
-			const webdavMusices = await indexingWebdav(webdavIndexing, refresh)
+  const { t } = useTranslation()
+  const isFocused = useIsFocused()
+  const { loading, current, setLoading, indexingList, setNeedUpdate, needUpdate } = useIndexStore()
+  const { setTracks, tracks, tracksMap, update, batchUpdate } = useLibraryStore((state: any) => state)
+  const { setActiveTrack, activeTrack } = useActiveTrack((state: any) => state)
+  
+  const theme = useThemeColor()
+  const {
+    setActiveQueueId,
+    activeQueueId,
+    queueListWithContent,
+    setQueueListContent,
+    updateQueue,
+    batchUpdateQueue,
+  } = useQueueStore((state: any) => state)
+  const refresh = useCallback(() => {
+    setTracks(tracksMap)
+    setActiveQueueId(activeQueueId)
+  }, [activeQueueId, setActiveQueueId, setTracks, tracksMap])
 
-			setLoading({
-				loading: false,
-				percentage: 100,
-				current: '',
-			})
-			const musicTotal = [...localMusices, ...webdavMusices]
+  const refreshLibrary = useCallback(async () => {
+    try {
+      // If there's a previous request, abort it
+      if (currentAbortController) {
+        console.log('aborting')
+        currentAbortController.abort()
+      }
+      // Create a new AbortController
+      currentAbortController = new AbortController()
+      const signal = currentAbortController.signal
+      setLoading({ loading: true, percentage: 0, current: '' })
+      const localIndexing = indexingList.filter((el: { from: string }) => el.from === 'local')
+      const webdavIndexing = indexingList.filter((el: { from: string }) => el.from !== 'local')
+      const start = performance.now()
+      const localMusices = await indexingLocal(localIndexing, refresh)
+      const webdavMusices = await indexingWebdav(webdavIndexing, refresh)
 
-			const formatedMusicTotal = {} as any
-			const songTitles = musicTotal?.map((el) => {
-				const { title } = el
-				el.pendingMeta = true
-				formatedMusicTotal[title] = el
-				return title
-			})
+      setLoading({
+        loading: false,
+        percentage: 100,
+        current: '',
+      })
+      const musicTotal = [...localMusices, ...webdavMusices]
 
-			const filteredQueue = queueListWithContent[activeQueueId]
-				?.map((el: { title: string }, index: number) => {
-					return songTitles.includes(el.title) ? -1 : index
-				})
-				?.filter((el: number) => el > -1)
-			if (!songTitles.includes(activeTrack)) {
-				setActiveTrack(undefined)
-			}
+      const formatedMusicTotal = {} as any
+      const songTitles = musicTotal?.map((el) => {
+        const { title } = el
+        el.pendingMeta = true
+        formatedMusicTotal[title] = el
+        return title
+      })
 
-			setTracks(formatedMusicTotal)
-			setQueueListContent(
-				queueListWithContent[activeQueueId]?.filter(
-					(_el: any, index: any) => !filteredQueue.includes(index),
-				),
-				activeQueueId,
-				queueListWithContent,
-			)
-			const end = performance.now()
-			console.log('cost is', `${end - start}ms`)
-			await TrackPlayer.remove(filteredQueue)
+      const filteredQueue = queueListWithContent[activeQueueId]
+        ?.map((el: { title: string }, index: number) => {
+          return songTitles.includes(el.title) ? -1 : index
+        })
+        ?.filter((el: number) => el > -1)
+      if (!songTitles.includes(activeTrack)) {
+        setActiveTrack(undefined)
+      }
+
+      setTracks(formatedMusicTotal)
+      setQueueListContent(
+        queueListWithContent[activeQueueId]?.filter(
+          (_el: any, index: any) => !filteredQueue.includes(index),
+        ),
+        activeQueueId,
+        queueListWithContent,
+      )
+      const end = performance.now()
+      console.log('cost is', `${end - start}ms`)
+      await TrackPlayer.remove(filteredQueue)
+      
+      // Clear updates array before starting
+      updates = [];
+
+      // Use asyncPool to limit concurrency
+      await asyncPool(5, musicTotal, async (el, i) => {
+        const { title } = el;
+        if (signal.aborted) {
+          return;
+        }
+
+        try {
+          // Fetch metadata
+          const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal)
+          meta.title = title
+          if (!signal.aborted) {
+            updates.push(meta)
+            if (updates.length % BATCH_SIZE === 0) {
+              batchUpdate(updates)
+              batchUpdateQueue(updates)
+              updates = [];
+            }
+            const currentSong = await TrackPlayer.getActiveTrack();
+            if (currentSong && currentSong.basename === el.title) {
+              setActiveTrack(meta)
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching metadata for ${title}:`, error)
+        }
+      });
+
+      // Process any remaining updates
+      if (updates.length > 0) { 
+        batchUpdate(updates)
+        batchUpdateQueue(updates)
+      }
+      setLoading({ loading: false, percentage: 0, current: '' })
+      setNeedUpdate(false)
+    } catch (error) {
+      console.log('error', error)
+
+      setLoading({ loading: false, percentage: 0, current: '' })
+      setNeedUpdate(false)
+    } finally {
+      // Clear the abort controller
+      currentAbortController = null
+    }
+  }, [
+    activeQueueId,
+    activeTrack,
+    batchUpdate,
+    batchUpdateQueue,
+    indexingList,
+    queueListWithContent,
+    refresh,
+    setActiveTrack,
+    setLoading,
+    setNeedUpdate,
+    setQueueListContent,
+    setTracks,
+  ])
+
+  const debouncedRefreshLibrary = useCallback(debounce(refreshLibrary, 0), [refreshLibrary])
+
+  useEffect(() => {
+    currentAbortController = new AbortController()
+    const signal = currentAbortController.signal
+    setLoading({ loading: false, percentage: 0, current: '' })
+    const resumeMetadataExtraction = async () => {
+      // Clear updates array before starting
+      updates = [];
+
+      // Use asyncPool to limit concurrency
+      await asyncPool(5, tracks, async (el, i) => {
+        const { title, pendingMeta } = el
+        if (signal.aborted) {
+          return
+        }
+		// skip if already fetched
+		if(!pendingMeta) {
+			return
+		}
 		
-			
-			for (const [i, el] of musicTotal.entries()) {
-				const { title } = el
-				if (signal.aborted) {
-					return undefined
-				}
+        try {
+          // Fetch metadata
+          const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal)
+		  meta.title = title
+          if (!signal.aborted) {
+            updates.push(meta)
+            if (updates.length % BATCH_SIZE === 0) {
+              batchUpdate(updates)
+              batchUpdateQueue(updates)
+              updates = [];
+            }
+            const currentSong = await TrackPlayer.getActiveTrack();
+            if (currentSong && currentSong.basename === el.title) {
+              setActiveTrack(meta)
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching metadata for ${title}:`, error)
+        }
+      });
 
-				// Clear the abort controller at the last iteration
-				if (i === musicTotal.length - 1) {
-					currentAbortController = null
-				}
+      // Process any remaining updates
+      if (updates.length > 0) { 
+        batchUpdate(updates)
+        batchUpdateQueue(updates)
+      }
+    }
 
-				try {
-					// Fetch metadata and await it
-					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal, cache)
-					
-					meta.title = title
-					if (!signal.aborted) {
-						updates.push(meta)
-						if(updates.length % BATCH_SIZE === 0) {
-		
-							batchUpdate(updates)
-							batchUpdateQueue(updates)
-							updates = [];
-						}
-						const currentSong  = await TrackPlayer.getActiveTrack();
-						
-						
-						if (currentSong && currentSong.basename === el.title) {
-							setActiveTrack(meta)
-						}
-					}
-				} catch (error) {
-					console.error(`Error fetching metadata for ${title}:`, error)
-				}
-			}
-			if(updates.length > 0) { 
-				batchUpdate(updates)
-				batchUpdateQueue(updates)
-			}
-			setLoading({ loading: false, percentage: 0, current: '' })
-			setNeedUpdate(false)
-		} catch (error) {
-			console.log('error', error)
+    resumeMetadataExtraction()
 
-			setLoading({ loading: false, percentage: 0, current: '' })
-			setNeedUpdate(false)
-		}
-	}, [
-		activeQueueId,
-		activeTrack,
-		cache,
-		indexingList,
-		queueListWithContent,
-		refresh,
-		setActiveTrack,
-		setLoading,
-		setNeedUpdate,
-		setQueueListContent,
-		setTracks,
-		update,
-		updateQueue,
-	])
-	const debouncedRefreshLibrary = useCallback(debounce(refreshLibrary, 0), [refreshLibrary])
+    return () => {
+      // Cleanup on unmount
+      if (currentAbortController) {
+        currentAbortController.abort()
+      }
+    }
+  }, [])
 
-	useEffect(() => {
-		currentAbortController = new AbortController()
-		const signal = currentAbortController.signal
-		setLoading({ loading: false, percentage: 0, current: '' })
-		const resumeMetadaExtration = async () => {
-			for (const [i, el] of tracks.entries()) {
-				const { title, pendingMeta } = el
-				if (!pendingMeta) {
-					continue
-				}
-				if (signal.aborted) {
-					return undefined
-				}
+  useEffect(() => {
+    if (isFocused && needUpdate) {
+      try {
+        debouncedRefreshLibrary()
+        setNeedUpdate(false)
+      } catch (error) {
+        console.log('error', error)
+      }
+    }
+  }, [needUpdate, debouncedRefreshLibrary, isFocused, setNeedUpdate])
 
-				// Clear the abort controller at the last iteration
-				if (i === tracks.length - 1) {
-					currentAbortController = null
-				}
-
-				try {
-
-					// Fetch metadata and await it
-					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal, cache)
-					updates.push(meta)
-					if (!signal.aborted) {
-						if(updates.length % BATCH_SIZE === 0) {
-						
-							batchUpdate(updates)
-							batchUpdateQueue(updates)
-							updates = [];
-						}
-						const currentSong  = await TrackPlayer.getActiveTrack();
-						
-						
-						if (currentSong && currentSong.basename === el.title) {
-							setActiveTrack(meta)
-						}
-					}
-				} catch (error) {
-					console.error(`Error fetching metadata for ${title}:`, error)
-				}
-			}
-			if(updates.length > 0) { 
-				batchUpdate(updates)
-				batchUpdateQueue(updates)
-			}
-
-		}
-
-		resumeMetadaExtration()
-	}, [])
-
-	useEffect(() => {
-		if (isFocused && needUpdate) {
-			try {
-				debouncedRefreshLibrary()
-				setNeedUpdate(false)
-			} catch (error) {
-				console.log('error', error)
-			}
-		}
-	}, [needUpdate, debouncedRefreshLibrary, isFocused, setNeedUpdate])
-	return (
-		<SafeAreaView style={defaultStyles.container}>
-			<Stack>
-				<Stack.Screen
-					name="index"
-					options={{
-						...StackScreenWithSearchBar,
-						headerLargeTitle: true,
-						headerTitle: t('songs.header'),
-						headerRight: () => {
-							return (
-								<StopPropagation>
-									{loading ? (
-										<View>
-											<ActivityIndicator
-												style={{
-													position: 'absolute',
-													right: 0,
-												}}
-												size="small"
-											/>
-											<Text
-												style={{
-													color: theme.colors.text,
-													fontSize: 12,
-													position: 'absolute',
-													right: 0,
-													top: 24,
-												}}
-											>
-												{current}
-											</Text>
-										</View>
-									) : (
-										<HeaderMemu refreshLibrary={refreshLibrary}>
-											<Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
-										</HeaderMemu>
-									)}
-								</StopPropagation>
-							)
-						},
-					}}
-				/>
-			</Stack>
-		</SafeAreaView>
-	)
+  return (
+    <SafeAreaView style={defaultStyles.container}>
+      <Stack>
+        <Stack.Screen
+          name="index"
+          options={{
+            ...StackScreenWithSearchBar,
+            headerLargeTitle: true,
+            headerTitle: t('songs.header'),
+            headerRight: () => {
+              return (
+                <StopPropagation>
+                  {loading ? (
+                    <View>
+                      <ActivityIndicator
+                        style={{
+                          position: 'absolute',
+                          right: 0,
+                        }}
+                        size="small"
+                      />
+                      <Text
+                        style={{
+                          color: theme.colors.text,
+                          fontSize: 12,
+                          position: 'absolute',
+                          right: 0,
+                          top: 24,
+                        }}
+                      >
+                        {current}
+                      </Text>
+                    </View>
+                  ) : (
+                    <HeaderMemu refreshLibrary={refreshLibrary}>
+                      <Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
+                    </HeaderMemu>
+                  )}
+                </StopPropagation>
+              )
+            },
+          }}
+        />
+      </Stack>
+    </SafeAreaView>
+  )
 }
 
 export default SongsScreenLayout

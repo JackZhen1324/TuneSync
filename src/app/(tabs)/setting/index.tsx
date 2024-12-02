@@ -30,6 +30,9 @@ const SettingScreen = () => {
 			case 'language':
 				setPanelVisible(true)
 				break
+			case 'cache':
+				router.push(`/(tabs)/setting/cache`)
+			break
 		}
 	}
 

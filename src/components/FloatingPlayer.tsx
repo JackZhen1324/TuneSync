@@ -1,6 +1,5 @@
 import { PlayPauseButton, SkipToNextButton } from '@/components/PlayerControls'
 import { unknownTrackImageUri } from '@/constants/images'
-import { useActiveTrack } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { StyleSheet, TouchableOpacity, View, ViewProps } from 'react-native'
@@ -11,7 +10,6 @@ import { MovingText } from './MovingText'
 export const FloatingPlayer = ({ style }: ViewProps) => {
 	const router = useRouter()
 
-	const { activeTrackObj, activeTrack } = useActiveTrack((state) => state)
 	const track = useActiveTrackAlternative()
 	const displayedTrack = track
 
@@ -34,7 +32,7 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 				<View style={styles.trackTitleContainer}>
 					<MovingText
 						style={styles.trackTitle}
-						text={`${activeTrack}  ${activeTrackObj.artist || ''}` ?? 'loading'}
+						text={`${displayedTrack?.basename}  ${displayedTrack?.artist || ''}`}
 						animationThreshold={25}
 					/>
 				</View>

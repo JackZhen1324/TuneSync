@@ -33,7 +33,12 @@
 		"addedResource": "추가된 리소스",
 		"folder": "폴더",
 		"about": "정보",
-		"language": "Language"
+		"language": "Language",
+		"cacheManagement": "Cache"
+	},
+	"cache": {
+		"size": "cache 교광",
+		"clean": "cache 교광"
 	},
 	"webdavAdd": {
 		"configName": "리소스 이름",
