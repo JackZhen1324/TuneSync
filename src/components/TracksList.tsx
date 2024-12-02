@@ -1,13 +1,14 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
+import { addTrackToPlayer } from '@/helpers/cache'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
 import { useCallback } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TrackPlayer, { Track, useIsPlaying } from 'react-native-track-player'
+import TrackPlayer, { Track, useActiveTrack as useActiveTrackAlternative, useIsPlaying } from 'react-native-track-player'
 import { QueueControls } from './QueueControls'
 export type TracksListProps = Partial<FlatListProps<Track>> & {
 	id: string
@@ -30,7 +31,8 @@ export const TracksList = ({
 	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
 		(state) => state,
 	)
-	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
+	const { setActiveTrack } = useActiveTrack((state) => state)
+	const activeTrack = useActiveTrackAlternative()
 	const isPLaying = useIsPlaying()
 	const handleTrackSelect = useCallback(
 		async (selectedTrack: Track) => {
@@ -43,7 +45,8 @@ export const TracksList = ({
 					(el: { title: string | undefined }) => el.title !== selectedTrack.title,
 				)
 				setQueueListContent([...filteredList, selectedTrack], activeQueueId, queueListWithContent)
-				await TrackPlayer.add([selectedTrack])
+				await addTrackToPlayer(selectedTrack)
+				//await TrackPlayer.add([selectedTrack])
 
 				await TrackPlayer.pause()
 				await TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
@@ -58,13 +61,13 @@ export const TracksList = ({
 	)
 	const renderItem = useCallback(
 		({ item: track }: any, index: number) => {
-			const isActive = track.title === activeTrack
+			const isActive = activeTrack ? track.title === activeTrack.basename : false
 			return (
 				<TracksListItem
 					from={from}
 					isPLaying={isPLaying.playing}
 					isActive={isActive}
-					key={`${track?.filename}${track.url}${track.etag}${index}`}
+					key={`${track?.filename}${track.url}${track.etag}`}
 					track={track}
 					onTrackSelect={handleTrackSelect}
 				/>

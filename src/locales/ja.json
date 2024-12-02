@@ -33,7 +33,12 @@
 		"addedResource": "追加されたリソース",
 		"folder": "フォルダ",
 		"about": "情報",
-		"language": "Language"
+		"language": "Language",
+		"cacheManagement": "Cache"
+	},
+	"cache": {
+		"size": "Cache Size",
+		"clean": "Clean Cache"
 	},
 	"webdavAdd": {
 		"configName": "リソース名",

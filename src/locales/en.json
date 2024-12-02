@@ -33,8 +33,10 @@
 		"addedResource": "Added Resources",
 		"folder": "Folder",
 		"about": "About",
-		"language": "Language"
+		"language": "Language",
+		"cacheManagement": "Cache Management"
 	},
+
 	"webdavAdd": {
 		"configName": "Resource Name",
 		"location": "Resource Location (Domain or IP)",
@@ -42,6 +44,10 @@
 		"password": "Password",
 		"saveBtn": "Save",
 		"deleteBtn": "Delete"
+	},
+	"cache": {
+		"size": "Cache Size",
+		"clean": "Clean Cache"
 	},
 	"about": {
 		"version": "Current Version",

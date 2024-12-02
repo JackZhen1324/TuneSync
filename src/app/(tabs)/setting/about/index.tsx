@@ -1,21 +1,38 @@
 import logo from '@/assets/icon.png'
-import { router } from 'expo-router'
+import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
 const AboutPage = () => {
 	const { t } = useTranslation()
+	const router = useRouter()
+	// 处理菜单点击事件
 	const handlePress = (menu) => {
 		switch (menu) {
+			case 'report':
+				Linking.openURL('https://github.com/JackZhen1324/TuneSync/issues').catch((err) =>
+					console.error("Couldn't load page", err),
+				)
+				break
+			case 'website':
+				Linking.openURL('https://github.com/JackZhen1324/TuneSync').catch((err) =>
+					console.error("Couldn't load page", err),
+				)
+				break
 			case 'privacy':
 				router.push('/setting/about/privacy')
+				break
+			default:
+				break
 		}
 	}
+
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
 			<View style={styles.content}>
 				<Image
-					source={logo} // Replace with your logo URL
+					source={logo} // 替换为你的 logo 路径
 					style={styles.logo}
 				/>
 				<Text style={styles.appName}>TuneSync</Text>
@@ -25,16 +42,18 @@ const AboutPage = () => {
 					<Text style={styles.optionText}>{t('about.version')}</Text>
 					<Text style={styles.optionValue}>0.1.0</Text>
 				</View>
-				<TouchableOpacity style={styles.option}>
-					<Text style={styles.optionText}>{t('about.checkUpdate')}</Text>
-					<Text style={styles.optionValue}>已是最新版本 </Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.option}>
+
+				{/* 跳转到 GitHub Issues */}
+				<TouchableOpacity onPress={() => handlePress('report')} style={styles.option}>
 					<Text style={styles.optionText}>{t('about.report')}</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.option}>
+
+				{/* 跳转到 GitHub 页面 */}
+				<TouchableOpacity onPress={() => handlePress('website')} style={styles.option}>
 					<Text style={styles.optionText}>{t('about.website')}</Text>
 				</TouchableOpacity>
+
+				{/* 跳转到隐私政策 */}
 				<TouchableOpacity onPress={() => handlePress('privacy')} style={styles.option}>
 					<Text style={styles.optionText}>{t('about.privacy')}</Text>
 				</TouchableOpacity>

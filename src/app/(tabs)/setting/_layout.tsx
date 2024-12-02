@@ -28,6 +28,17 @@ const PlaylistsScreenLayout = () => {
 						headerTintColor: colors.primary,
 					}}
 				/>
+								<Stack.Screen
+					name="cache/index"
+					options={{
+						headerTitle: t('setting.cacheManagement'),
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
 				<Stack.Screen
 					name="media/webdav/[index]"
 					options={{

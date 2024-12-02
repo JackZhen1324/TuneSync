@@ -33,7 +33,12 @@
 		"addedResource": "Lagrede Ressurser",
 		"folder": "Mappe",
 		"about": "Om",
-		"language": "Språk"
+		"language": "Språk",
+		"cacheManagement": "Cache"
+	},
+	"cache": {
+		"size": "Cache størrelse",
+		"clean": "Rens cache"
 	},
 	"webdavAdd": {
 		"configName": "Ressursnavn",
