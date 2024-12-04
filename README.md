@@ -40,6 +40,7 @@ TuneSync is currently under early access stage. While some features are operatio
 - [x] Manage audio queue
 - [x] Searching songs from added library
 - [x] Airplay support
+- [ ] Support Android
 - [ ] Voice searching songs from added library
 - [ ] Karaoke mode
 - [ ] Metadata editing
@@ -66,6 +67,7 @@ npx expo run:ios
 ### Run Andriod
 
 ```bash
+// The UI is broken, need to be fixed.
 npx expo run:andriod
 ```
 
