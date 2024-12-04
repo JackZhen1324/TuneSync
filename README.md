@@ -87,4 +87,4 @@ Not ready to release
 
 ### iOS
 
-Distribute via TestFlight. Please leave your Apple email address in the Discord channel or contact me at zqian15@asu.edu to receive a redeem code.
+Distribute via TestFlight. Try install from https://testflight.apple.com/join/HBQ91aZW or contack me via zqian15@asu.edu for helps.
