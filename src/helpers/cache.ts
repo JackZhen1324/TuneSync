@@ -1,64 +1,76 @@
-import RNFS from 'react-native-fs';
-import TrackPlayer from 'react-native-track-player';
+import RNFS from 'react-native-fs'
+import TrackPlayer from 'react-native-track-player'
 
-const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache`;
+const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache`
 
 // 初始化缓存目录
 export const initCacheDirectory = async () => {
-  const exists = await RNFS.exists(CACHE_DIR);
-  if (!exists) {
-    await RNFS.mkdir(CACHE_DIR);
-  }
-};
+	const exists = await RNFS.exists(CACHE_DIR)
+	if (!exists) {
+		await RNFS.mkdir(CACHE_DIR)
+	}
+}
 
 // 获取缓存音轨
-export const getCachedTrack = async (trackUrl, trackId) => {
-  const fileExtension = trackUrl.split('.').pop();
-  const fileName = `${trackId}.${fileExtension}`;
-  const filePath = `${CACHE_DIR}/${fileName}`;
+interface Track {
+	id: string
+	url: string
+	title: string
+	artist: string
+	artwork?: string
+	basename?: string
+}
 
-  const fileExists = await RNFS.exists(filePath);
+export const getCachedTrack = async (trackUrl: string, trackId: string): Promise<string> => {
+	const fileExtension = trackUrl.split('.').pop() || ''
+	const fileName = `${trackId}.${fileExtension}`
+	const filePath = `${CACHE_DIR}/${fileName}`
 
-  if (fileExists) {
-    console.log('hit cache:', filePath);
-    return filePath;
-  } else {
-    try {
-      const options = {
-        fromUrl: trackUrl,
-        toFile: filePath,
-        background: true,
-        discretionary: true,
-      };
+	const fileExists = await RNFS.exists(filePath)
 
-      const downloadResult = RNFS.downloadFile(options);
-      const result = await downloadResult.promise;
+	if (fileExists) {
+		console.log('hit cache:', filePath)
+		return filePath
+	} else {
+		try {
+			const options = {
+				fromUrl: trackUrl,
+				toFile: filePath,
+				background: true,
+				discretionary: true,
+			}
 
-      if (result.statusCode === 200) {
-        console.log('start playing from cache', filePath);
-        
-        return filePath;
-      } else {
-        throw new Error('文件下载失败');
-      }
-    } catch (error) {
-        console.log('缓存音轨时出错:', error);
-        
-      console.error('缓存音轨时出错:', error);
-      return trackUrl; // 返回远程 URL 作为回退
-    }
-  }
-};
+			const downloadResult = RNFS.downloadFile(options)
+			const result = await downloadResult.promise
+
+			if (result.statusCode === 200) {
+				console.log('start playing from cache', filePath)
+				return filePath
+			} else {
+				throw new Error('文件下载失败')
+			}
+		} catch (error) {
+			console.log('缓存音轨时出错:', error)
+			console.error('缓存音轨时出错:', error)
+			return trackUrl // 返回远程 URL 作为回退
+		}
+	}
+}
 
 // 添加音轨到播放器
-export const addTrackToPlayer = async (track) => {
-  const trackUrl = await getCachedTrack(track.url, track.basename);
-  const trackToAdd = {
-    ...track,
-    url: trackUrl,
-  };
-  await TrackPlayer.add([trackToAdd]);
-};
+interface TrackToAdd extends Track {
+	url: string
+}
+
+export const addTrackToPlayer = async (track: Track): Promise<void> => {
+	const trackUrl = await getCachedTrack(track.url, track.basename || track.id)
+	const trackToAdd: TrackToAdd = {
+		...track,
+		url: trackUrl,
+	}
+
+	await TrackPlayer.add(trackToAdd)
+}
 
 // // 应用启动时初始化缓存目录
 // initCacheDirectory();

@@ -20,9 +20,9 @@ const SongsScreen = () => {
 	})
 
 	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
-	const { queueListWithContent, activeQueueId } = useQueueStore((state) => state)
+	const { queueListWithContent } = useQueueStore((state) => state) as { queueListWithContent: any }
 	const loadQueue = async () => {
-		await TrackPlayer.setQueue(queueListWithContent[activeQueueId])
+		await TrackPlayer.setQueue(queueListWithContent.default)
 		init = 1
 	}
 	useEffect(() => {
