@@ -12,6 +12,7 @@ import { StopPropagation } from './utils/StopPropagation'
 export type TracksListItemProps = {
 	activeSong: string
 	track: Track
+	index: number
 	onTrackSelect: (track: Track) => void
 	onDelete: any
 }
@@ -19,6 +20,7 @@ export type TracksListItemProps = {
 const PlayListItemComponent = ({
 	activeSong,
 	track,
+	index,
 	onTrackSelect: handleTrackSelect,
 	onDelete: handleDelete,
 }: TracksListItemProps) => {
@@ -77,7 +79,7 @@ const PlayListItemComponent = ({
 					{/* <Pressable > */}
 					<StopPropagation>
 						<MaterialIcons
-							onPress={() => handleDelete(track)}
+							onPress={() => handleDelete(track, index)}
 							name="delete-outline"
 							size={24}
 							color="gray"
