@@ -1,6 +1,5 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { debounce } from '@/helpers/debounce'
-import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
@@ -16,43 +15,46 @@ const ItemDivider = () => (
 )
 
 export const PlaylistsList = () => {
-	const { activeQueueId, queueListWithContent } = useQueueStore((state) => state)
-	const { queue, remove } = useTrackPlayerQueue()
+	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
+		(state) => state,
+	)
 	const [needUpdate, setNeedUpdate] = useState(false)
-	const { setActiveTrack } = useActiveTrack((state) => state)
+	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
 	const currentTrack = useActiveTrackAlternative()
-
 	const onDelete = useCallback(
-		async (item: { title: any }, index: any) => {
-			const resQueue = await remove(index || 0)
-
-			if (resQueue.length < 1) {
+		async (item: { title: any }) => {
+			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
+				(el) => el.title !== item.title,
+			)
+			setQueueListContent(filteredQueueListWithContent, activeQueueId, queueListWithContent)
+			if (filteredQueueListWithContent.length < 1) {
 				TrackPlayer.reset()
 				setActiveTrack(undefined)
 				router.back()
 				return
 			}
 
-			if (currentTrack?.basename === item.title) {
+			if (activeTrack === item.title) {
+				await TrackPlayer.skipToNext()
 				TrackPlayer.play()
 			} else {
 				setNeedUpdate(true)
 			}
 		},
-		[currentTrack?.basename, remove, setActiveTrack],
+		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
 	useEffect(() => {
 		const sync = debounce(async () => {
 			const has = queueListWithContent[activeQueueId].map((el) => el.title)
-			const queue = (await TrackPlayer.getQueue()) as any
+			const queue = await TrackPlayer.getQueue()
 			const deletePending = queue
-				.map((el: { title: string }, index: any) => {
+				.map((el, index) => {
 					if (has.includes(el.title)) {
 						return -1
 					}
 					return index
 				})
-				.filter((el: number) => el > 0)
+				.filter((el) => el > 0)
 			await TrackPlayer.remove(deletePending)
 			setNeedUpdate(false)
 		}, 300)
@@ -62,23 +64,25 @@ export const PlaylistsList = () => {
 	}, [activeQueueId, queueListWithContent, setActiveTrack, needUpdate])
 
 	const renderItem = useCallback(
-		({ item: track, index }: any) => {
+		({ item: track }: any) => {
 			return (
 				<PlayListItem
 					onDelete={onDelete}
 					activeSong={currentTrack?.basename || ''}
 					key={track.filename}
 					track={track}
-					index={index}
 					onTrackSelect={debounce(async () => {
 						setActiveTrack(track)
+						const index = queueListWithContent[activeQueueId].findIndex(
+							(el: { title: any }) => el.title === track.title,
+						)
 						await TrackPlayer.skip(index)
 						TrackPlayer.play()
 					}, 100)}
 				/>
 			)
 		},
-		[onDelete, currentTrack?.basename, setActiveTrack],
+		[activeQueueId, activeTrack, onDelete, queueListWithContent, setActiveTrack, currentTrack],
 	)
 
 	return (
@@ -95,7 +99,7 @@ export const PlaylistsList = () => {
 					/>
 				</View>
 			}
-			data={queue}
+			data={queueListWithContent[activeQueueId]}
 			renderItem={renderItem}
 		/>
 	)

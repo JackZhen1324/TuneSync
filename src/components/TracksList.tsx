@@ -1,17 +1,14 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
-import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
+import { addTrackToPlayer } from '@/helpers/cache'
 import { useActiveTrack } from '@/store/library'
+import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
 import { useCallback } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import TrackPlayer, {
-	Track,
-	useActiveTrack as useActiveTrackAlternative,
-	useIsPlaying,
-} from 'react-native-track-player'
+import TrackPlayer, { Track, useActiveTrack as useActiveTrackAlternative, useIsPlaying } from 'react-native-track-player'
 import { QueueControls } from './QueueControls'
 export type TracksListProps = Partial<FlatListProps<Track>> & {
 	id: string
@@ -31,24 +28,28 @@ export const TracksList = ({
 	hideQueueControls = false,
 	...flatlistProps
 }: TracksListProps) => {
+	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
+		(state) => state,
+	)
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const activeTrack = useActiveTrackAlternative()
-	const { queue, add } = useTrackPlayerQueue()
-
 	const isPLaying = useIsPlaying()
 	const handleTrackSelect = useCallback(
-		async (selected: Track) => {
-			const selectedTrack = {
-				...selected,
-				id: queue.length,
-			}
+		async (selectedTrack: Track) => {
 			setActiveTrack(selectedTrack)
-			const index = queue.findIndex((el) => el.title === selectedTrack.title)
+			const index = queueListWithContent[activeQueueId].findIndex(
+				(el: { title: string | undefined }) => el.title === selectedTrack.title,
+			)
 			if (index === -1) {
+				const filteredList = queueListWithContent[activeQueueId].filter(
+					(el: { title: string | undefined }) => el.title !== selectedTrack.title,
+				)
+				setQueueListContent([...filteredList, selectedTrack], activeQueueId, queueListWithContent)
+				await addTrackToPlayer(selectedTrack)
+				//await TrackPlayer.add([selectedTrack])
+
 				await TrackPlayer.pause()
-				await add(selectedTrack)
-				await TrackPlayer.skipToNext()
-				await TrackPlayer.play()
+				await TrackPlayer.skip(queueListWithContent[activeQueueId].length - 1 || 0)
 				TrackPlayer.play()
 			} else {
 				await TrackPlayer.pause()
@@ -56,10 +57,10 @@ export const TracksList = ({
 				TrackPlayer.play()
 			}
 		},
-		[add, queue, setActiveTrack],
+		[activeQueueId, queueListWithContent, setActiveTrack, setQueueListContent],
 	)
 	const renderItem = useCallback(
-		({ item: track }: { item: Track }) => {
+		({ item: track }: any, index: number) => {
 			const isActive = activeTrack ? track.title === activeTrack.basename : false
 			return (
 				<TracksListItem

@@ -1,16 +1,18 @@
 import { PlayPauseButton, SkipToNextButton } from '@/components/PlayerControls'
 import { unknownTrackImageUri } from '@/constants/images'
-import { useActiveTrack } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { StyleSheet, TouchableOpacity, View, ViewProps } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { useActiveTrack as useActiveTrackAlternative } from 'react-native-track-player'
 import { MovingText } from './MovingText'
 
 export const FloatingPlayer = ({ style }: ViewProps) => {
 	const router = useRouter()
-	const { activeTrackObj } = useActiveTrack()
-	const displayedTrack = activeTrackObj
+
+	const track = useActiveTrackAlternative()
+	const displayedTrack = track
+
 	const handlePress = () => {
 		router.navigate('/player')
 	}
@@ -30,7 +32,7 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 				<View style={styles.trackTitleContainer}>
 					<MovingText
 						style={styles.trackTitle}
-						text={`${displayedTrack?.title}  ${displayedTrack?.artist || ''}`}
+						text={`${displayedTrack?.basename}  ${displayedTrack?.artist || ''}`}
 						animationThreshold={25}
 					/>
 				</View>
