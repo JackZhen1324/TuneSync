@@ -1,5 +1,5 @@
 import request from '@/helpers/request'
-export async function getAccessToken() {
+export async function getAccessToken(): Promise<any> {
 	const params = new URLSearchParams()
 	params.append('grant_type', 'client_credentials')
 	params.append('client_id', 'f690106c3dcd4e2aba404bb13b4e61da')

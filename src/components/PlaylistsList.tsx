@@ -1,5 +1,6 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import { debounce } from '@/helpers/debounce'
+import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { utilsStyles } from '@/styles'
@@ -15,46 +16,43 @@ const ItemDivider = () => (
 )
 
 export const PlaylistsList = () => {
-	const { activeQueueId, queueListWithContent, setQueueListContent } = useQueueStore(
-		(state) => state,
-	)
+	const { activeQueueId, queueListWithContent } = useQueueStore((state) => state)
+	const { queue, remove } = useTrackPlayerQueue()
 	const [needUpdate, setNeedUpdate] = useState(false)
-	const { setActiveTrack, activeTrack } = useActiveTrack((state) => state)
+	const { setActiveTrack } = useActiveTrack((state) => state)
 	const currentTrack = useActiveTrackAlternative()
+
 	const onDelete = useCallback(
-		async (item: { title: any }) => {
-			const filteredQueueListWithContent = [...queueListWithContent[activeQueueId]].filter(
-				(el) => el.title !== item.title,
-			)
-			setQueueListContent(filteredQueueListWithContent, activeQueueId, queueListWithContent)
-			if (filteredQueueListWithContent.length < 1) {
+		async (item: { title: any }, index: any) => {
+			const resQueue = await remove(index || 0)
+
+			if (resQueue.length < 1) {
 				TrackPlayer.reset()
 				setActiveTrack(undefined)
 				router.back()
 				return
 			}
 
-			if (activeTrack === item.title) {
-				await TrackPlayer.skipToNext()
+			if (currentTrack?.basename === item.title) {
 				TrackPlayer.play()
 			} else {
 				setNeedUpdate(true)
 			}
 		},
-		[activeQueueId, activeTrack, queueListWithContent, setActiveTrack, setQueueListContent],
+		[currentTrack?.basename, remove, setActiveTrack],
 	)
 	useEffect(() => {
 		const sync = debounce(async () => {
 			const has = queueListWithContent[activeQueueId].map((el) => el.title)
-			const queue = await TrackPlayer.getQueue()
+			const queue = (await TrackPlayer.getQueue()) as any
 			const deletePending = queue
-				.map((el, index) => {
+				.map((el: { title: string }, index: any) => {
 					if (has.includes(el.title)) {
 						return -1
 					}
 					return index
 				})
-				.filter((el) => el > 0)
+				.filter((el: number) => el > 0)
 			await TrackPlayer.remove(deletePending)
 			setNeedUpdate(false)
 		}, 300)
@@ -62,34 +60,40 @@ export const PlaylistsList = () => {
 			sync()
 		}
 	}, [activeQueueId, queueListWithContent, setActiveTrack, needUpdate])
-
+	const handleClick = useCallback(
+		async (track, index) => {
+			setActiveTrack(track)
+			await TrackPlayer.skip(index)
+			TrackPlayer.play()
+		},
+		[setActiveTrack],
+	)
 	const renderItem = useCallback(
-		({ item: track }: any) => {
+		({ item: track, index }: any) => {
 			return (
 				<PlayListItem
 					onDelete={onDelete}
 					activeSong={currentTrack?.basename || ''}
 					key={track.filename}
 					track={track}
-					onTrackSelect={debounce(async () => {
-						setActiveTrack(track)
-						const index = queueListWithContent[activeQueueId].findIndex(
-							(el: { title: any }) => el.title === track.title,
-						)
-						await TrackPlayer.skip(index)
-						TrackPlayer.play()
-					}, 100)}
+					index={index}
+					onTrackSelect={handleClick}
 				/>
 			)
 		},
-		[activeQueueId, activeTrack, onDelete, queueListWithContent, setActiveTrack, currentTrack],
+		[onDelete, currentTrack?.basename, handleClick],
 	)
 
 	return (
 		<FlatList
+			keyExtractor={(item, index) => `${item.etag}`}
 			contentContainerStyle={{ paddingTop: 10, paddingBottom: 300 }}
 			ItemSeparatorComponent={ItemDivider}
 			ListFooterComponent={ItemDivider}
+			windowSize={1}
+			initialNumToRender={10}
+			// removeClippedSubviews={true}
+			contentInsetAdjustmentBehavior="automatic"
 			ListEmptyComponent={
 				<View>
 					<Text style={utilsStyles.emptyContentText}>No playlist found</Text>
@@ -99,7 +103,7 @@ export const PlaylistsList = () => {
 					/>
 				</View>
 			}
-			data={queueListWithContent[activeQueueId]}
+			data={queue}
 			renderItem={renderItem}
 		/>
 	)

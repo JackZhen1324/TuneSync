@@ -22,7 +22,8 @@ SplashScreen.preventAutoHideAsync()
 TrackPlayer.registerPlaybackService(() => playbackService)
 
 const App = () => {
-	const { setActiveTrack } = useActiveTrack((state) => state)
+	const { setActiveTrackIndex, activeTrackId } = useActiveTrack((state) => state)
+
 	const { language } = useLanguageStore()
 
 	const handleTrackPlayerLoaded = useCallback(() => {
@@ -32,15 +33,17 @@ const App = () => {
 		onLoad: handleTrackPlayerLoaded,
 	})
 
-	const changeLanguage = (lang) => {
+	const changeLanguage = (lang: string): void => {
 		i18n.changeLanguage(lang)
 	}
+
 	useEffect(() => {
 		// initialize cache directory
 		initCacheDirectory()
 		// change language
 		changeLanguage(language)
 	}, [])
+
 	const { setToken } = useSpotofyAuthToken()
 	const { runAsync } = useRequest(getAccessToken, {
 		manual: true,
@@ -50,18 +53,17 @@ const App = () => {
 			setToken(`${el.token_type} ${el.access_token}`)
 		})
 	}, [])
-
-	useLogTrackPlayerState()
 	useTrackPlayerEvents(
 		[Event.PlaybackState, Event.PlaybackTrackChanged],
 		debounce(async (event: { state: string }) => {
 			if (event.state === 'playing') {
-				const track = await TrackPlayer.getActiveTrack()
 				const activeIndex = await TrackPlayer.getActiveTrackIndex()
-				setActiveTrack(track, activeIndex)
+				setActiveTrackIndex(activeIndex)
 			}
 		}, 10),
 	)
+	useLogTrackPlayerState()
+
 	return (
 		<SafeAreaProvider>
 			<GestureHandlerRootView style={{ flex: 1 }}>
