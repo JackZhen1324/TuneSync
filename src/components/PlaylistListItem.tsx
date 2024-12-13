@@ -12,13 +12,15 @@ import { StopPropagation } from './utils/StopPropagation'
 export type TracksListItemProps = {
 	activeSong: string
 	track: Track
-	onTrackSelect: (track: Track) => void
+	index: number
+	onTrackSelect: (track: Track, index: number) => void
 	onDelete: any
 }
 
 const PlayListItemComponent = ({
 	activeSong,
 	track,
+	index,
 	onTrackSelect: handleTrackSelect,
 	onDelete: handleDelete,
 }: TracksListItemProps) => {
@@ -28,8 +30,8 @@ const PlayListItemComponent = ({
 		return activeSong === track.title
 	}, [activeSong, track.title])
 	const handlePress = useCallback(() => {
-		handleTrackSelect(track)
-	}, [handleTrackSelect, track])
+		handleTrackSelect(track, index)
+	}, [handleTrackSelect, track, index])
 
 	return (
 		<TouchableRipple centered={true} rippleColor="rgba(255, 255, 255, .005)" onPress={handlePress}>
@@ -77,7 +79,7 @@ const PlayListItemComponent = ({
 					{/* <Pressable > */}
 					<StopPropagation>
 						<MaterialIcons
-							onPress={() => handleDelete(track)}
+							onPress={() => handleDelete(track, index)}
 							name="delete-outline"
 							size={24}
 							color="gray"

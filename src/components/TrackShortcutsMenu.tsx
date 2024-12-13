@@ -58,7 +58,7 @@ export const TrackShortcutsMenu = ({ track, children, from }: TrackShortcutsMenu
 			})
 			.with('remove-from-playlist', () => {
 				const [albumName] = (from || '').split('::')
-				const newPlaylist = playlist.map((el) => {
+				const newPlaylist = playlist.map((el: { name: string; tracks: Track[] }) => {
 					if (el.name === albumName) {
 						return {
 							...el,

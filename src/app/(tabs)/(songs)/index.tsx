@@ -3,7 +3,7 @@ import { screenPadding } from '@/constants/tokens'
 import { trackTitleFilter } from '@/helpers/filter'
 import { generateTracksListId } from '@/helpers/miscellaneous'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
-import { useLibraryStore } from '@/store/library'
+import { useActiveTrack, useLibraryStore } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { useEffect, useMemo } from 'react'
@@ -20,9 +20,11 @@ const SongsScreen = () => {
 	})
 
 	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
-	const { queueListWithContent, activeQueueId } = useQueueStore((state) => state)
+	const { activeTrackId } = useActiveTrack((state) => state)
+	const { queueListWithContent } = useQueueStore((state) => state) as { queueListWithContent: any }
 	const loadQueue = async () => {
-		await TrackPlayer.setQueue(queueListWithContent[activeQueueId])
+		await TrackPlayer.setQueue(queueListWithContent.default)
+		await TrackPlayer.skip(activeTrackId)
 		init = 1
 	}
 	useEffect(() => {

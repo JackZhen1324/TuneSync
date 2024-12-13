@@ -6,15 +6,16 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import SlidingUpPanel from 'rn-sliding-up-panel'
 type useModalView = {
 	content: () => ReactNode
-	headerLeft: string
-	headerRight: () => ReactNode
-	allowDragging: boolean
+	headerLeft?: string
+	headerRight?: () => ReactNode
+	allowDragging?: boolean
 }
 const useModalView = (props: useModalView) => {
 	const { content, headerLeft, headerRight, allowDragging = false, ...res } = props
 	// const [modalVisible, setModalVisible] = useState(false)
 	const panelRef = useRef(null)
 	const { t } = useTranslation()
+
 	const render = () => {
 		return (
 			<SlidingUpPanel
