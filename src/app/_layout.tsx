@@ -32,7 +32,7 @@ const App = () => {
 		onLoad: handleTrackPlayerLoaded,
 	})
 
-	const changeLanguage = (lang: string): void => {
+	const changeLanguage = (lang) => {
 		i18n.changeLanguage(lang)
 	}
 	useEffect(() => {

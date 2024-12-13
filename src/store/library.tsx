@@ -12,7 +12,6 @@ import { persist } from 'zustand/middleware'
 import { storage } from './mkkv'
 
 interface LibraryState {
-	cache: any
 	tracks: TrackWithPlaylist[]
 	tracksMap: any
 	setTracks: any
@@ -42,25 +41,31 @@ export const useLibraryStore = create<LibraryState>()(
 	persist(
 		(set) => {
 			return {
-				tracks: [] as TrackWithPlaylist[],
-				tracksMap: {} as Record<string, TrackWithPlaylist>,
-				cache: {} as Record<string, TrackWithPlaylist>,
-				batchUpdate: (data: any) => {
-					set((state) => {
+				tracks: [],
+				tracksMap: {},
+				cache: {},
+				batchUpdate: (data) => {	
+					set((state) => {		
 						const temp = state.tracksMap
 						const cache = state.cache
-						data.forEach((el: { title: any }) => {
+						data.forEach((el) => {
+					
+							
 							const id = el.title
+							
 							temp[id] = { ...temp[id], ...el }
+							
 							cache[id] = { ...temp[id], ...el }
 						})
+						
+						
 						return {
 							tracksMap: temp,
-							tracks: Object.values(temp),
-						}
-					})
+							tracks: Object.values(temp)
+						}})
+					
 				},
-				update: (id: string, data: Partial<TrackWithPlaylist>) => {
+				update: (id, data) => {
 					return set((state) => {
 						const temp = state.tracksMap
 						const cache = state.cache
@@ -78,7 +83,7 @@ export const useLibraryStore = create<LibraryState>()(
 						tracksMap: {},
 					})
 				},
-				setTracks: async (tracks: Record<string, TrackWithPlaylist>) => {
+				setTracks: async (tracks: any) => {
 					set({
 						tracks: Object.values(tracks),
 						tracksMap: tracks,
@@ -90,7 +95,7 @@ export const useLibraryStore = create<LibraryState>()(
 						}
 					})
 				},
-				toggleTrackFavorite: (track: Track) =>
+				toggleTrackFavorite: (track) =>
 					set((state) => ({
 						tracks: state.tracks.map((currentTrack) => {
 							if (currentTrack.url === track.url) {
@@ -99,10 +104,11 @@ export const useLibraryStore = create<LibraryState>()(
 									rating: currentTrack.rating === 1 ? 0 : 1,
 								}
 							}
+
 							return currentTrack
 						}),
 					})),
-				addToPlaylist: (track: Track, playlistName: string) =>
+				addToPlaylist: (track, playlistName) =>
 					set((state) => ({
 						tracks: state.tracks.map((currentTrack) => {
 							if (currentTrack.url === track.url) {
@@ -111,6 +117,7 @@ export const useLibraryStore = create<LibraryState>()(
 									playlist: [...(currentTrack.playlist ?? []), playlistName],
 								}
 							}
+
 							return currentTrack
 						}),
 					})),
