@@ -86,7 +86,7 @@ export const PlaylistsList = () => {
 
 	return (
 		<FlatList
-			keyExtractor={(item, index) => `${item.basename}${index}`}
+			keyExtractor={(item, index) => `${item.basename}${index}${item.etag}`}
 			contentContainerStyle={{ paddingTop: 10, paddingBottom: 300 }}
 			ItemSeparatorComponent={ItemDivider}
 			ListFooterComponent={ItemDivider}
