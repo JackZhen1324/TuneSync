@@ -1,3 +1,4 @@
+import { getCachedTrack } from '@/helpers/cache'
 import { useQueueStore } from '@/store/queue'
 import { useCallback, useEffect, useState } from 'react'
 import TrackPlayer, { Event, Track, TrackMetadataBase } from 'react-native-track-player'
@@ -40,13 +41,15 @@ export const useTrackPlayerQueue = () => {
 		},
 		[updateQueue],
 	)
-	const add = useCallback(
-		async (item: any) => {
-			await TrackPlayer.add(item)
-			await updateQueue()
-		},
-		[updateQueue],
-	)
+	const addTrackToPlayer = async (track: Track): Promise<void> => {
+		const trackUrl = await getCachedTrack(track.url, track.basename || track.id)
+		const trackToAdd = {
+			...track,
+			url: trackUrl,
+		}
+
+		await TrackPlayer.add(trackToAdd)
+	}
 	useEffect(() => {
 		// 初始化获取队列
 		updateQueue()
@@ -75,5 +78,5 @@ export const useTrackPlayerQueue = () => {
 		}
 	}, [updateQueue])
 
-	return { queue, remove, update, add }
+	return { queue, remove, update, addTrackToPlayer }
 }

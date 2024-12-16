@@ -7,19 +7,13 @@ export const checkIsAudioFile = (path: string) => {
 	const mimeType = mime.lookup(fileExtension) || ''
 	return mimeType.includes('audio')
 }
-export async function indexingLocal(configs: any[], refresh: any) {
-	// console.log('configs', configs)
-
+export async function indexingLocal(configs: any[]) {
 	const singerInfoCache = {}
-	const percertageOfEachConfig = Math.floor(100 / (configs.length || 1))
-	let currentPercentage = 0
 	const total = []
-
 	for (let i = 0; i < configs.length; i++) {
 		const element = configs[i]
 		const { dir } = element
 		const music = await RNFS.readDir(RNFS.DocumentDirectoryPath + '/' + dir)
-		const percentageForNestSection = percertageOfEachConfig / (music.length || 1)
 
 		const filteredMusic = music?.filter((el) => {
 			// const fileInfo = await RNFS.stat(el?.path);
@@ -30,12 +24,12 @@ export async function indexingLocal(configs: any[], refresh: any) {
 			const path = el.path
 			const name = el.name
 
-			currentPercentage += percentageForNestSection
-
 			const downloadLink: string = path
 			return {
 				url: downloadLink,
 				title: el.name,
+				basename: el.name,
+				from: 'local',
 				...el,
 			}
 		})
@@ -47,7 +41,6 @@ export async function indexingLocal(configs: any[], refresh: any) {
 
 		for (const dir of dirs) {
 			const nestedMusic = await getNestMusic(dir, RNFS, singerInfoCache)
-			currentPercentage += percentageForNestSection
 			total.push(...nestedMusic)
 		}
 	}
@@ -76,6 +69,7 @@ async function getNestMusic(dir: { path: string }, RNFS: any, singerInfoCache: a
 			const formattedElement = {
 				url: downloadLink,
 				title: element.basename,
+				basename: element.name,
 				playlist: element?.album?.title || [],
 				...element,
 				from: 'local',

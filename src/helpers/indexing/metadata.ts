@@ -12,7 +12,7 @@ export async function fetchMetadata(
 		if (abortSignal.aborted) throw new Error('Aborted1')
 		const { title, webdavUrl } = params
 		// Download the file using react-native-fs
-		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any	
+		const { artwork: rawImage, ...metadata } = (await extractMetadataFromURL(webdavUrl)) as any
 		const artworkRaw = `data:image/jpeg;base64,${rawImage}`
 		const [compressedImage, artwork] = rawImage ? await resizeBase64Image(artworkRaw, 40, 40) : []
 
@@ -53,15 +53,12 @@ export async function fetchMetadata(
 				pendingMeta: false,
 				playlist: [...(formatedMetadata.playlist || album?.title || 'unknown')],
 				duration,
-				// name: metadata.title ?? title,
-				from: 'webdav',
 			}
 		}
 
 		return {
 			artistInfo: { images: [{ url: artwork }] } || {},
 			rating: 0,
-			from: 'webdav',
 			pendingMeta: false,
 			...formatedMetadata,
 		}

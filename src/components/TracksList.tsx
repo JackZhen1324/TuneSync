@@ -1,11 +1,13 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
+import { getCachedTrack } from '@/helpers/cache'
+import { debounce } from '@/helpers/debounce'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack } from '@/store/library'
 import { utilsStyles } from '@/styles'
 import { useCallback } from 'react'
-import { FlatList, FlatListProps, Text, View } from 'react-native'
+import { FlatList, FlatListProps, InteractionManager, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, {
 	Track,
@@ -33,7 +35,7 @@ export const TracksList = ({
 }: TracksListProps) => {
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const activeTrack = useActiveTrackAlternative()
-	const { queue, add } = useTrackPlayerQueue()
+	const { queue, addTrackToPlayer } = useTrackPlayerQueue()
 
 	const isPLaying = useIsPlaying()
 	const handleTrackSelect = useCallback(
@@ -46,7 +48,7 @@ export const TracksList = ({
 			const index = queue.findIndex((el) => el.title === selectedTrack.title)
 
 			if (index === -1) {
-				await TrackPlayer.add(selectedTrack)
+				await addTrackToPlayer(selectedTrack)
 				await TrackPlayer.skip(queue.length)
 			} else {
 				await TrackPlayer.skip(index || 0)
@@ -54,7 +56,7 @@ export const TracksList = ({
 
 			TrackPlayer.play()
 		},
-		[queue, setActiveTrack],
+		[addTrackToPlayer, queue, setActiveTrack],
 	)
 	const renderItem = useCallback(
 		({ item: track }: { item: Track }) => {
@@ -73,14 +75,29 @@ export const TracksList = ({
 		[activeTrack, from, handleTrackSelect, isPLaying.playing],
 	)
 	// console.log(tracks[0])
-
+	const preload = useCallback((items) => {
+		InteractionManager.runAfterInteractions(() => {
+			// 执行长任务
+			items.forEach(({ item }) => {
+				if (item.from !== 'local') {
+					getCachedTrack(item.url, item.basename || item.id)
+				}
+			})
+		})
+	}, [])
 	return (
 		<FlatList
+			onViewableItemsChanged={debounce(
+				({ viewableItems }: { viewableItems: FlatListProps<Track>['data'] }) => {
+					preload(viewableItems)
+				},
+				200,
+			)}
 			style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 			data={tracks}
 			renderItem={renderItem}
-			keyExtractor={(item, index) => item.etag}
-			windowSize={1}
+			keyExtractor={(item, index) => `${item.basename}${index}`}
+			windowSize={2}
 			removeClippedSubviews={true}
 			contentInsetAdjustmentBehavior="automatic"
 			contentContainerStyle={{ paddingBottom: 100 }}
