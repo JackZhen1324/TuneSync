@@ -14,6 +14,7 @@ export type TracksListItemProps = {
 	from?: string
 	isPLaying?: boolean
 	isActive: boolean
+	isLoading?: boolean
 	track: Track
 	onTrackSelect: (track: Track) => void
 }
@@ -23,27 +24,37 @@ const TracksListItemComponent = ({
 	track,
 	isActive,
 	isPLaying,
+	isLoading = false,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
+	// 点击逻辑：点击后立即调用onTrackSelect，从外部控制逻辑和状态变更
 	const handlePress = useCallback(() => {
-		handleTrackSelect(track)
-	}, [handleTrackSelect, track])
+		if (!isLoading) {
+			handleTrackSelect(track)
+		}
+	}, [handleTrackSelect, track, isLoading])
+
 	if (!track) return null
+
 	return (
-		<TouchableHighlight onPress={handlePress}>
+		<TouchableHighlight onPress={handlePress} disabled={isLoading}>
 			<View style={styles.trackItemContainer}>
-				<View>
+				<View style={styles.artworkContainer}>
 					<FastImage
 						source={{
 							uri: track?.artwork || unknownTrackImageUri,
 							priority: FastImage.priority.normal,
 						}}
-						style={{
-							...styles.trackArtworkImage,
-							opacity: isActive ? 0.6 : 1,
-						}}
+						style={[styles.trackArtworkImage, isActive && { opacity: 0.6 }]}
 					/>
 					{isActive && isPLaying && (
+						<LoaderKit
+							style={styles.trackPlayingIconIndicator}
+							name="LineScaleParty"
+							color={colors.icon}
+						/>
+					)}
+					{isLoading && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
 							name="LineScaleParty"
@@ -56,16 +67,20 @@ const TracksListItemComponent = ({
 					<View style={styles.trackTextContainer}>
 						<Text
 							numberOfLines={1}
-							style={{
-								...styles.trackTitleText,
-								color: isActive ? colors.primary : colors.text,
-							}}
+							style={[
+								styles.trackTitleText,
+								{ color: isActive ? colors.primary : colors.text },
+								isLoading && { opacity: 0.7 },
+							]}
 						>
 							{track.formatedTitle || track.basename || track.title || track.name}
 						</Text>
 
 						{track.artist && (
-							<Text numberOfLines={1} style={styles.trackArtistText}>
+							<Text
+								numberOfLines={1}
+								style={[styles.trackArtistText, isLoading && { opacity: 0.7 }]}
+							>
 								{track.artist}
 							</Text>
 						)}
@@ -87,9 +102,16 @@ export const TracksListItem = memo(TracksListItemComponent)
 const styles = StyleSheet.create({
 	trackItemContainer: {
 		flexDirection: 'row',
-		columnGap: 14,
-		alignItems: 'center',
 		paddingRight: 20,
+		alignItems: 'center',
+	},
+	artworkContainer: {
+		position: 'relative',
+	},
+	trackArtworkImage: {
+		borderRadius: 8,
+		width: 50,
+		height: 50,
 	},
 	trackPlayingIconIndicator: {
 		position: 'absolute',
@@ -98,24 +120,15 @@ const styles = StyleSheet.create({
 		width: 16,
 		height: 16,
 	},
-	trackPausedIndicator: {
-		position: 'absolute',
-		top: 14,
-		left: 14,
-	},
-	trackArtworkImage: {
-		borderRadius: 8,
-		width: 50,
-		height: 50,
-	},
 	trackDetailsContainer: {
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		marginLeft: 14, // 移出 columnGap，根据实际需求调整
 	},
 	trackTextContainer: {
-		width: '100%',
+		flex: 1,
 	},
 	trackTitleText: {
 		...defaultStyles.text,
@@ -128,5 +141,12 @@ const styles = StyleSheet.create({
 		color: colors.textMuted,
 		fontSize: 14,
 		marginTop: 4,
+	},
+	loadingOverlay: {
+		...StyleSheet.absoluteFillObject,
+		backgroundColor: 'rgba(0,0,0,0.3)',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 8,
 	},
 })

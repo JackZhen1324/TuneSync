@@ -13,6 +13,7 @@ export type TracksListItemProps = {
 	activeSong: string
 	track: Track
 	index: number
+	isLoading: boolean
 	onTrackSelect: (track: Track, index: number) => void
 	onDelete: any
 }
@@ -21,6 +22,7 @@ const PlayListItemComponent = ({
 	activeSong,
 	track,
 	index,
+	isLoading,
 	onTrackSelect: handleTrackSelect,
 	onDelete: handleDelete,
 }: TracksListItemProps) => {
@@ -49,6 +51,13 @@ const PlayListItemComponent = ({
 					/>
 
 					{isAtive && playing && (
+						<LoaderKit
+							style={styles.trackPlayingIconIndicator}
+							name="LineScaleParty"
+							color={colors.icon}
+						/>
+					)}
+					{isLoading && (
 						<LoaderKit
 							style={styles.trackPlayingIconIndicator}
 							name="LineScaleParty"
