@@ -13,8 +13,19 @@ import RNFS from 'react-native-fs'
 import { List, TouchableRipple } from 'react-native-paper'
 
 export function getContentAfterFirstDocuments(filePath: string) {
-	const keyword = 'Documents'
-	const keywordIndex = filePath.indexOf(keyword)
+	const keywords = ['File Provider Storage', 'Documents']
+	let keyword = ''
+	const keywordIndex = keywords.reduce((sum, res) => {
+		if (sum > -1) {
+			return sum
+		} else {
+			const index = filePath.indexOf(res)
+			if (index) {
+				keyword = res
+			}
+			return index
+		}
+	}, -1)
 
 	if (keywordIndex === -1) {
 		return null
@@ -25,7 +36,6 @@ export function getContentAfterFirstDocuments(filePath: string) {
 
 	// URL decode the result
 	const decodedResult = decodeURIComponent(result)
-
 	return decodedResult
 }
 
@@ -113,7 +123,6 @@ const ResourceManage = () => {
 
 				try {
 					const folderName = directoryUri.split('/').slice(0, -1).pop()
-
 					const destinationPath = `${RNFS.DocumentDirectoryPath}/myDevice/${folderName}/${file.name}`
 					const exists = await RNFS.exists(`${RNFS.DocumentDirectoryPath}/myDevice/${folderName}/`)
 
@@ -158,8 +167,6 @@ const ResourceManage = () => {
 
 							setIndexingList(
 								indexingList.filter((indexItem) => {
-									console.log(indexItem, child, 'delete local')
-
 									return indexItem.dir !== child
 								}),
 							)
