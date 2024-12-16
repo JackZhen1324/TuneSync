@@ -5,7 +5,7 @@ import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
 import React, { memo, useCallback } from 'react'
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LoaderKit from 'react-native-loader-kit'
 import { Track } from 'react-native-track-player'
@@ -55,11 +55,9 @@ const TracksListItemComponent = ({
 						/>
 					)}
 					{isLoading && (
-						<LoaderKit
-							style={styles.trackPlayingIconIndicator}
-							name="LineScaleParty"
-							color={colors.icon}
-						/>
+						<View style={styles.loadingOverlay}>
+							<ActivityIndicator size="small" color="#fff" />
+						</View>
 					)}
 				</View>
 

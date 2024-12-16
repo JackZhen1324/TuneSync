@@ -54,6 +54,7 @@ export const TracksList = ({
 			Promise.resolve().then(async () => {
 				try {
 					const index = queue.findIndex((el) => el.title === selectedTrack.title)
+					TrackPlayer.pause()
 					if (index === -1) {
 						await addTrackToPlayer(selectedTrack)
 						await TrackPlayer.skip(queue.length)
