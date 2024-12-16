@@ -21,14 +21,12 @@ const SongsScreen = () => {
 
 	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
 	const { activeTrackId } = useActiveTrack((state) => state)
-
 	const { queueListWithContent } = useQueueStore((state) => state) as { queueListWithContent: any }
 	const loadQueue = async () => {
 		await TrackPlayer.setQueue(queueListWithContent.default)
 		if (activeTrackId <= queueListWithContent.default.length && activeTrackId > -1) {
 			await TrackPlayer.skip(activeTrackId)
 		}
-
 		init = 1
 	}
 	useEffect(() => {

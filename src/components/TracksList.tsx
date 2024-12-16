@@ -1,11 +1,10 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
-import { debounce } from '@/helpers/debounce'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack } from '@/store/library'
 import { utilsStyles } from '@/styles'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, {
@@ -14,6 +13,7 @@ import TrackPlayer, {
 	useIsPlaying,
 } from 'react-native-track-player'
 import { QueueControls } from './QueueControls'
+
 export type TracksListProps = Partial<FlatListProps<Track>> & {
 	id: string
 	tracks: Track[]
@@ -35,45 +35,58 @@ export const TracksList = ({
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const activeTrack = useActiveTrackAlternative()
 	const { queue, addTrackToPlayer } = useTrackPlayerQueue()
-	const isPLaying = useIsPlaying()
-	const handleTrackSelect = debounce(
-		useCallback(
-			async (selected: Track) => {
-				const selectedTrack = {
-					...selected,
-					id: queue.length,
-				}
-				setActiveTrack(selectedTrack)
-				const index = queue.findIndex((el) => el.title === selectedTrack.title)
+	const isPlaying = useIsPlaying()
 
-				if (index === -1) {
-					await addTrackToPlayer(selectedTrack)
-					await TrackPlayer.skip(queue.length)
-				} else {
-					await TrackPlayer.skip(index || 0)
-				}
+	// 用于在点击后立即更新UI（例如：可在 TracksListItem 中根据 loadingTrackId 显示加载状态）
+	const [loadingTrackId, setLoadingTrackId] = useState<string | null>(activeTrack?.basename || '')
 
-				TrackPlayer.play()
-			},
-			[addTrackToPlayer, queue, setActiveTrack],
-		),
-		100,
+	const handleTrackSelect = useCallback(
+		(selected: Track) => {
+			// 立即更新UI
+			const selectedTrack = {
+				...selected,
+				id: queue.length,
+			}
+			setActiveTrack(selectedTrack)
+			setLoadingTrackId(selectedTrack.basename) // 标记正在加载的曲目
+
+			// 在后台执行耗时操作
+			Promise.resolve().then(async () => {
+				try {
+					const index = queue.findIndex((el) => el.title === selectedTrack.title)
+					if (index === -1) {
+						await addTrackToPlayer(selectedTrack)
+						await TrackPlayer.skip(queue.length)
+					} else {
+						await TrackPlayer.skip(index || 0)
+					}
+					TrackPlayer.play()
+				} catch (error) {
+					console.error('Error while trying to play track:', error)
+				} finally {
+					setLoadingTrackId(null) // 加载完成，取消loading标记
+				}
+			})
+		},
+		[addTrackToPlayer, queue, setActiveTrack],
 	)
+
 	const renderItem = useCallback(
 		({ item: track }: { item: Track }) => {
 			const isActive = activeTrack ? track.title === activeTrack.basename : false
+			const isLoading = loadingTrackId === track.title
 			return (
 				<TracksListItem
 					from={from}
-					isPLaying={isPLaying.playing}
+					isPLaying={isPlaying.playing}
 					isActive={isActive}
-					key={`${track?.filename}${track.url}${track.etag}`}
+					isLoading={isLoading}
 					track={track}
 					onTrackSelect={handleTrackSelect}
 				/>
 			)
 		},
-		[activeTrack, from, handleTrackSelect, isPLaying.playing],
+		[activeTrack, from, handleTrackSelect, isPlaying.playing, loadingTrackId],
 	)
 
 	return (
@@ -91,7 +104,6 @@ export const TracksList = ({
 					<QueueControls tracks={tracks} style={{ paddingBottom: 20 }} />
 				) : undefined
 			}
-			// ListFooterComponent={ItemDivider}
 			ItemSeparatorComponent={ItemDivider}
 			ListEmptyComponent={
 				<View>
