@@ -1,13 +1,12 @@
 import { TracksListItem } from '@/components/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
-import { getCachedTrack } from '@/helpers/cache'
 import { debounce } from '@/helpers/debounce'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack } from '@/store/library'
 import { utilsStyles } from '@/styles'
 import { useCallback } from 'react'
-import { FlatList, FlatListProps, InteractionManager, Text, View } from 'react-native'
+import { FlatList, FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, {
 	Track,
@@ -36,27 +35,29 @@ export const TracksList = ({
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const activeTrack = useActiveTrackAlternative()
 	const { queue, addTrackToPlayer } = useTrackPlayerQueue()
-
 	const isPLaying = useIsPlaying()
-	const handleTrackSelect = useCallback(
-		async (selected: Track) => {
-			const selectedTrack = {
-				...selected,
-				id: queue.length,
-			}
-			setActiveTrack(selectedTrack)
-			const index = queue.findIndex((el) => el.title === selectedTrack.title)
+	const handleTrackSelect = debounce(
+		useCallback(
+			async (selected: Track) => {
+				const selectedTrack = {
+					...selected,
+					id: queue.length,
+				}
+				setActiveTrack(selectedTrack)
+				const index = queue.findIndex((el) => el.title === selectedTrack.title)
 
-			if (index === -1) {
-				await addTrackToPlayer(selectedTrack)
-				await TrackPlayer.skip(queue.length)
-			} else {
-				await TrackPlayer.skip(index || 0)
-			}
+				if (index === -1) {
+					await addTrackToPlayer(selectedTrack)
+					await TrackPlayer.skip(queue.length)
+				} else {
+					await TrackPlayer.skip(index || 0)
+				}
 
-			TrackPlayer.play()
-		},
-		[addTrackToPlayer, queue, setActiveTrack],
+				TrackPlayer.play()
+			},
+			[addTrackToPlayer, queue, setActiveTrack],
+		),
+		100,
 	)
 	const renderItem = useCallback(
 		({ item: track }: { item: Track }) => {
@@ -74,29 +75,13 @@ export const TracksList = ({
 		},
 		[activeTrack, from, handleTrackSelect, isPLaying.playing],
 	)
-	// console.log(tracks[0])
-	const preload = useCallback((items) => {
-		InteractionManager.runAfterInteractions(() => {
-			// 执行长任务
-			items.forEach(({ item }) => {
-				if (item.from !== 'local') {
-					getCachedTrack(item.url, item.basename || item.id)
-				}
-			})
-		})
-	}, [])
+
 	return (
 		<FlatList
-			onViewableItemsChanged={debounce(
-				({ viewableItems }: { viewableItems: FlatListProps<Track>['data'] }) => {
-					preload(viewableItems)
-				},
-				200,
-			)}
 			style={{ paddingHorizontal: screenPaddingXs.horizontal }}
 			data={tracks}
 			renderItem={renderItem}
-			keyExtractor={(item, index) => `${item.basename}${index}`}
+			keyExtractor={(item, index) => `${item.basename}${index}${item?.etag}`}
 			windowSize={2}
 			removeClippedSubviews={true}
 			contentInsetAdjustmentBehavior="automatic"

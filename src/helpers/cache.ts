@@ -45,9 +45,10 @@ export const getCachedTrack = async (trackUrl: string, trackId: string): Promise
 
 			if (result.statusCode === 200) {
 				console.log('start playing from cache', filePath)
-				return filePath
+				return trackUrl
 			} else {
-				throw new Error('文件下载失败')
+				console.error('文件下载失败')
+				return trackUrl
 			}
 		} catch (error) {
 			console.log('缓存音轨时出错:', error)

@@ -11,7 +11,7 @@ import { colors, fontSize, screenPadding } from '@/constants/tokens'
 import useModalView from '@/hooks/useModalView'
 import { usePlayerBackground } from '@/hooks/usePlayerBackground'
 import { searchLyricViaNetease, searchSongsViaNetease } from '@/service/neteaseData'
-import { useActiveTrack, useFavorateStore } from '@/store/library'
+import { useFavorateStore } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -46,6 +46,7 @@ import {
 	TabView,
 } from 'react-native-tab-view'
 import { Event, Scene } from 'react-native-tab-view/lib/typescript/src/types'
+import { useActiveTrack } from 'react-native-track-player'
 
 const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 	const isAirplayConnected = useAirplayConnectivity()
@@ -170,7 +171,7 @@ const LyricsRoute = ({ lyrics }: any) => (
 )
 
 const PlayerScreen = () => {
-	const { activeTrack, activeTrackObj } = useActiveTrack()
+	const activeTrackObj = useActiveTrack()
 	const { imageColors } = usePlayerBackground(activeTrackObj?.artwork ?? unknownTrackImageUri)
 	const { top, bottom } = useSafeAreaInsets()
 	const [lyricsInfo, setLyrics] = useState([])
