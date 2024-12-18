@@ -34,7 +34,8 @@
 		"folder": "文件夹",
 		"about": "关于",
 		"language": "语言",
-		"cacheManagement": "缓存管理"
+		"cacheManagement": "缓存管理",
+		"middlewareManagement": "中间件管理"
 	},
 	"cache": {
 		"size": "缓存大小",

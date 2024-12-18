@@ -5,16 +5,12 @@ import { useSetting } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { LanguageCode } from '../../../locales/languageMap'
 import LanguageModal from './language'
 
 const SettingScreen = () => {
 	const router = useRouter()
 	const setting = useSetting()
-	const { t, i18n } = useTranslation()
-	const [language, setLanguage] = useState<LanguageCode>(i18n.language as LanguageCode)
 	const [isPanelVisible, setPanelVisible] = useState(false)
 	const handleMenuPress = ({ id }: any) => {
 		switch (id) {
@@ -32,7 +28,10 @@ const SettingScreen = () => {
 				break
 			case 'cache':
 				router.push(`/(tabs)/setting/cache`)
-			break
+				break
+			case 'middleware':
+				router.push(`/(tabs)/setting/middleware`)
+				break
 		}
 	}
 
@@ -48,7 +47,7 @@ const SettingScreen = () => {
 					<Setting scrollEnabled={false} setting={setting} onMenuPress={handleMenuPress} />
 				</ScrollView>
 			</View>
-			<BottomUpPanel  isVisible={isPanelVisible} onClose={() => setPanelVisible(false)}>
+			<BottomUpPanel isVisible={isPanelVisible} onClose={() => setPanelVisible(false)}>
 				<LanguageModal></LanguageModal>
 			</BottomUpPanel>
 		</>

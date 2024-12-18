@@ -27,7 +27,6 @@ export const getCachedTrack = async (trackUrl: string, trackId: string): Promise
 	const filePath = `${CACHE_DIR}/${fileName}`
 
 	const fileExists = await RNFS.exists(filePath)
-
 	if (fileExists) {
 		console.log('hit cache:', filePath)
 		return filePath

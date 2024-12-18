@@ -42,7 +42,9 @@ export const useTrackPlayerQueue = () => {
 		[updateQueue],
 	)
 	const addTrackToPlayer = async (track: Track): Promise<void> => {
-		const trackUrl = await getCachedTrack(track.url, track.basename || track.id)
+		const { url, from, basename, id } = track
+
+		const trackUrl = from === 'local' ? url : await getCachedTrack(url, basename || id)
 		const trackToAdd = {
 			...track,
 			url: trackUrl,

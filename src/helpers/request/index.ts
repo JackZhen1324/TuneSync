@@ -9,20 +9,20 @@ const instance = axios.create({
 // 请求拦截器 在发起http请求之前的一些操作
 // 1、发送请求之前，加载一些组件
 // 2、某些请求需要携带token，如果说没有没有携带，直接跳转到登录页面
-instance.interceptors.request.use(
-	(config) => {
-		config.params = {
-			api_key: 'cff50af5e282bff668e6439cc947756f',
-			format: 'json',
-			...config.params,
-		}
+// instance.interceptors.request.use(
+// 	 (config) => {
+// 		config.params = {
+// 			api_key: 'cff50af5e282bff668e6439cc947756f',
+// 			format: 'json',
+// 			...config.params,
+// 		}
 
-		return config
-	},
-	(err) => {
-		return Promise.reject(err)
-	},
-)
+// 		return config
+// 	},
+// 	(err) => {
+// 		return Promise.reject(err)
+// 	},
+// )
 
 // 响应拦截器
 instance.interceptors.response.use(

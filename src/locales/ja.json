@@ -34,7 +34,8 @@
 		"folder": "フォルダ",
 		"about": "情報",
 		"language": "Language",
-		"cacheManagement": "Cache"
+		"cacheManagement": "Cache",
+		"middlewareManagement": "Middleware"
 	},
 	"cache": {
 		"size": "Cache Size",

@@ -4,6 +4,7 @@ import { debounce } from '@/helpers/debounce'
 import { Artist, TrackWithPlaylist } from '@/helpers/types'
 import { MaterialIcons, SimpleLineIcons } from '@expo/vector-icons'
 import AntDesign from '@expo/vector-icons/AntDesign'
+import Octicons from '@expo/vector-icons/Octicons'
 import { uniqBy } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { Track } from 'react-native-track-player'
@@ -397,19 +398,24 @@ export const useSetting = () => {
 			icon: <AntDesign name="folder1" size={24} color="#E76F51" />,
 		},
 		{
-			id: 'about',
-			title: t('setting.about'),
-			icon: <SimpleLineIcons name="info" size={24} color="#E76F51" />,
-		},
-		{
 			id: 'language',
 			title: t('setting.language'),
 			icon: <MaterialIcons name="language" size={24} color="#E76F51" />,
 		},
 		{
 			id: 'cache',
-			title: t('setting.cacheManagement') || 'Cache Management',
+			title: t('setting.cacheManagement') || 'Cache',
 			icon: <MaterialIcons name="cached" size={24} color="#E76F51" />,
+		},
+		{
+			id: 'middleware',
+			title: t('setting.middlewareManagement') || 'Middleware',
+			icon: <Octicons name="plug" size={24} color="#E76F51" />,
+		},
+		{
+			id: 'about',
+			title: t('setting.about'),
+			icon: <SimpleLineIcons name="info" size={24} color="#E76F51" />,
 		},
 	]
 }

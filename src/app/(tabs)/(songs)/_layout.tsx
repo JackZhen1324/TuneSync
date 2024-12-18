@@ -4,11 +4,12 @@ import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
 import { debounce } from '@/helpers/debounce'
 import { indexingLocal } from '@/helpers/indexing/local'
-import { fetchMetadata } from '@/helpers/indexing/metadata'
 import { indexingWebdav } from '@/helpers/indexing/webdav'
+import { fetchMetadata } from '@/helpers/metadata'
 import useThemeColor from '@/hooks/useThemeColor'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { useActiveTrack, useIndexStore, useLibraryStore } from '@/store/library'
+import { useMiddleware } from '@/store/middleware'
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
@@ -53,11 +54,12 @@ const asyncPool = async (
 const SongsScreenLayout = () => {
 	const { t } = useTranslation()
 	const isFocused = useIsFocused()
+	const { middlewareConfigs } = useMiddleware()
 	const { update } = useTrackPlayerQueue()
 	const { loading, current, setLoading, indexingList, setNeedUpdate, needUpdate } = useIndexStore()
 	const { setTracks, tracks, tracksMap, batchUpdate } = useLibraryStore((state: any) => state)
-	const { setActiveTrack, activeTrack } = useActiveTrack((state: any) => state)
 
+	const { setActiveTrack, activeTrack } = useActiveTrack((state: any) => state)
 	const theme = useThemeColor()
 	const { setActiveQueueId, activeQueueId, queueListWithContent, setQueueListContent } =
 		useQueueStore((state: any) => state)
@@ -80,9 +82,9 @@ const SongsScreenLayout = () => {
 			const localIndexing = indexingList.filter((el: { from: string }) => el.from === 'local')
 			const webdavIndexing = indexingList.filter((el: { from: string }) => el.from !== 'local')
 			const start = performance.now()
-			const localMusices = await indexingLocal(localIndexing, refresh)
-			const webdavMusices = await indexingWebdav(webdavIndexing, refresh)
-
+			const localMusices = await indexingLocal(localIndexing)
+			const webdavMusices = await indexingWebdav(webdavIndexing)
+			refresh()
 			setLoading({
 				loading: false,
 				percentage: 100,
@@ -131,7 +133,8 @@ const SongsScreenLayout = () => {
 
 				try {
 					// Fetch metadata
-					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal)
+					const meta = await fetchMetadata({ title, webdavUrl: el.url, middlewareConfigs }, signal)
+
 					meta.title = title
 					if (!signal.aborted) {
 						updates.push(meta)
@@ -171,6 +174,7 @@ const SongsScreenLayout = () => {
 		activeTrack,
 		batchUpdate,
 		indexingList,
+		middlewareConfigs,
 		queueListWithContent,
 		refresh,
 		setActiveTrack,
@@ -204,7 +208,7 @@ const SongsScreenLayout = () => {
 
 				try {
 					// Fetch metadata
-					const meta = await fetchMetadata({ title, webdavUrl: el.url }, signal)
+					const meta = await fetchMetadata({ title, webdavUrl: el.url, middlewareConfigs }, signal)
 					meta.title = title
 					if (!signal.aborted) {
 						updates.push(meta)

@@ -34,7 +34,8 @@
 		"folder": "폴더",
 		"about": "정보",
 		"language": "Language",
-		"cacheManagement": "Cache"
+		"cacheManagement": "Cache",
+		"middlewareManagement": "Middleware"
 	},
 	"cache": {
 		"size": "cache 교광",

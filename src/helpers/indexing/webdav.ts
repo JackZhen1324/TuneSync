@@ -1,7 +1,7 @@
 import getWebdavClient from '@/hooks/useWebdavClient'
 import { WebDAVClient } from 'webdav'
 
-export async function indexingWebdav(configs: any[], refresh: any) {
+export async function indexingWebdav(configs: any[]) {
 	const total: any[] = []
 
 	try {
