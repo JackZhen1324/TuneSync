@@ -22,7 +22,6 @@ const ArtistsScreen = () => {
 	})
 	const { tracks } = useTracks()
 	const artists = useArtists(tracks)
-
 	const filteredArtists = useMemo(() => {
 		if (!search) return artists
 

@@ -28,7 +28,18 @@ const PlaylistsScreenLayout = () => {
 						headerTintColor: colors.primary,
 					}}
 				/>
-								<Stack.Screen
+				<Stack.Screen
+					name="middleware/index"
+					options={{
+						headerTitle: t('setting.middlewareManagement'),
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
 					name="cache/index"
 					options={{
 						headerTitle: t('setting.cacheManagement'),

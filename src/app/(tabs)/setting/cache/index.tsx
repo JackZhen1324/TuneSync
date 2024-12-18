@@ -4,8 +4,6 @@ import { defaultStyles } from '@/styles'
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 const Cache = () => {
-
-
 	return (
 		<SafeAreaView style={styles.safeArea}>
 			<View style={defaultStyles.container}>

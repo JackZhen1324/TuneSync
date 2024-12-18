@@ -34,7 +34,8 @@
 		"folder": "Folder",
 		"about": "About",
 		"language": "Language",
-		"cacheManagement": "Cache Management"
+		"cacheManagement": "Cache",
+		"middlewareManagement": "Middleware"
 	},
 
 	"webdavAdd": {

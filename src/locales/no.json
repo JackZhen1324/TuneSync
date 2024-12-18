@@ -34,7 +34,8 @@
 		"folder": "Mappe",
 		"about": "Om",
 		"language": "Språk",
-		"cacheManagement": "Cache"
+		"cacheManagement": "Cache",
+		"middlewareManagement": "Middleware"
 	},
 	"cache": {
 		"size": "Cache størrelse",
