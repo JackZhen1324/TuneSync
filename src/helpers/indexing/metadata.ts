@@ -66,7 +66,7 @@ export async function fetchMetadata(
 		if (error.message.includes('Aborted')) {
 			console.log('metadata fetch was ' + error.message)
 		} else {
-			console.log('metadata error', error)
+			console.log('metadata error', error.message)
 		}
 		return {
 			pendingMeta: true,
