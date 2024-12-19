@@ -6,6 +6,7 @@ class AwesomeModule: NSObject {
     func extractMetadataFromURL(_ url: String, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
         let assetUrl: URL
         if url.hasPrefix("http://") || url.hasPrefix("https://") {
+             print("remote file: \(url)")
             // 网络资源
             guard let audioUrl = URL(string: url) else {
                 rejecter("error", "Invalid URL", NSError(domain: "", code: 200, userInfo: nil))
@@ -13,6 +14,7 @@ class AwesomeModule: NSObject {
             }
             assetUrl = audioUrl
         } else {
+            print("Local file: \(url)")
             
             // 本地文件路径（相对路径或绝对路径）
             let filePath = URL(fileURLWithPath: url)
@@ -20,6 +22,7 @@ class AwesomeModule: NSObject {
         }
 
         let asset = AVAsset(url: assetUrl)
+        print("asset: \(asset)")
         // 在某些情况下，AVAsset的metadata可能需要加载完成后才能读取
         // 我们使用asset.loadValuesAsynchronously(forKeys: ...)异步加载
         asset.loadValuesAsynchronously(forKeys: ["commonMetadata"]) {
