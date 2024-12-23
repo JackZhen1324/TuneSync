@@ -34,7 +34,7 @@ export async function fetchMetadata(params: FetchParams, abortSignal: AbortSigna
 		if (error.message.includes('Aborted')) {
 			console.log('metadata fetch aborted:', error.message)
 		} else {
-			console.log('metadata error', error)
+			console.log('metadata error', error.message)
 		}
 		return { pendingMeta: true }
 	}

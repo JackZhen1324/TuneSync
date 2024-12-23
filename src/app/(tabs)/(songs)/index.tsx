@@ -20,7 +20,6 @@ const SongsScreen = () => {
 	})
 
 	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
-
 	const { activeTrackId } = useActiveTrack((state) => state)
 	const { queueListWithContent } = useQueueStore((state) => state) as { queueListWithContent: any }
 	const loadQueue = async () => {
