@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs'
 import TrackPlayer from 'react-native-track-player'
 
-const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache`
+const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache` // 使用缓存目录
 
 // 初始化缓存目录
 export const initCacheDirectory = async () => {
@@ -21,7 +21,13 @@ interface Track {
 	basename?: string
 }
 
-export const getCachedTrack = async (trackUrl: string, trackId: string): Promise<string> => {
+export const getCachedTrack = async (
+	trackUrl: string,
+	trackId: string,
+): Promise<{
+	filePath?: string
+	CACHE_DIR: string
+}> => {
 	const fileExtension = trackUrl.split('.').pop() || ''
 	const fileName = `${trackId}.${fileExtension}`
 	const filePath = `${CACHE_DIR}/${fileName}`
@@ -29,7 +35,7 @@ export const getCachedTrack = async (trackUrl: string, trackId: string): Promise
 	const fileExists = await RNFS.exists(filePath)
 	if (fileExists) {
 		console.log('hit cache:', filePath)
-		return filePath
+		return { filePath, CACHE_DIR }
 	} else {
 		try {
 			const options = {
@@ -39,20 +45,19 @@ export const getCachedTrack = async (trackUrl: string, trackId: string): Promise
 				discretionary: true,
 			}
 
-			const downloadResult = RNFS.downloadFile(options)
+			const downloadResult = await RNFS.downloadFile(options)
 			const result = await downloadResult.promise
 
 			if (result.statusCode === 200) {
 				console.log('start playing from cache', filePath)
-				return trackUrl
+				return { filePath, CACHE_DIR } // 返回已下载的文件路径
 			} else {
 				console.error('文件下载失败')
-				return trackUrl
+				return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
 			}
 		} catch (error) {
-			console.log('缓存音轨时出错:', error)
 			console.error('缓存音轨时出错:', error)
-			return trackUrl // 返回远程 URL 作为回退
+			return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
 		}
 	}
 }
@@ -72,16 +77,16 @@ export const addTrackToPlayer = async (track: Track): Promise<void> => {
 	await TrackPlayer.add(trackToAdd)
 }
 
-// // 应用启动时初始化缓存目录
-// initCacheDirectory();
+// 在应用启动时初始化缓存目录
+initCacheDirectory()
 
-// // 示例使用
+// 示例使用
 // const track = {
-//   id: 'track123',
-//   url: 'https://example.com/path/to/track.mp3',
-//   title: '歌曲标题',
-//   artist: '艺术家名称',
-//   artwork: 'https://example.com/path/to/artwork.jpg',
+//     id: 'track123',
+//     url: 'https://example.com/path/to/track.mp3',
+//     title: '歌曲标题',
+//     artist: '艺术家名称',
+//     artwork: 'https://example.com/path/to/artwork.jpg',
 // };
 
 // addTrackToPlayer(track);
