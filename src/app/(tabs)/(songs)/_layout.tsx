@@ -2,6 +2,7 @@ import { HeaderMemu } from '@/components/headerMenu'
 import { StopPropagation } from '@/components/utils/StopPropagation'
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
+import { debounce } from '@/helpers/debounce'
 import { indexingLocal } from '@/helpers/indexing/local'
 import { indexingWebdav } from '@/helpers/indexing/webdav'
 import { fetchMetadata } from '@/helpers/metadata'
@@ -16,11 +17,11 @@ import { useIsFocused } from '@react-navigation/native'
 import { Stack } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, InteractionManager, Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
 let currentAbortController: AbortController | null = null
-const BATCH_SIZE = 5
+const BATCH_SIZE = 1
 let updates: Array<{ title: string; url: string; pendingMeta?: boolean }> = []
 
 const asyncPool = async (
@@ -184,7 +185,7 @@ const SongsScreenLayout = () => {
 		update,
 	])
 
-	const debouncedRefreshLibrary = refreshLibrary
+	const debouncedRefreshLibrary = useCallback(debounce(refreshLibrary, 0), [refreshLibrary])
 
 	useEffect(() => {
 		currentAbortController = new AbortController()
@@ -246,9 +247,7 @@ const SongsScreenLayout = () => {
 	useEffect(() => {
 		if (isFocused && needUpdate) {
 			try {
-				InteractionManager.runAfterInteractions(() => {
-					debouncedRefreshLibrary()
-				})
+				debouncedRefreshLibrary()
 				setNeedUpdate(false)
 			} catch (error) {
 				console.log('error', error)

@@ -39,6 +39,7 @@ export const PlaylistsList = () => {
 				router.back()
 				return
 			}
+
 			// 如果当前删除的曲目是正在播放的曲目则保持播放状态
 			if (currentTrack?.basename === item.title) {
 				TrackPlayer.play()
