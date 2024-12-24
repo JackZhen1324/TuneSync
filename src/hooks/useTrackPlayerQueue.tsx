@@ -1,6 +1,7 @@
-import { getCachedTrack } from '@/helpers/cache'
+import { getCachedTrack, reCached } from '@/helpers/cache'
 import { useQueueStore } from '@/store/queue'
 import { useCallback, useEffect, useState } from 'react'
+import RNFS from 'react-native-fs'
 import TrackPlayer, { Event, Track, TrackMetadataBase } from 'react-native-track-player'
 
 /**
@@ -41,13 +42,41 @@ export const useTrackPlayerQueue = () => {
 		},
 		[updateQueue],
 	)
+	const skip = async (index, track) => {
+		const cachePath = track?.cachedUrl || ''
+		const cacheDir = track?.cache_dir || ''
+		const fileExists = await RNFS.exists(cachePath)
+		const cacheNotExpired = await RNFS.exists(cacheDir)
+		if (!cacheNotExpired) {
+			await TrackPlayer.reset()
+			await addTrackToPlayer(track)
+		}
+		// 缓存失效时重新获取
+		else if (fileExists) {
+			await TrackPlayer.skip(index)
+		} else {
+			await reCached(track.originalUrl, track.basename, track.cachedUrl)
+			await TrackPlayer.skip(index)
+		}
+	}
 	const addTrackToPlayer = async (track: Track): Promise<void> => {
 		const { url, from, basename, id } = track
+		let trackUrl
+		let cache_dir
+		if (from === 'local') {
+			trackUrl = url
+		} else {
+			const { filePath, CACHE_DIR } = await getCachedTrack(url, basename || id)
+			cache_dir = CACHE_DIR
+			trackUrl = filePath
+		}
 
-		const trackUrl = from === 'local' ? url : await getCachedTrack(url, basename || id)
 		const trackToAdd = {
 			...track,
-			url: trackUrl,
+			originalUrl: track.url,
+			cachedUrl: trackUrl || '',
+			url: trackUrl || '',
+			cache_dir: cache_dir,
 		}
 
 		await TrackPlayer.add(trackToAdd)
@@ -80,5 +109,5 @@ export const useTrackPlayerQueue = () => {
 		}
 	}, [updateQueue])
 
-	return { queue, remove, update, addTrackToPlayer }
+	return { queue, remove, update, addTrackToPlayer, skip }
 }
