@@ -27,7 +27,6 @@ const SongsScreen = () => {
 		if (activeTrackId <= queueListWithContent.default.length && activeTrackId > -1) {
 			await TrackPlayer.skip(activeTrackId)
 		}
-		init = 1
 	}
 	useEffect(() => {
 		setTracks(tracksMap)
@@ -35,6 +34,7 @@ const SongsScreen = () => {
 	}, [])
 	useEffect(() => {
 		if (init === 0) {
+			init = 1
 			loadQueue()
 		}
 	})
