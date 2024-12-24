@@ -1,4 +1,4 @@
-import { getCachedTrack } from '@/helpers/cache'
+import { getCachedTrack, reCached } from '@/helpers/cache'
 import { useQueueStore } from '@/store/queue'
 import { useCallback, useEffect, useState } from 'react'
 import RNFS from 'react-native-fs'
@@ -44,12 +44,18 @@ export const useTrackPlayerQueue = () => {
 	)
 	const skip = async (index, track) => {
 		const cachePath = track?.cachedUrl || ''
+		const cacheDir = track?.cache_dir || ''
 		const fileExists = await RNFS.exists(cachePath)
+		const cacheNotExpired = await RNFS.exists(cacheDir)
+		if (!cacheNotExpired) {
+			await TrackPlayer.reset()
+			await addTrackToPlayer(track)
+		}
 		// 缓存失效时重新获取
-		if (fileExists) {
+		else if (fileExists) {
 			await TrackPlayer.skip(index)
 		} else {
-			await getCachedTrack(track.originalUrl, track.basename)
+			await reCached(track.originalUrl, track.basename, track.cachedUrl)
 			await TrackPlayer.skip(index)
 		}
 	}
