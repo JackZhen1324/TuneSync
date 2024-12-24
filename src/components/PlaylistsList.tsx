@@ -17,7 +17,7 @@ const ItemDivider = () => (
 
 export const PlaylistsList = () => {
 	const { activeQueueId, queueListWithContent } = useQueueStore((state) => state)
-	const { queue, remove } = useTrackPlayerQueue()
+	const { queue, remove, skip } = useTrackPlayerQueue()
 	const [needUpdate, setNeedUpdate] = useState(false)
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const currentTrack = useActiveTrackAlternative()
@@ -39,7 +39,6 @@ export const PlaylistsList = () => {
 				router.back()
 				return
 			}
-
 			// 如果当前删除的曲目是正在播放的曲目则保持播放状态
 			if (currentTrack?.basename === item.title) {
 				TrackPlayer.play()
@@ -75,7 +74,7 @@ export const PlaylistsList = () => {
 			// 2. 使用异步延迟的方式调用 TrackPlayer 的操作，让 React 有机会先更新UI并执行动画
 			Promise.resolve().then(async () => {
 				try {
-					await TrackPlayer.skip(index)
+					await skip(index, track)
 					await TrackPlayer.play()
 				} catch (error) {
 					console.error('Error while trying to play track:', error)
@@ -84,7 +83,7 @@ export const PlaylistsList = () => {
 				}
 			})
 		},
-		[setActiveTrack],
+		[setActiveTrack, skip],
 	)
 	const renderItem = useCallback(
 		({ item: track, index }: { item: any; index: number }) => {
