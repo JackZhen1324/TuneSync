@@ -26,7 +26,6 @@ import { useTranslation } from 'react-i18next'
 import {
 	ActivityIndicator,
 	Dimensions,
-	InteractionManager,
 	PressableAndroidRippleConfig,
 	StyleProp,
 	StyleSheet,
@@ -231,11 +230,7 @@ const PlayerScreen = () => {
 					<SongInfoRoute
 						setIndex={setIndex}
 						activeTrack={activeTrackObj}
-						togglePlaylist={() => {
-							const handle = InteractionManager.createInteractionHandle()
-							panelRef.current.show()
-							InteractionManager.clearInteractionHandle(handle)
-						}}
+						togglePlaylist={() => panelRef.current.show()}
 					/>
 				)
 			case 'lyrics':
