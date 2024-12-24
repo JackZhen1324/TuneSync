@@ -4,10 +4,8 @@ import { initCacheDirectory } from '@/helpers/cache'
 import { debounce } from '@/helpers/debounce'
 import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState'
 import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer'
-import { getAccessToken } from '@/service/auth'
 import { useLanguageStore } from '@/store/language'
-import { useActiveTrack, useSpotofyAuthToken } from '@/store/library'
-import { useRequest } from 'ahooks'
+import { useActiveTrack } from '@/store/library'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import 'intl-pluralrules'
@@ -22,7 +20,7 @@ SplashScreen.preventAutoHideAsync()
 TrackPlayer.registerPlaybackService(() => playbackService)
 
 const App = () => {
-	const { setActiveTrackIndex, activeTrackId } = useActiveTrack((state) => state)
+	const { setActiveTrackIndex } = useActiveTrack((state) => state)
 
 	const { language } = useLanguageStore()
 
@@ -44,15 +42,6 @@ const App = () => {
 		changeLanguage(language)
 	}, [])
 
-	const { setToken } = useSpotofyAuthToken()
-	const { runAsync } = useRequest(getAccessToken, {
-		manual: true,
-	})
-	useEffect(() => {
-		runAsync().then((el) => {
-			setToken(`${el.token_type} ${el.access_token}`)
-		})
-	}, [])
 	useTrackPlayerEvents(
 		[Event.PlaybackState, Event.PlaybackTrackChanged],
 		debounce(async (event: { state: string }) => {

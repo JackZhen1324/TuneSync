@@ -40,6 +40,7 @@ TuneSync is currently under early access stage. While some features are operatio
 - [x] Manage audio queue
 - [x] Searching songs from added library
 - [x] Airplay support
+- [ ] Support Android
 - [ ] Voice searching songs from added library
 - [ ] Karaoke mode
 - [ ] Metadata editing
@@ -66,6 +67,7 @@ npx expo run:ios
 ### Run Andriod
 
 ```bash
+// The UI is broken, need to be fixed.
 npx expo run:andriod
 ```
 
@@ -85,4 +87,4 @@ Not ready to release
 
 ### iOS
 
-Distribute via TestFlight. Please leave your Apple email address in the Discord channel or contact me at zqian15@asu.edu to receive a redeem code.
+Distribute via TestFlight. Try install from https://testflight.apple.com/join/HBQ91aZW or contack me via zqian15@asu.edu for helps.
