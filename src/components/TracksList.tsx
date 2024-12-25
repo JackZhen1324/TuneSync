@@ -34,17 +34,15 @@ export const TracksList = ({
 }: TracksListProps) => {
 	const { setActiveTrack } = useActiveTrack((state) => state)
 	const activeTrack = useActiveTrackAlternative()
-	const { queue, addTrackToPlayer, skip } = useTrackPlayerQueue()
+	const { addTrackToPlayer, skip } = useTrackPlayerQueue()
 	const isPlaying = useIsPlaying()
 	// 用于在点击后立即更新UI（例如：可在 TracksListItem 中根据 loadingTrackId 显示加载状态）
 	const [loadingTrackId, setLoadingTrackId] = useState<string | null>(activeTrack?.basename || '')
-
 	const handleTrackSelect = useCallback(
 		(selected: Track) => {
 			// 立即更新UI
 			const selectedTrack = {
 				...selected,
-				id: queue.length,
 			}
 			setActiveTrack(selectedTrack)
 			setLoadingTrackId(selectedTrack.basename) // 标记正在加载的曲目
@@ -52,6 +50,7 @@ export const TracksList = ({
 			// 在后台执行耗时操作
 			Promise.resolve().then(async () => {
 				try {
+					const queue = await TrackPlayer.getQueue()
 					const index = queue.findIndex((el) => el.title === selectedTrack.title)
 					TrackPlayer.pause()
 					if (index === -1) {
@@ -68,7 +67,7 @@ export const TracksList = ({
 				}
 			})
 		},
-		[addTrackToPlayer, queue, setActiveTrack, skip],
+		[addTrackToPlayer, setActiveTrack, skip],
 	)
 
 	const renderItem = useCallback(
