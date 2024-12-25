@@ -47,19 +47,17 @@ export const useTrackPlayerQueue = () => {
 		const cacheDir = track?.cache_dir || ''
 		const fileExists = await RNFS.exists(cachePath)
 		const cacheNotExpired = await RNFS.exists(cacheDir)
+		// project rebuild
 		if (!cacheNotExpired) {
 			track.url = track.originalUrl
-			console.log('project rebuild', track)
 			await TrackPlayer.reset()
 			await addTrackToPlayer(track)
 			await TrackPlayer.skip(0)
 		}
-		// 缓存失效时重新获取
+		// cache hit
 		else if (fileExists) {
 			await TrackPlayer.skip(index)
 		} else {
-			console.log('reload cache')
-
 			await reCached(track.originalUrl, track.basename, track.cachedUrl)
 			await TrackPlayer.skip(index)
 		}

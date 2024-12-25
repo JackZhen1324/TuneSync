@@ -33,7 +33,6 @@ export const getCachedTrack = async (
 	const filePath = `${CACHE_DIR}/${fileName}`
 
 	const fileExists = await RNFS.exists(filePath)
-	console.log('fileExists', fileExists)
 
 	if (fileExists) {
 		return { filePath, CACHE_DIR }
