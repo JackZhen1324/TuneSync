@@ -6,11 +6,11 @@ import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { useActiveTrack, useLibraryStore } from '@/store/library'
 import { useQueueStore } from '@/store/queue'
 import { defaultStyles } from '@/styles'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useLayoutEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TrackPlayer from 'react-native-track-player'
-let init = 0
+
 const SongsScreen = () => {
 	const { t } = useTranslation()
 	const search = useNavigationSearch({
@@ -20,24 +20,30 @@ const SongsScreen = () => {
 	})
 
 	const { setTracks, tracks, tracksMap } = useLibraryStore((state) => state)
-	const { activeTrackId } = useActiveTrack((state) => state)
+	const { activeTrack } = useActiveTrack((state) => state)
 	const { queueListWithContent } = useQueueStore((state) => state) as { queueListWithContent: any }
 	const loadQueue = async () => {
-		await TrackPlayer.setQueue(queueListWithContent.default)
-		if (activeTrackId <= queueListWithContent.default.length && activeTrackId > -1) {
+		try {
+			const queue = queueListWithContent.default
+			const activeTrackId = queue.findIndex((el) => el.basename === activeTrack) || 0
+			await TrackPlayer.setQueue(queue)
 			await TrackPlayer.skip(activeTrackId)
+		} catch (error) {
+			console.log('error', error)
 		}
 	}
-	useEffect(() => {
-		setTracks(tracksMap)
-		return () => {}
+	useLayoutEffect(() => {
+		// wait for player to be ready
+		const a = setTimeout(() => {
+			loadQueue()
+		}, 0)
+		return () => {
+			clearTimeout(a)
+		}
 	}, [])
 	useEffect(() => {
-		if (init === 0) {
-			init = 1
-			loadQueue()
-		}
-	})
+		setTracks(tracksMap)
+	}, [])
 
 	const filteredTracks = useMemo(() => {
 		if (!search) return tracks
