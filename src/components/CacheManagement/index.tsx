@@ -1,6 +1,6 @@
 import { colors as tokens } from '@/constants/tokens'
+import { usePlayerStore } from '@/store/player'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -23,9 +23,8 @@ const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache`
 const CacheManagement = () => {
 	const { t } = useTranslation()
 	const [cacheSize, setCacheSize] = useState(0)
-	const navigation = useNavigation()
 	const colorScheme = useColorScheme() // 获取当前的主题（'light' 或 'dark'）
-
+	const { fireCacheResetTrigger } = usePlayerStore((state) => state)
 	useEffect(() => {
 		requestStoragePermission()
 		calculateCacheSize()
@@ -95,8 +94,10 @@ const CacheManagement = () => {
 							}
 							setCacheSize(0)
 							Alert.alert('提示', '缓存已清空')
+							fireCacheResetTrigger()
 						} catch (error) {
 							console.error('清空缓存时出错：', error)
+							fireCacheResetTrigger()
 						}
 					},
 				},
