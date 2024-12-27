@@ -38,8 +38,22 @@
 		"middlewareManagement": "Middleware"
 	},
 	"cache": {
-		"size": "Cache størrelse",
-		"clean": "Rens cache"
+		"size": "Cache Size",
+		"cleanBt": "Clean Cache",
+		"clean": {
+			"title": "Cache Reset",
+			"desc": "Are you sure you want to reset the cache?",
+			"cancelBt": "Cancel",
+			"confirmBt": "OK"
+		},
+		"success": {
+			"title": "Success",
+			"desc": "The cache has been reset successfully."
+		},
+		"error": {
+			"title": "Error",
+			"desc": "Failed to reset the cache."
+		}
 	},
 	"webdavAdd": {
 		"configName": "Ressursnavn",

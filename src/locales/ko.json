@@ -38,8 +38,22 @@
 		"middlewareManagement": "Middleware"
 	},
 	"cache": {
-		"size": "cache 교광",
-		"clean": "cache 교광"
+		"size": "캐시 크기",
+		"cleanBt": "캐시 정리",
+		"clean": {
+			"title": "캐시 초기화",
+			"desc": "캐시를 초기화 하시겠습니까?",
+			"cancelBt": "취소",
+			"confirmBt": "확인"
+		},
+		"success": {
+			"title": "성공",
+			"desc": "캐시가 성공적으로 초기화되었습니다."
+		},
+		"error": {
+			"title": "오류",
+			"desc": "캐시 초기화에 실패했습니다."
+		}
 	},
 	"webdavAdd": {
 		"configName": "리소스 이름",

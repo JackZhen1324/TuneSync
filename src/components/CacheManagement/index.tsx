@@ -76,15 +76,15 @@ const CacheManagement = () => {
 
 	const clearCache = async () => {
 		Alert.alert(
-			'清空缓存',
-			'确定要清空缓存吗？',
+			t('cache.clean.title') || '清空缓存',
+			t('cache.clean.desc') || '确定要清空缓存吗？',
 			[
 				{
-					text: '取消',
+					text: t('cache.clean.cancelBt') || '取消',
 					style: 'cancel',
 				},
 				{
-					text: '确定',
+					text: t('cache.clean.confirmBt') || '确定',
 					onPress: async () => {
 						try {
 							const exists = await RNFS.exists(CACHE_DIR)
@@ -93,10 +93,13 @@ const CacheManagement = () => {
 								await RNFS.mkdir(CACHE_DIR)
 							}
 							setCacheSize(0)
-							Alert.alert('提示', '缓存已清空')
+							Alert.alert(
+								t('cache.success.title') || '提示',
+								t('cache.success.desc') || '缓存已清空',
+							)
 							fireCacheResetTrigger()
 						} catch (error) {
-							console.error('清空缓存时出错：', error)
+							console.error(t('cache.error.desc') || '清空缓存时出错：', error)
 							fireCacheResetTrigger()
 						}
 					},
@@ -150,7 +153,7 @@ const CacheManagement = () => {
 							color={tokens.text}
 							style={{ marginRight: 8 }}
 						/>
-						<Text style={styles.actionButtonText}>{t('cache.clean')}</Text>
+						<Text style={styles.actionButtonText}>{t('cache.cleanBt')}</Text>
 					</TouchableOpacity>
 				</View>
 			</ScrollView>

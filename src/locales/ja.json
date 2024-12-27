@@ -38,8 +38,22 @@
 		"middlewareManagement": "Middleware"
 	},
 	"cache": {
-		"size": "Cache Size",
-		"clean": "Clean Cache"
+		"size": "キャッシュサイズ",
+		"cleanBt": "キャッシュをクリア",
+		"clean": {
+			"title": "キャッシュリセット",
+			"desc": "キャッシュをリセットしてもよろしいですか？",
+			"cancelBt": "キャンセル",
+			"confirmBt": "OK"
+		},
+		"success": {
+			"title": "成功",
+			"desc": "キャッシュは正常にリセットされました。"
+		},
+		"error": {
+			"title": "エラー",
+			"desc": "キャッシュのリセットに失敗しました。"
+		}
 	},
 	"webdavAdd": {
 		"configName": "リソース名",
