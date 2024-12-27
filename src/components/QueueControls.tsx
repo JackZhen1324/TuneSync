@@ -1,5 +1,5 @@
 import { colors } from '@/constants/tokens'
-import { useQueueStore } from '@/store/queue'
+import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
 import { defaultStyles } from '@/styles'
 import { Ionicons } from '@expo/vector-icons'
 import { StyleSheet, Text, View, ViewProps } from 'react-native'
@@ -11,18 +11,23 @@ type QueueControlsProps = {
 } & ViewProps
 
 export const QueueControls = ({ tracks, style, ...viewProps }: QueueControlsProps) => {
-	const { activeQueueId, queueListWithContent, setQueueListContent, setActiveQueueId } =
-		useQueueStore((state) => state)
+	const { addTrackToPlayer } = useTrackPlayerQueue()
 	const handlePlay = async () => {
-		await TrackPlayer.setQueue(tracks)
-		setQueueListContent(tracks, activeQueueId, queueListWithContent)
-		await TrackPlayer.play()
+		const count = tracks.length
+		const randomIndex = Math.floor(Math.random() * count)
+		await addTrackToPlayer(tracks[randomIndex])
+		const queue = await TrackPlayer.getQueue()
+		const index = queue.findIndex((el) => el.basename === tracks[randomIndex].basename)
+		await TrackPlayer.skip(index)
+		TrackPlayer.play()
 	}
 
 	const handleShufflePlay = async () => {
+		await TrackPlayer.reset()
 		const shuffledTracks = [...tracks].sort(() => Math.random() - 0.5)
-		setQueueListContent(shuffledTracks, activeQueueId, queueListWithContent)
-		await TrackPlayer.setQueue(shuffledTracks)
+		shuffledTracks.forEach(async (el) => {
+			await addTrackToPlayer(el)
+		})
 		await TrackPlayer.play()
 	}
 
