@@ -1,14 +1,13 @@
 import { TrackShortcutsMenu } from '@/components/TrackShortcutsMenu'
 import { StopPropagation } from '@/components/utils/StopPropagation'
-import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize } from '@/constants/tokens'
 import { defaultStyles } from '@/styles'
 import { Entypo } from '@expo/vector-icons'
 import React, { memo, useCallback } from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import LoaderKit from 'react-native-loader-kit'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { Track } from 'react-native-track-player'
+import TracksListItemHeader from './TracksListItemHeader'
+import TracksListItemHeaderActive from './TracksListItemHeaderActive'
 
 export type TracksListItemProps = {
 	from?: string
@@ -22,44 +21,29 @@ export type TracksListItemProps = {
 const TracksListItemComponent = ({
 	from,
 	track,
+	isLoading,
 	isActive,
-	isPLaying,
-	isLoading = false,
 	onTrackSelect: handleTrackSelect,
 }: TracksListItemProps) => {
 	// 点击逻辑：点击后立即调用onTrackSelect，从外部控制逻辑和状态变更
 	const handlePress = useCallback(() => {
-		if (!isLoading) {
-			handleTrackSelect(track)
-		}
-	}, [handleTrackSelect, track, isLoading])
+		handleTrackSelect(track)
+	}, [handleTrackSelect, track])
 
 	if (!track) return null
 
 	return (
-		<TouchableHighlight onPress={handlePress} disabled={isLoading}>
+		<TouchableHighlight onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
-				<View style={styles.artworkContainer}>
-					<FastImage
-						source={{
-							uri: track?.artwork || unknownTrackImageUri,
-							priority: FastImage.priority.normal,
-						}}
-						style={[styles.trackArtworkImage, isActive && { opacity: 0.6 }]}
-					/>
-					{isActive && isPLaying && (
-						<LoaderKit
-							style={styles.trackPlayingIconIndicator}
-							name="LineScaleParty"
-							color={colors.icon}
-						/>
-					)}
-					{isLoading && (
-						<View style={styles.loadingOverlay}>
-							<ActivityIndicator size="small" color="#fff" />
-						</View>
-					)}
-				</View>
+				{isActive ? (
+					<TracksListItemHeaderActive
+						track={track}
+						isActive={isActive}
+						isLoading={isLoading}
+					></TracksListItemHeaderActive>
+				) : (
+					<TracksListItemHeader isLoading={isLoading} track={track}></TracksListItemHeader>
+				)}
 
 				<View style={styles.trackDetailsContainer}>
 					<View style={styles.trackTextContainer}>
@@ -85,7 +69,7 @@ const TracksListItemComponent = ({
 					</View>
 
 					<StopPropagation>
-						<TrackShortcutsMenu from={from} track={track}>
+						<TrackShortcutsMenu from={track.from} track={track}>
 							<Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
 						</TrackShortcutsMenu>
 					</StopPropagation>
@@ -95,7 +79,13 @@ const TracksListItemComponent = ({
 	)
 }
 
-export const TracksListItem = memo(TracksListItemComponent)
+export const TracksListItem = memo(TracksListItemComponent, (preP, current) => {
+	return (
+		preP.isActive === current.isActive &&
+		Object.is(preP.track, current.track) &&
+		preP.isLoading === current.isLoading
+	)
+})
 
 const styles = StyleSheet.create({
 	trackItemContainer: {

@@ -1,16 +1,16 @@
-import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize } from '@/constants/tokens'
+import { equals } from '@/helpers/utils'
 import { defaultStyles } from '@/styles'
 import { MaterialIcons } from '@expo/vector-icons'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import LoaderKit from 'react-native-loader-kit'
 import { TouchableRipple } from 'react-native-paper'
-import { Track, useIsPlaying } from 'react-native-track-player'
+import { Track } from 'react-native-track-player'
+import TracksListItemHeader from './TracksListItemHeader'
+import TracksListItemHeaderActive from './TracksListItemHeaderActive'
 import { StopPropagation } from './utils/StopPropagation'
 export type TracksListItemProps = {
-	activeSong: string
+	isActive: boolean
 	track: Track
 	index: number
 	isLoading: boolean
@@ -19,7 +19,7 @@ export type TracksListItemProps = {
 }
 
 const PlayListItemComponent = ({
-	activeSong,
+	isActive,
 	track,
 	index,
 	isLoading,
@@ -27,10 +27,7 @@ const PlayListItemComponent = ({
 	onDelete: handleDelete,
 }: TracksListItemProps) => {
 	// const { activeTrack } = useActiveTrack()
-	const { playing } = useIsPlaying()
-	const isAtive = useMemo(() => {
-		return activeSong === track.title
-	}, [activeSong, track.title])
+
 	const handlePress = useCallback(() => {
 		handleTrackSelect(track, index)
 	}, [handleTrackSelect, track, index])
@@ -39,30 +36,13 @@ const PlayListItemComponent = ({
 		<TouchableRipple centered={true} rippleColor="rgba(255, 255, 255, .005)" onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
 				<View>
-					<FastImage
-						source={{
-							uri: track.artwork || unknownTrackImageUri,
-							priority: FastImage.priority.normal,
-						}}
-						style={{
-							...styles.trackArtworkImage,
-							opacity: isAtive ? 0.6 : 1,
-						}}
-					/>
-
-					{isAtive && playing && (
-						<LoaderKit
-							style={styles.trackPlayingIconIndicator}
-							name="LineScaleParty"
-							color={colors.icon}
-						/>
-					)}
-					{isLoading && (
-						<LoaderKit
-							style={styles.trackPlayingIconIndicator}
-							name="LineScaleParty"
-							color={colors.icon}
-						/>
+					{isActive ? (
+						<TracksListItemHeaderActive
+							track={track}
+							isActive={isActive}
+						></TracksListItemHeaderActive>
+					) : (
+						<TracksListItemHeader isLoading={isLoading} track={track}></TracksListItemHeader>
 					)}
 				</View>
 
@@ -72,7 +52,7 @@ const PlayListItemComponent = ({
 							numberOfLines={1}
 							style={{
 								...styles.trackTitleText,
-								color: isAtive ? colors.primary : colors.text,
+								color: isActive ? colors.primary : colors.text,
 							}}
 						>
 							{track.formatedTitle || track.basename}
@@ -101,9 +81,22 @@ const PlayListItemComponent = ({
 	)
 }
 
-export const PlayListItem = memo(PlayListItemComponent)
+export const PlayListItem = memo(PlayListItemComponent, (preP, current) => {
+	return (
+		preP.isActive === current.isActive &&
+		equals(preP.track, current.track) &&
+		preP.isLoading === current.isLoading
+	)
+})
 
 const styles = StyleSheet.create({
+	loadingOverlay: {
+		...StyleSheet.absoluteFillObject,
+		backgroundColor: 'rgba(0,0,0,0.3)',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 8,
+	},
 	trackItemContainer: {
 		flexDirection: 'row',
 		columnGap: 14,

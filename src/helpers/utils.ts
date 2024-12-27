@@ -34,3 +34,23 @@ export const truncateFileName = (name, maxLength) => {
 	if (name.length <= maxLength) return name
 	return name.slice(0, maxLength - 3) + '...'
 }
+
+export const equals = (objA, objB) => {
+	// 浅比较
+	// 检查两个对象的引用是否相等
+	if (objA === objB) return true
+
+	// 检查对象的键数量是否相等
+	const keysA = Object.keys(objA)
+	const keysB = Object.keys(objB)
+	if (keysA.length !== keysB.length) return false
+
+	// 检查每个键的值是否相等
+	for (const key of keysA) {
+		if (objA[key] !== objB[key]) {
+			return false // 发现不同的值，返回 false
+		}
+	}
+
+	return true // 所有第一层属性值都相同
+}
