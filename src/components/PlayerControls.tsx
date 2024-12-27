@@ -1,9 +1,12 @@
 import { colors } from '@/constants/tokens'
+import { reCached } from '@/helpers/cache'
+import { useIsPlaying } from '@/hooks/useIsPlaying'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { memo, useRef } from 'react'
-import { Animated, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
-import TrackPlayer, { useIsPlaying } from 'react-native-track-player'
-
+import { useDebounceFn } from 'ahooks'
+import { memo, useMemo, useRef } from 'react'
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import TrackPlayer from 'react-native-track-player'
 type PlayerControlsProps = {
 	style?: ViewStyle
 }
@@ -28,28 +31,35 @@ export const PlayerControls = memo(({ style }: PlayerControlsProps) => {
 })
 
 export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps) => {
-	const { playing } = useIsPlaying()
-	const scaleAnim = useRef(new Animated.Value(1)).current // 控制大小
+	const { playing: playing, setIsPlaying: setIsPlay } = useIsPlaying()
+	const scaleAnim = useSharedValue(1)
+	// const { skip } = useTrackPlayerQueue()
+
+	const isPlay = useMemo(() => {
+		return playing
+	}, [JSON.stringify(playing)])
+	// 使用 useAnimatedStyle 来创建样式
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [{ scale: scaleAnim.value }],
+		}
+	})
 	const handlePressIn = () => {
-		// 按下时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 0.8, // 缩小到90%
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		scaleAnim.value = withSpring(0.8) // 按下时缩小
 	}
 
 	const handlePressOut = () => {
-		// 松开时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 1, // 恢复到原始大小
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		// const handle = InteractionManager.createInteractionHandle()
+		setIsPlay(!isPlay)
+		scaleAnim.value = withSpring(1) // 松开时恢复原样
+		// InteractionManager.clearInteractionHandle(handle)
+	}
+	const handlePlay = () => {
+		if (isPlay) {
+			TrackPlayer.pause()
+		} else {
+			TrackPlayer.play()
+		}
 	}
 	return (
 		<View
@@ -58,50 +68,63 @@ export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps
 				style,
 			]}
 		>
-			<Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+			<Animated.View style={animatedStyle}>
 				<TouchableOpacity
 					activeOpacity={0.85}
 					onPressIn={handlePressIn}
 					onPressOut={handlePressOut}
-					onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
+					onPress={handlePlay}
 				>
-					<FontAwesome6 name={playing ? 'pause' : 'play'} size={iconSize} color={colors.text} />
+					<FontAwesome6 name={isPlay ? 'pause' : 'play'} size={iconSize} color={colors.text} />
 				</TouchableOpacity>
 			</Animated.View>
 		</View>
 	)
 })
 
-export const SkipToNextButton = memo(({ iconSize = 30 }: PlayerButtonProps) => {
-	const scaleAnim = useRef(new Animated.Value(1)).current // 控制大小
+export const SkipToNextButton = memo(({ iconSize = 30 }) => {
+	const scaleAnim = useSharedValue(1)
+	const offset = useRef(0)
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [{ scale: scaleAnim.value }],
+		}
+	})
+	const { run } = useDebounceFn(
+		async () => {
+			const currentIndex = (await TrackPlayer.getActiveTrackIndex()) || 0
+			const queue = await TrackPlayer.getQueue()
+			const targetIndex = currentIndex + offset.current
+			if (targetIndex < 0 || targetIndex > queue.length - 1 || offset.current < 2) {
+				await TrackPlayer.skipToNext()
+			} else {
+				const current = queue[targetIndex]
+				await reCached(current.originalUrl, current.basename, current.cachedUrl)
+				await TrackPlayer.skip(targetIndex)
+			}
+		},
+		{
+			wait: 200,
+		},
+	)
+
 	const handlePressIn = () => {
-		// 按下时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 0.8, // 缩小到90%
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		offset.current += 1
+		scaleAnim.value = withSpring(0.8) // 缩小到90%
 	}
 
 	const handlePressOut = () => {
-		// 松开时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 1, // 恢复到原始大小
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		scaleAnim.value = withSpring(1) // 恢复到原始大小
 	}
+
 	return (
-		<Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+		<Animated.View style={animatedStyle}>
 			<TouchableOpacity
+				activeOpacity={0.85}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
-				activeOpacity={0.7}
-				onPress={() => TrackPlayer.skipToNext()}
+				onPress={run}
+				// 这里添加 Skip 的逻辑
 			>
 				<FontAwesome6 name="forward" size={iconSize} color={colors.text} />
 			</TouchableOpacity>
@@ -110,37 +133,50 @@ export const SkipToNextButton = memo(({ iconSize = 30 }: PlayerButtonProps) => {
 })
 
 export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
-	const scaleAnim = useRef(new Animated.Value(1)).current // 控制大小
+	const scaleAnim = useSharedValue(1)
+	const offset = useRef(0)
+	const { run } = useDebounceFn(
+		async () => {
+			const currentIndex = (await TrackPlayer.getActiveTrackIndex()) || 0
+			const queue = await TrackPlayer.getQueue()
+			const targetIndex = currentIndex + offset.current
+			if (targetIndex < 0 || targetIndex > queue.length - 1 || offset.current < 2) {
+				await TrackPlayer.skipToPrevious()
+			} else {
+				const current = queue[targetIndex]
+				await reCached(current.originalUrl, current.basename, current.cachedUrl)
+				await TrackPlayer.skip(targetIndex)
+			}
+		},
+		{
+			wait: 200,
+		},
+	)
+	const animatedStyle = useAnimatedStyle(() => {
+		return {
+			transform: [{ scale: scaleAnim.value }],
+		}
+	})
+
 	const handlePressIn = () => {
-		// 按下时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 0.8, // 缩小到90%
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		offset.current -= 1
+		scaleAnim.value = withSpring(0.8) // 缩小到90%
 	}
 
 	const handlePressOut = () => {
-		// 松开时的动画
-		Animated.parallel([
-			Animated.spring(scaleAnim, {
-				toValue: 1, // 恢复到原始大小
-				bounciness: 10,
-				useNativeDriver: true,
-			}),
-		]).start()
+		scaleAnim.value = withSpring(1) // 恢复到原始大小
 	}
+
 	return (
-		<Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+		<Animated.View style={animatedStyle}>
 			<TouchableOpacity
+				activeOpacity={0.85}
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
-				activeOpacity={0.7}
-				onPress={() => TrackPlayer.skipToPrevious()}
+				onPress={run}
+				// 这里添加 Skip 的逻辑
 			>
-				<FontAwesome6 name={'backward'} size={iconSize} color={colors.text} />
+				<FontAwesome6 name="backward" size={iconSize} color={colors.text} />
 			</TouchableOpacity>
 		</Animated.View>
 	)
