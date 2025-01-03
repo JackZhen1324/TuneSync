@@ -1,0 +1,79 @@
+{
+	"routes": {
+		"favorites": "المفضلة",
+		"collections": "المجموعات",
+		"songs": "الأغاني",
+		"artists": "الفنانين",
+		"setting": "الإعدادات"
+	},
+	"favorites": {
+		"header": "الأغاني المفضلة",
+		"search": "البحث في الأغاني المفضلة"
+	},
+	"collections": {
+		"header": "المجموعات",
+		"search": "البحث في المجموعات",
+		"addPLaylsit": "إضافة قائمة تشغيل"
+	},
+	"songs": {
+		"header": "الأغاني",
+		"search": "البحث في الأغاني"
+	},
+	"artists": {
+		"header": "الفنانين",
+		"search": "البحث في الفنانين"
+	},
+	"setting": {
+		"header": "الإعدادات",
+		"addSource": "إضافة مصدر",
+		"local": "محلي",
+		"localResource": "مصدر محلي",
+		"remoteResource": "مصدر بعيد",
+		"webdavResource": "مصدر WebDAV",
+		"addedResource": "المصادر المضافة",
+		"folder": "مجلد",
+		"about": "حول",
+		"language": "اللغة",
+		"cacheManagement": "إدارة الذاكرة المؤقتة",
+		"middlewareManagement": "إدارة الوسائط"
+	},
+	"webdavAdd": {
+		"configName": "اسم المصدر",
+		"location": "موقع المصدر (النطاق أو IP)",
+		"username": "اسم المستخدم",
+		"password": "كلمة المرور",
+		"saveBtn": "حفظ",
+		"deleteBtn": "حذف"
+	},
+	"cache": {
+		"size": "حجم الذاكرة المؤقتة",
+		"cleanBt": "تنظيف الذاكرة المؤقتة",
+		"clean": {
+			"title": "إعادة تعيين الذاكرة المؤقتة",
+			"desc": "هل أنت متأكد أنك تريد إعادة تعيين الذاكرة المؤقتة؟",
+			"cancelBt": "إلغاء",
+			"confirmBt": "موافق"
+		}
+	},
+	"player": {
+		"tabs": {
+			"song": "أغنية",
+			"lyric": "كلمات"
+		},
+		"playlist": {
+			"header": "قائمة التشغيل"
+		}
+	},
+	"playlistAdd": {
+		"header": "إضافة قائمة تشغيل",
+		"title": "عنوان قائمة التشغيل",
+		"save": "إنشاء"
+	},
+	"global": {
+		"refreshLib": "تحديث المكتبة",
+		"addTofavorite": "إضافة إلى المفضلة",
+		"deleteFromfavorite": "إزالة من المفضلة",
+		"addToPlayList": "إضافة إلى قائمة التشغيل",
+		"deleteFromPlayList": "إزالة من قائمة التشغيل"
+	}
+}

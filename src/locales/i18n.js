@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import * as RNLocalize from 'react-native-localize'
+import ar from './ar.json'
 import en from './en.json'
 import ja from './ja.json' // 日语
 import ko from './ko.json' // 韩语
@@ -22,6 +23,9 @@ const resources = {
 	},
 	ja: {
 		translation: ja,
+	},
+	ar: {
+		translation: ar,
 	},
 }
 
