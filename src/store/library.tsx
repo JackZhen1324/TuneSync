@@ -357,8 +357,8 @@ export const usePlaylists = create<any>()(
 export const useAlbums = (tracks: any[]) => {
 	const albums = tracks?.reduce(
 		(
-			acc: { name: string; tracks: any[]; artworkPreview: any; type: string }[],
-			track: { playlist: any[]; artwork: any },
+			acc: { name: string; tracks: any[]; artworkPreview: any; type: string; artist?: string }[],
+			track: { playlist: any[]; artwork: any; artist: string }, // Added artist property
 		) => {
 			track.playlist?.forEach((playlistName: any) => {
 				const existingPlaylist = acc.find(
@@ -370,6 +370,7 @@ export const useAlbums = (tracks: any[]) => {
 					acc.push({
 						type: 'album',
 						name: playlistName,
+						artist: track.artist,
 						tracks: [track],
 						artworkPreview: track.artwork ?? unknownTrackImageUri,
 					})

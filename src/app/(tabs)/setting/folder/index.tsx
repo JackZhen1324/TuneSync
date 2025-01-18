@@ -98,11 +98,10 @@ const GridView = () => {
 			<FlatList
 				data={data}
 				renderItem={renderItem}
-				keyExtractor={(item) => item.dir}
+				keyExtractor={(item) => item.title + item.etag}
 				numColumns={numColumns}
 				columnWrapperStyle={styles.row}
 				style={{ backgroundColor: 'black' }}
-				// contentContainerStyle={styles.container}
 			/>
 		</View>
 	)

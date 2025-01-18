@@ -16,7 +16,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import TrackPlayer, { Event, useTrackPlayerEvents } from 'react-native-track-player'
 import i18n from '../locales/i18n'
-
 SplashScreen.preventAutoHideAsync()
 
 TrackPlayer.registerPlaybackService(() => playbackService)
@@ -130,7 +129,6 @@ const RootNavigation = () => {
 					headerShown: false,
 				}}
 			/>
-
 			<Stack.Screen
 				name="(modals)/addToPlaylist"
 				options={{

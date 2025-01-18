@@ -6,8 +6,8 @@ import React, { memo, useCallback } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 import { Track } from 'react-native-track-player'
-import TracksListItemHeader from './TracksListItemHeader'
-import TracksListItemHeaderActive from './TracksListItemHeaderActive'
+import TracksListItemHeader from './TracksList/TracksListItemHeader'
+import TracksListItemHeaderActive from './TracksList/TracksListItemHeaderActive'
 import { StopPropagation } from './utils/StopPropagation'
 export type TracksListItemProps = {
 	isActive: boolean

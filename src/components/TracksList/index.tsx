@@ -1,4 +1,4 @@
-import { TracksListItem } from '@/components/TracksListItem'
+import { TracksListItem } from '@/components/TracksList/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
@@ -13,7 +13,7 @@ import TrackPlayer, {
 	useActiveTrack as useActiveTrackAlternative,
 	useIsPlaying,
 } from 'react-native-track-player'
-import { QueueControls } from './QueueControls'
+import { QueueControls } from '../QueueControls'
 
 export type TracksListProps = Partial<FlashListProps<Track>> & {
 	id: string
@@ -53,8 +53,14 @@ export const TracksList = ({
 					const index = queue.findIndex((el) => el.title === selectedTrack.title)
 					TrackPlayer.pause()
 					if (index === -1) {
+						const step1 = performance.now()
 						await addTrackToPlayer(selectedTrack)
+						const step2 = performance.now()
+						console.log('step1 cost:', step2 - step1)
+
 						await TrackPlayer.skip(queue.length)
+						const step3 = performance.now()
+						console.log('step2 cost:', step3 - step2)
 					} else {
 						await skip(index || 0, queue[index])
 					}
