@@ -56,9 +56,7 @@ const Coverflow = ({
 	style,
 	...props
 }: CoverflowProps) => {
-	// const [scrollX] = useState(new Animated.Value(initialSelection))
 	const [selection, setSelection] = useState(initialSelection)
-
 	const [layoutWidth, setLayoutWidth] = useState(0)
 	const [childElements, setChildElements] = useState(
 		fixChildrenOrder({ children }, initialSelection),
@@ -162,9 +160,7 @@ const Coverflow = ({
 
 	const renderItem = ([position, item]) => {
 		if (!layoutWidth) return null
-
 		const selected = position === selection
-
 		const visible = position > selection - 7 && position < selection + 7
 		return visible ? (
 			<Item

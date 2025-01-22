@@ -1,8 +1,7 @@
 import { BlurView } from 'expo-blur'
 import React, { useEffect, useRef } from 'react'
-import { Animated, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import { Animated, Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native'
 import { useIsPlaying } from 'react-native-track-player'
-import { SCREEN_HEIGHT } from '../CoverFlow/Item'
 import { FloatingPlayer } from '../FloatingPlayer'
 
 interface FrostedBackgroundProps {
@@ -15,6 +14,7 @@ interface FrostedBackgroundProps {
 }
 
 const FrostedBackground: React.FC<FrostedBackgroundProps> = ({ source, selected, children }) => {
+	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 	const widthAnimiation = useRef(new Animated.Value(80)).current
 	const isPlaying = useIsPlaying()
 
@@ -41,7 +41,7 @@ const FrostedBackground: React.FC<FrostedBackgroundProps> = ({ source, selected,
 				</BlurView>
 			</ImageBackground>
 
-			<View style={styles.content}>
+			<View style={{ ...styles.content, bottom: 0.15 * SCREEN_HEIGHT }}>
 				<Text style={styles.text}>{selected?.name}</Text>
 				<Text style={styles.subText}>{selected?.artist}</Text>
 				<FloatingPlayer
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
 		width: '100%',
 		// ...StyleSheet.absoluteFillObject, // 覆盖在背景上方
 		position: 'absolute',
-		bottom: SCREEN_HEIGHT * 0.15,
 		left: 0,
 		right: 0,
 		justifyContent: 'center',
