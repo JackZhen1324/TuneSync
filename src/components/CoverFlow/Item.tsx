@@ -58,7 +58,7 @@ const Item = (props: ItemProps) => {
 	const flipScale = useRef(
 		flipAnimationForScale.interpolate({
 			inputRange: [0, 1],
-			outputRange: [1, 1.6],
+			outputRange: [1, 1.7],
 		}),
 	).current
 	const [isDetail, setIsDetail] = useState(false)
@@ -97,7 +97,7 @@ const Item = (props: ItemProps) => {
 			{
 				scale: scroll.interpolate({
 					inputRange: [position - 2, position - 1, position, position + 1, position + 2],
-					outputRange: [scaleFurther, scaleDown, 1, scaleDown, scaleFurther],
+					outputRange: [scaleFurther, scaleDown, 0.85, scaleDown, scaleFurther],
 				}),
 			},
 			{
@@ -180,4 +180,6 @@ const Item = (props: ItemProps) => {
 	)
 }
 
-export default Item
+export default React.memo(Item, (preP, nextP) => {
+	return preP.position === nextP.position && preP.selected === nextP.selected
+})

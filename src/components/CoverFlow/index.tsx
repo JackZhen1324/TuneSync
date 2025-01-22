@@ -63,7 +63,6 @@ const Coverflow = ({
 	const [childElements, setChildElements] = useState(
 		fixChildrenOrder({ children }, initialSelection),
 	)
-
 	const sensitivityValue = useMemo(() => convertSensitivity(sensitivity), [sensitivity])
 	const scrollPos = useRef(initialSelection)
 
@@ -164,16 +163,15 @@ const Coverflow = ({
 	const renderItem = ([position, item]) => {
 		if (!layoutWidth) return null
 
-		const count = React.Children.count(children)
 		const selected = position === selection
-		const isDetail = position === selection
-		return (
+
+		const visible = position > selection - 7 && position < selection + 7
+		return visible ? (
 			<Item
 				key={item.key}
 				selected={selected}
 				scroll={scrollX}
 				position={position}
-				count={count}
 				spacing={spacing}
 				wingSpan={wingSpan}
 				rotation={rotation}
@@ -185,7 +183,7 @@ const Coverflow = ({
 			>
 				{item}
 			</Item>
-		)
+		) : null
 	}
 
 	return (

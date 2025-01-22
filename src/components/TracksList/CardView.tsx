@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
 })
 
 const CoverFlowDemo = () => {
-	const [spacing, setSpacing] = useState(180)
-	const [wingSpan, setWingSpan] = useState(40)
-	const [rotation, setRotation] = useState(45)
-	const [perspective, setPerspective] = useState(800)
-	const [scaleDown, setScaleDown] = useState(0.7)
-	const [scaleFurther, setScaleFurther] = useState(0.65)
-	const [midRotation, setMidRotation] = useState(0)
+	const [spacing] = useState(180)
+	const [wingSpan] = useState(40)
+	const [rotation] = useState(45)
+	const [perspective] = useState(800)
+	const [scaleDown] = useState(0.7)
+	const [scaleFurther] = useState(0.65)
+	const [midRotation] = useState(0)
 	const [isDetail, setDetail] = useState(false)
 	const { collections } = useCollections()
 	const min = useSharedValue(0)
@@ -81,9 +81,7 @@ const CoverFlowDemo = () => {
 	useEffect(() => {
 		scrollX.setValue(currentProgress)
 	}, [])
-
 	progress.value = currentProgress
-
 	const [selected, setSelected] = useState(collections[Math.round(collections.length / 2)])
 	const [imageColors, setImageUrl] = useState(unknownTrackImageUri)
 	const [scrollX] = useState(new Animated.Value(collections.length / 2))
@@ -171,7 +169,6 @@ const CoverFlowDemo = () => {
 						scrollX.setValue(Math.round(value))
 						setProgress(Math.round(value))
 					}}
-					// renderBubble={() => null}
 					thumbWidth={20}
 					progress={progress}
 					maximumValue={max}
@@ -187,4 +184,3 @@ const CoverFlowDemo = () => {
 	)
 }
 export default CoverFlowDemo
-// AppRegistry.registerComponent('CoverFlow', () => CoverFlowDemo)
