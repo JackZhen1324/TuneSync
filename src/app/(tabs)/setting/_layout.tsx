@@ -1,11 +1,13 @@
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
+import { useTracks } from '@/store/library'
 import { defaultStyles } from '@/styles'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 const PlaylistsScreenLayout = () => {
 	const { t } = useTranslation()
+	const { tracks } = useTracks()
 	return (
 		<View style={defaultStyles.container}>
 			<Stack>
@@ -86,7 +88,7 @@ const PlaylistsScreenLayout = () => {
 				<Stack.Screen
 					name="folder/index"
 					options={{
-						headerTitle: t('setting.folder'),
+						headerTitle: `${t('setting.folder')}(${tracks.length})`,
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,

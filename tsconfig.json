@@ -17,6 +17,13 @@
 			"@/assets/*": ["./assets/*"]
 		}
 	},
-	"include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts",
+		"src/components/TracksList/CardView.tsx.bk",
+		"src/components/CoverFlow/Item.tsx"
+	],
 	"exclude": ["node_modules"]
 }

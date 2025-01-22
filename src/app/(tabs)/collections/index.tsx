@@ -20,7 +20,7 @@ const AlbumsScreen = () => {
 	const { tracks } = useTracks()
 
 	const { albums } = useAlbums(tracks)
-	const { playlist, setPlaylist } = usePlaylists((state) => state)
+	const { playlist } = usePlaylists((state) => state)
 	const filteredAlbums = useMemo(() => {
 		return [...playlist, ...(albums?.filter(playlistNameFilter(search)) || [])]
 	}, [albums, playlist, search])

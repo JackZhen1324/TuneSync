@@ -1,4 +1,4 @@
-import { TracksListItem } from '@/components/TracksListItem'
+import { TracksListItem } from '@/components/TracksList/TracksListItem'
 import { unknownTrackImageUri } from '@/constants/images'
 import { screenPaddingXs } from '@/constants/tokens'
 import { useTrackPlayerQueue } from '@/hooks/useTrackPlayerQueue'
@@ -13,7 +13,7 @@ import TrackPlayer, {
 	useActiveTrack as useActiveTrackAlternative,
 	useIsPlaying,
 } from 'react-native-track-player'
-import { QueueControls } from './QueueControls'
+import { QueueControls } from '../QueueControls'
 
 export type TracksListProps = Partial<FlashListProps<Track>> & {
 	id: string
@@ -21,6 +21,7 @@ export type TracksListProps = Partial<FlashListProps<Track>> & {
 	hideQueueControls?: boolean
 	search?: string
 	from?: string
+	hideHeader?: boolean
 }
 
 const ItemDivider = () => (
@@ -30,6 +31,7 @@ const ItemDivider = () => (
 export const TracksList = ({
 	from,
 	tracks,
+	hideHeader,
 	hideQueueControls = false,
 	...flashlistProps
 }: TracksListProps) => {
@@ -54,6 +56,7 @@ export const TracksList = ({
 					TrackPlayer.pause()
 					if (index === -1) {
 						await addTrackToPlayer(selectedTrack)
+
 						await TrackPlayer.skip(queue.length)
 					} else {
 						await skip(index || 0, queue[index])
@@ -76,6 +79,7 @@ export const TracksList = ({
 
 			return (
 				<TracksListItem
+					hideHeader={hideHeader}
 					from={from}
 					isPLaying={isPlaying.playing}
 					isActive={isActive}
@@ -85,7 +89,7 @@ export const TracksList = ({
 				/>
 			)
 		},
-		[activeTrack, from, handleTrackSelect, isPlaying, loadingTrackId],
+		[activeTrack, from, handleTrackSelect, isPlaying, loadingTrackId, hideHeader],
 	)
 
 	return (

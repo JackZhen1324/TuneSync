@@ -15,12 +15,14 @@ export type TracksListItemProps = {
 	isActive: boolean
 	isLoading?: boolean
 	track: Track
+	hideHeader?: boolean
 	onTrackSelect: (track: Track) => void
 }
 
 const TracksListItemComponent = ({
 	from,
 	track,
+	hideHeader,
 	isLoading,
 	isActive,
 	onTrackSelect: handleTrackSelect,
@@ -67,12 +69,13 @@ const TracksListItemComponent = ({
 							</Text>
 						)}
 					</View>
-
-					<StopPropagation>
-						<TrackShortcutsMenu from={track.from} track={track}>
-							<Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
-						</TrackShortcutsMenu>
-					</StopPropagation>
+					{!hideHeader && (
+						<StopPropagation>
+							<TrackShortcutsMenu from={track.from} track={track}>
+								<Entypo name="dots-three-horizontal" size={18} color={colors.icon} />
+							</TrackShortcutsMenu>
+						</StopPropagation>
+					)}
 				</View>
 			</View>
 		</TouchableHighlight>
@@ -83,7 +86,8 @@ export const TracksListItem = memo(TracksListItemComponent, (preP, current) => {
 	return (
 		preP.isActive === current.isActive &&
 		Object.is(preP.track, current.track) &&
-		preP.isLoading === current.isLoading
+		preP.isLoading === current.isLoading &&
+		preP.hideHeader === current.hideHeader
 	)
 })
 

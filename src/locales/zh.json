@@ -39,7 +39,21 @@
 	},
 	"cache": {
 		"size": "缓存大小",
-		"clean": "清空缓存"
+		"cleanBt": "清空缓存",
+		"clean": {
+			"title": "缓存重置",
+			"desc": "确定要重置缓存吗?",
+			"cancelBt": "取消",
+			"confirmBt": "确定"
+		},
+		"success": {
+			"title": "提示",
+			"desc": "缓存重置成功。"
+		},
+		"error": {
+			"title": "错误",
+			"desc": "缓存重置失败。"
+		}
 	},
 	"webdavAdd": {
 		"configName": "资源名称",

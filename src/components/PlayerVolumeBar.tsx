@@ -25,14 +25,14 @@ export const PlayerVolumeBar = ({ style }: ViewProps) => {
 						progress={progress}
 						minimumValue={min}
 						containerStyle={utilsStyles.slider}
-						onValueChange={(value) => {
-							updateVolume(value)
-						}}
-						renderBubble={() => null}
 						theme={{
 							maximumTrackTintColor: colors.maximumTrackTintColor,
 							minimumTrackTintColor: colors.minimumTrackTintColor,
 						}}
+						onValueChange={(value) => {
+							updateVolume(value)
+						}}
+						renderBubble={() => null}
 						thumbWidth={0}
 						maximumValue={max}
 					/>
