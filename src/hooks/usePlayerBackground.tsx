@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { getColors } from 'react-native-image-colors'
 import { IOSImageColors } from 'react-native-image-colors/build/types'
 
-export const usePlayerBackground = (imageUrl: string) => {
+export const usePlayerBackground = (image: string) => {
+	const [imageUrl, setImageUrl] = useState(image)
 	const [imageColors, setImageColors] = useState<IOSImageColors | null>(null)
 
 	useEffect(() => {
@@ -14,5 +15,5 @@ export const usePlayerBackground = (imageUrl: string) => {
 		}).then((colors) => setImageColors(colors as IOSImageColors))
 	}, [imageUrl])
 
-	return { imageColors }
+	return { imageColors, setImageUrl }
 }

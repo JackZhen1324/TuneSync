@@ -11,6 +11,7 @@ import { Animated, StyleSheet } from 'react-native'
 const TabsNavigation = () => {
 	const { t } = useTranslation()
 	const animatedValue = useRef(new Animated.Value(0)).current
+
 	const isLandscape = useIsLandscape()
 	useEffect(() => {
 		Animated.timing(animatedValue, {

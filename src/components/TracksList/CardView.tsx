@@ -4,21 +4,27 @@
  * @flow
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native'
 
-import { useAlbums, useLibraryStore, usePlaylists } from '@/store/library'
+import { unknownTrackImageUri } from '@/constants/images'
+import { colors } from '@/constants/tokens'
+import useCollections from '@/hooks/useCollections'
+import { utilsStyles } from '@/styles'
+import { Slider } from 'react-native-awesome-slider'
+import FastImage from 'react-native-fast-image'
+import { useSharedValue } from 'react-native-reanimated'
 import CoverFlow from '../CoverFlow'
+import FrostedBackground from '../FrostedBackground'
 import Image from '../Image'
 
 /* eslint-disable global-require */
-
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: 'black',
 	},
 	item: {
 		width: 64 * 2.5,
@@ -28,154 +34,111 @@ const styles = StyleSheet.create({
 		backgroundColor: 'blue',
 		borderWidth: 2,
 		borderColor: '#fff',
+	},
+	itemText: {
+		fontSize: 24,
+		color: '#fff',
+		fontWeight: 'bold',
+	},
+	sliderBar: {
+		position: 'absolute',
+		bottom: 30,
+		left: 30,
+		right: 30,
+		height: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	sliderTrack: {
+		width: '100%',
+		height: 4,
+		backgroundColor: '#bdc3c7',
+		borderRadius: 2,
+	},
+	sliderThumb: {
+		position: 'absolute',
+		width: 20,
+		height: 20,
+		backgroundColor: '#2ecc71',
 		borderRadius: 10,
 	},
 })
 
-// export default class CoverFlowDemo2 extends Component {
-// 	constructor(props) {
-// 		super(props)
-
-// 		const values = {
-// 			spacing: 180,
-// 			wingSpan: 80,
-// 			rotation: 70,
-// 			midRotation: 0,
-// 			scaleDown: 0.8,
-// 			scaleFurther: 0.75,
-// 			perspective: 800,
-// 			cards: 20,
-// 		}
-
-// 		this.state = values
-// 	}
-
-// 	onChange = (item) => {
-// 		console.log(`'Current Item', ${item}`)
-// 	}
-
-// 	onPress = (item) => {
-// 		Alert.alert(`Pressed on current item ${item}`)
-// 	}
-
-// 	getCards(count) {
-// 		const res = []
-// 		const keys = Object.keys(CARDS)
-// 		for (let i = 0; i < count && i < keys.length; i += 1) {
-// 			const card = keys[i]
-// 			console.log('Rendering Card', card)
-// 			res.push(
-// 				<Image
-// 					key={card}
-// 					source={CARDS[card]}
-// 					resizeMode="contain"
-// 					style={{
-// 						width: 400,
-// 						alignItems: 'center',
-// 						justifyContent: 'center',
-// 						height: '90%',
-// 						// borderRadius: 20,
-// 					}}
-// 				/>,
-// 			)
-// 		}
-// 		return res
-// 	}
-
-// 	render() {
-// 		const {
-// 			spacing,
-// 			wingSpan,
-// 			rotation,
-// 			perspective,
-// 			scaleDown,
-// 			scaleFurther,
-// 			midRotation,
-// 			cards,
-// 		} = this.state
-
-// 		return (
-// 			<View style={{ flex: 1 }}>
-// 				<CoverFlow
-// 					style={styles.container}
-// 					onChange={this.onChange}
-// 					onPress={this.onPress}
-// 					spacing={spacing}
-// 					wingSpan={wingSpan}
-// 					rotation={rotation}
-// 					midRotation={midRotation}
-// 					scaleDown={scaleDown}
-// 					scaleFurther={scaleFurther}
-// 					perspective={perspective}
-// 					initialSelection={10}
-// 				>
-// 					{this.getCards(cards)}
-// 				</CoverFlow>
-
-// 			</View>
-// 		)
-// 	}
-// }
-
 const CoverFlowDemo = () => {
-	const { setTracks, tracks, tracksMap, batchUpdate } = useLibraryStore((state: any) => state)
-	// console.log('tracks', tracks)
-	const { albums } = useAlbums(tracks)
-	const { playlist } = usePlaylists()
 	const [spacing, setSpacing] = useState(180)
 	const [wingSpan, setWingSpan] = useState(40)
-	const [rotation, setRotation] = useState(75)
+	const [rotation, setRotation] = useState(45)
 	const [perspective, setPerspective] = useState(800)
 	const [scaleDown, setScaleDown] = useState(0.7)
 	const [scaleFurther, setScaleFurther] = useState(0.65)
 	const [midRotation, setMidRotation] = useState(0)
-	const [cards, setCards] = useState(20)
-	const collections = useMemo(() => {
-		return [...albums, ...playlist]
-	}, [albums, playlist])
+	const [isDetail, setDetail] = useState(false)
+	const { collections } = useCollections()
+	const min = useSharedValue(0)
+	const max = useSharedValue(collections.length - 1)
+	const [currentProgress, setProgress] = useState(Math.round(collections.length / 2))
+	const progress = useSharedValue(Math.round(collections.length / 2))
+	useEffect(() => {
+		scrollX.setValue(currentProgress)
+	}, [])
+
+	progress.value = currentProgress
+
+	const [selected, setSelected] = useState(collections[Math.round(collections.length / 2)])
+	const [imageColors, setImageUrl] = useState(unknownTrackImageUri)
+	const [scrollX] = useState(new Animated.Value(collections.length / 2))
 
 	// 处理卡片变更
-	const onChange = useCallback((item) => {
-		console.log(`'Current Item', ${item}`)
-	}, [])
+	const onChange = useCallback(
+		(item) => {
+			setSelected(collections[item])
+			setImageUrl(collections[item]?.artworkPreview)
+			setDetail(false)
+			setProgress(item)
+		},
+		[collections],
+	)
 
 	// 处理卡片点击
-	const onPress = useCallback((item) => {
-		Alert.alert(`Pressed on current item ${item}`)
+	const onPress = useCallback((item, isDetail) => {
+		setDetail(isDetail)
 	}, [])
 
-	const getCards = (tracks, collection) => {
+	const getCards = () => {
 		const res = []
-		// const keys = Object.keys(tracksMap)
-		// console.log('collections', collection)
-		const a = [{}]
-		console.log('collection', collection, collection.length)
 
-		collection.forEach((element) => {
-			console.log('element.artwork', element.artworkPreview, element.name)
-
+		collections.forEach((element) => {
 			res.push(
 				<Image
-					key={element.name}
+					key={element?.name}
 					source={element.artworkPreview}
 					resizeMode="contain"
 					style={{
-						width: 300,
+						width: 250,
 						alignItems: 'center',
 						justifyContent: 'center',
 						height: '80%',
-						// borderRadius: 20,
+						borderRadius: 20,
 					}}
 				/>,
 			)
 		})
-		console.log('res', res)
 
 		return res
 	}
-	return (
-		<View style={{ flex: 1 }}>
+
+	return collections.length <= 0 ? (
+		<View style={{ backgroundColor: 'black', flex: 1 }}>
+			<Text style={utilsStyles.emptyContentText}>No album found</Text>
+			<FastImage
+				source={{ uri: unknownTrackImageUri, priority: FastImage.priority.normal }}
+				style={utilsStyles.emptyContentImage}
+			/>
+		</View>
+	) : (
+		<FrostedBackground source={imageColors} selected={isDetail ? {} : selected}>
 			<CoverFlow
+				scrollX={scrollX}
 				style={styles.container}
 				onChange={onChange}
 				onPress={onPress}
@@ -188,9 +151,39 @@ const CoverFlowDemo = () => {
 				perspective={perspective}
 				initialSelection={Math.round(collections.length / 2)}
 			>
-				{getCards(tracks, collections)}
+				{getCards()}
 			</CoverFlow>
-		</View>
+
+			{!isDetail && (
+				<Slider
+					style={{
+						position: 'absolute',
+						width: SCREEN_WIDTH * 0.7,
+						left: SCREEN_WIDTH * 0.15,
+						bottom: 40,
+						zIndex: 999,
+					}}
+					onValueChange={(value) => {
+						setProgress(value)
+						scrollX.setValue(value)
+					}}
+					onSlidingComplete={(value) => {
+						scrollX.setValue(Math.round(value))
+						setProgress(Math.round(value))
+					}}
+					// renderBubble={() => null}
+					thumbWidth={20}
+					progress={progress}
+					maximumValue={max}
+					minimumValue={min}
+					containerStyle={utilsStyles.slider}
+					theme={{
+						maximumTrackTintColor: colors.maximumTrackTintColor,
+						minimumTrackTintColor: colors.minimumTrackTintColor,
+					}}
+				></Slider>
+			)}
+		</FrostedBackground>
 	)
 }
 export default CoverFlowDemo

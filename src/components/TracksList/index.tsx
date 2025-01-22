@@ -21,6 +21,7 @@ export type TracksListProps = Partial<FlashListProps<Track>> & {
 	hideQueueControls?: boolean
 	search?: string
 	from?: string
+	hideHeader?: boolean
 }
 
 const ItemDivider = () => (
@@ -30,6 +31,7 @@ const ItemDivider = () => (
 export const TracksList = ({
 	from,
 	tracks,
+	hideHeader,
 	hideQueueControls = false,
 	...flashlistProps
 }: TracksListProps) => {
@@ -53,14 +55,9 @@ export const TracksList = ({
 					const index = queue.findIndex((el) => el.title === selectedTrack.title)
 					TrackPlayer.pause()
 					if (index === -1) {
-						const step1 = performance.now()
 						await addTrackToPlayer(selectedTrack)
-						const step2 = performance.now()
-						console.log('step1 cost:', step2 - step1)
 
 						await TrackPlayer.skip(queue.length)
-						const step3 = performance.now()
-						console.log('step2 cost:', step3 - step2)
 					} else {
 						await skip(index || 0, queue[index])
 					}
@@ -82,6 +79,7 @@ export const TracksList = ({
 
 			return (
 				<TracksListItem
+					hideHeader={hideHeader}
 					from={from}
 					isPLaying={isPlaying.playing}
 					isActive={isActive}
@@ -91,7 +89,7 @@ export const TracksList = ({
 				/>
 			)
 		},
-		[activeTrack, from, handleTrackSelect, isPlaying, loadingTrackId],
+		[activeTrack, from, handleTrackSelect, isPlaying, loadingTrackId, hideHeader],
 	)
 
 	return (

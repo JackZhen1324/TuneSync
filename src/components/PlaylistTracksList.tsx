@@ -10,7 +10,15 @@ import FastImage from 'react-native-fast-image'
 import { QueueControls } from './QueueControls'
 import { TracksList } from './TracksList'
 
-export const PlaylistTracksList = ({ playlist, from }: { playlist: Playlist; from?: string }) => {
+export const PlaylistTracksList = ({
+	playlist,
+	from,
+	hideHeader,
+}: {
+	playlist: Playlist
+	from?: string
+	hideHeader?: boolean
+}) => {
 	const search = useNavigationSearch({
 		searchBarOptions: {
 			hideWhenScrolling: true,
@@ -27,10 +35,11 @@ export const PlaylistTracksList = ({ playlist, from }: { playlist: Playlist; fro
 			from={from}
 			id={generateTracksListId(playlist.name, search)}
 			hideQueueControls={true}
+			hideHeader={hideHeader}
 			ListHeaderComponentStyle={styles.playlistHeaderContainer}
 			ListHeaderComponent={
 				<View>
-					<View style={styles.artworkImageContainer}>
+					<View style={{ ...styles.artworkImageContainer, height: hideHeader ? 0 : 300 }}>
 						<FastImage
 							source={{
 								uri: playlist.artworkPreview,
@@ -44,7 +53,7 @@ export const PlaylistTracksList = ({ playlist, from }: { playlist: Playlist; fro
 						{playlist.name}
 					</Text>
 
-					{search.length === 0 && (
+					{search.length === 0 && !hideHeader && (
 						<QueueControls style={{ paddingTop: 24 }} tracks={playlist.tracks} />
 					)}
 				</View>
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
 	},
 	artworkImage: {
 		width: '85%',
-		height: '100%',
+		height: '80%',
 		resizeMode: 'cover',
 		borderRadius: 12,
 	},

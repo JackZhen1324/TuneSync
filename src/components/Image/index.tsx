@@ -1,6 +1,7 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import React, { useState } from 'react'
-import { Image as ImageNative, ImageProps, ImageStyle } from 'react-native'
+import { ImageProps, ImageStyle } from 'react-native'
+import FastImage from 'react-native-fast-image'
 interface FallbackImageProps extends Omit<ImageProps, 'source'> {
 	source: string // Primary image source
 	fallbackSource?: string // Fallback image source
@@ -11,12 +12,21 @@ const Image: React.FC<FallbackImageProps> = ({ source, fallbackSource, style, ..
 	const [uri, setUri] = useState(source)
 
 	return (
-		<ImageNative
-			source={{ uri }}
+		<FastImage
+			source={{
+				uri: uri,
+				priority: FastImage.priority.high,
+			}}
+			onError={() => setUri(fallbackSource || unknownTrackImageUri)}
 			style={style}
-			onError={() => setUri(unknownTrackImageUri)} // Switch to fallback
 			{...props}
 		/>
+		// <ImageNative
+		// 	source={{ uri }}
+		// 	style={style}
+		// 	onError={() => setUri(unknownTrackImageUri)} // Switch to fallback
+		// 	{...props}
+		// />
 	)
 }
 

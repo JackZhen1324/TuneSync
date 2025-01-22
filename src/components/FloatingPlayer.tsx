@@ -15,8 +15,11 @@ import {
 import FastImage from 'react-native-fast-image'
 import { useActiveTrack } from 'react-native-track-player'
 import { MovingText } from './MovingText'
+type FloatingPlayerProps = {
+	simpplifyMode?: boolean
+} & ViewProps
 
-export const FloatingPlayer = ({ style }: ViewProps) => {
+export const FloatingPlayer = ({ style, simpplifyMode }: FloatingPlayerProps) => {
 	const router = useRouter()
 	const activeTrackObj = useActiveTrack()
 	const displayedTrack = activeTrackObj
@@ -124,7 +127,12 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 	if (!displayedTrack?.title) return null
 
 	return (
-		<TouchableOpacity onPress={handlePress} activeOpacity={0.9} style={[styles.container, style]}>
+		<TouchableOpacity
+			disabled={simpplifyMode}
+			onPress={handlePress}
+			activeOpacity={0.9}
+			style={[styles.container, style]}
+		>
 			<>
 				<FastImage
 					source={{
@@ -137,13 +145,13 @@ export const FloatingPlayer = ({ style }: ViewProps) => {
 					<MovingText
 						style={styles.trackTitle}
 						text={`${displayedTrack?.title}  ${displayedTrack?.artist || ''}`}
-						animationThreshold={25}
+						animationThreshold={simpplifyMode ? 6 : 25}
 					/>
 				</View>
 
 				<View style={styles.trackControlsContainer}>
 					<PlayPauseButton iconSize={24} />
-					<SkipToNextButton iconSize={22} />
+					{!simpplifyMode && <SkipToNextButton iconSize={22} />}
 				</View>
 			</>
 		</TouchableOpacity>
