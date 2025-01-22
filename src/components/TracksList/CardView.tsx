@@ -19,7 +19,7 @@ import FrostedBackground from '../FrostedBackground'
 import Image from '../Image'
 
 /* eslint-disable global-require */
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
 })
 
 const CoverFlowDemo = () => {
+	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 	const [spacing] = useState(180)
 	const [wingSpan] = useState(40)
 	const [rotation] = useState(45)

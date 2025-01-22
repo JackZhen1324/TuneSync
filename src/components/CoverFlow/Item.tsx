@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import Detail from './Detail'
 
 const styles = StyleSheet.create({
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 		zIndex: 1,
 	},
 })
-export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
+
 type ItemProps = {
 	scroll: Animated.Value
 	position: number
@@ -44,7 +44,6 @@ const Item = (props: ItemProps) => {
 		selected,
 		children,
 	} = props
-
 	const [flipAnimation] = useState(new Animated.Value(0))
 	const [flipAnimationForScale] = useState(new Animated.Value(0))
 	const animatedY = useRef(new Animated.Value(0)).current // 初始高度
