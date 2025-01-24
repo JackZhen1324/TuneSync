@@ -1,6 +1,15 @@
+import { useCoverflowStore } from '@/store/coverflow'
 import { BlurView } from 'expo-blur'
 import React, { useEffect, useRef } from 'react'
-import { Animated, Dimensions, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import {
+	Animated,
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableWithoutFeedback,
+	View,
+} from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { useIsPlaying } from 'react-native-track-player'
 import { FloatingPlayer } from '../FloatingPlayer'
 
@@ -11,13 +20,19 @@ interface FrostedBackgroundProps {
 		artist: string
 	}
 	children: React.ReactNode
+	setDetail: (isDetial: boolean) => void
 }
 
-const FrostedBackground: React.FC<FrostedBackgroundProps> = ({ source, selected, children }) => {
+const FrostedBackground: React.FC<FrostedBackgroundProps> = ({
+	source,
+	selected,
+	children,
+	setDetail,
+}) => {
 	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 	const widthAnimiation = useRef(new Animated.Value(80)).current
 	const isPlaying = useIsPlaying()
-
+	const { togleDetail } = useCoverflowStore()
 	useEffect(() => {
 		if (isPlaying.playing) {
 			Animated.timing(widthAnimiation, {
@@ -34,28 +49,35 @@ const FrostedBackground: React.FC<FrostedBackgroundProps> = ({ source, selected,
 		}
 	}, [isPlaying, widthAnimiation])
 	return (
-		<View style={styles.container}>
-			<ImageBackground source={{ uri: source }} style={styles.imageBackground}>
-				<BlurView intensity={90} style={styles.blur}>
-					{children}
-				</BlurView>
-			</ImageBackground>
+		<TouchableWithoutFeedback
+			onPress={() => {
+				setDetail(false)
+				togleDetail(true)
+			}}
+		>
+			<View style={styles.container}>
+				<FastImage source={{ uri: source }} style={styles.imageBackground}>
+					<BlurView intensity={90} style={styles.blur}>
+						{children}
+					</BlurView>
+				</FastImage>
 
-			<View style={{ ...styles.content, bottom: 0.15 * SCREEN_HEIGHT }}>
-				<Text style={styles.text}>{selected?.name}</Text>
-				<Text style={styles.subText}>{selected?.artist}</Text>
-				<FloatingPlayer
-					simpplifyMode
-					style={{
-						width: widthAnimiation,
-						position: 'absolute',
-						left: 0,
-						right: 0,
-						bottom: 0,
-					}}
-				/>
+				<View style={{ ...styles.content, bottom: 0.13 * SCREEN_HEIGHT }}>
+					<Text style={styles.text}>{selected?.name}</Text>
+					<Text style={styles.subText}>{selected?.artist}</Text>
+					<FloatingPlayer
+						simpplifyMode
+						style={{
+							width: widthAnimiation,
+							position: 'absolute',
+							left: 0,
+							right: 0,
+							bottom: 0,
+						}}
+					/>
+				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	)
 }
 
@@ -72,7 +94,6 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		width: '100%',
-		// ...StyleSheet.absoluteFillObject, // 覆盖在背景上方
 		position: 'absolute',
 		left: 0,
 		right: 0,

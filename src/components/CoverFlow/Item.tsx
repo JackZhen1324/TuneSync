@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useCoverflowStore } from '@/store/coverflow'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Animated, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import Detail from './Detail'
 
@@ -47,7 +48,7 @@ const Item = (props: ItemProps) => {
 	const [flipAnimation] = useState(new Animated.Value(0))
 	const [flipAnimationForScale] = useState(new Animated.Value(0))
 	const animatedY = useRef(new Animated.Value(0)).current // 初始高度
-
+	const { toggleDetail, togleDetail } = useCoverflowStore()
 	const flipRotateY = useRef(
 		flipAnimation.interpolate({
 			inputRange: [0, 1],
@@ -61,28 +62,37 @@ const Item = (props: ItemProps) => {
 		}),
 	).current
 	const [isDetail, setIsDetail] = useState(false)
-
-	useEffect(() => {
-		if (!selected && isDetail) {
-			setIsDetail(!isDetail)
-			Animated.timing(flipAnimation, {
+	const flipBack = useCallback(() => {
+		Animated.timing(flipAnimation, {
+			toValue: 0, // Toggle between 0 (front) and 1 (flipped)
+			duration: 300,
+			useNativeDriver: true,
+		}).start(() => {
+			Animated.timing(animatedY, {
+				toValue: 0,
+				duration: 150,
+				useNativeDriver: true,
+			}).start(() => {})
+			Animated.timing(flipAnimationForScale, {
 				toValue: 0, // Toggle between 0 (front) and 1 (flipped)
 				duration: 300,
 				useNativeDriver: true,
-			}).start(() => {
-				Animated.timing(animatedY, {
-					toValue: 0,
-					duration: 150,
-					useNativeDriver: true,
-				}).start(() => {})
-				Animated.timing(flipAnimationForScale, {
-					toValue: 0, // Toggle between 0 (front) and 1 (flipped)
-					duration: 300,
-					useNativeDriver: true,
-				}).start(() => {})
-			})
+			}).start(() => {})
+		})
+	}, [animatedY, flipAnimation, flipAnimationForScale])
+	useEffect(() => {
+		if (toggleDetail) {
+			setIsDetail(false)
+			flipBack()
+			togleDetail(false)
 		}
-	}, [animatedY, flipAnimation, flipAnimationForScale, isDetail, selected])
+	}, [flipBack, toggleDetail, togleDetail])
+	useEffect(() => {
+		if (!selected && isDetail) {
+			setIsDetail(!isDetail)
+			flipBack()
+		}
+	}, [animatedY, flipAnimation, flipAnimationForScale, flipBack, isDetail, selected])
 
 	const style = {
 		transform: [
@@ -96,7 +106,7 @@ const Item = (props: ItemProps) => {
 			{
 				scale: scroll.interpolate({
 					inputRange: [position - 2, position - 1, position, position + 1, position + 2],
-					outputRange: [scaleFurther, scaleDown, 0.85, scaleDown, scaleFurther],
+					outputRange: [scaleFurther, scaleDown, 0.9, scaleDown, scaleFurther],
 				}),
 			},
 			{
@@ -135,6 +145,7 @@ const Item = (props: ItemProps) => {
 	return (
 		<TouchableWithoutFeedback
 			key={position}
+			style={{ backgroundColor: 'red' }}
 			onPress={() => {
 				if (selected) {
 					Animated.timing(flipAnimation, {
@@ -159,6 +170,7 @@ const Item = (props: ItemProps) => {
 					})
 					onSelect(position, !isDetail)
 				} else {
+					setIsDetail(false)
 					onSelect(position, false)
 				}
 			}}

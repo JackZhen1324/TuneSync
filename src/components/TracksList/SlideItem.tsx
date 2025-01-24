@@ -1,74 +1,135 @@
-import React, { useMemo } from 'react'
-import {
-	ImageSourcePropType,
-	type ImageStyle,
-	type StyleProp,
-	StyleSheet,
-	Text,
-	View,
-	type ViewProps,
-} from 'react-native'
-import type { AnimatedProps } from 'react-native-reanimated'
-import Animated from 'react-native-reanimated'
-import { PURPLE_IMAGES } from './images'
+import React, { useState } from 'react'
+import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 
-interface Props extends AnimatedProps<ViewProps> {
-	style?: StyleProp<ImageStyle>
-	index?: number
-	rounded?: boolean
-	source?: ImageSourcePropType
-}
-
-export const SlideItem: React.FC<Props> = (props) => {
-	const { style, index = 0, rounded = false, testID, ...animatedViewProps } = props
-
-	const source = useMemo(
-		() => props.source || PURPLE_IMAGES[index % PURPLE_IMAGES.length],
-		[index, props.source],
-	)
-
-	return (
-		<Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-			<Animated.Image
-				style={[style, styles.container, rounded && { borderRadius: 15 }]}
-				source={source}
-				resizeMode="cover"
-			/>
-			<View style={styles.overlay}>
-				<View style={styles.overlayTextContainer}>
-					<Text style={styles.overlayText}>{index}</Text>
-				</View>
-			</View>
-		</Animated.View>
-	)
-}
+import { colors } from '@/constants/tokens'
+import { debounce } from '@/helpers/debounce'
+import { utilsStyles } from '@/styles'
+import { Slider } from 'react-native-awesome-slider'
+import { SharedValue, useSharedValue } from 'react-native-reanimated'
 
 const styles = StyleSheet.create({
 	container: {
-		width: '100%',
-		height: '100%',
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
-	overlay: {
+	sliderBar: {
 		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
+
+		bottom: 40,
+		zIndex: 999,
 	},
-	overlayText: {
-		color: 'white',
-		fontSize: 20,
-		fontWeight: 'bold',
+	sliderTrack: {
+		width: '100%',
+		height: 4,
+		backgroundColor: '#bdc3c7',
+		borderRadius: 2,
 	},
-	overlayTextContainer: {
-		backgroundColor: 'rgba(0, 0, 0, 0.5)',
-		padding: 10,
+	sliderThumb: {
+		position: 'absolute',
+		width: 20,
+		height: 20,
+		backgroundColor: '#2ecc71',
 		borderRadius: 10,
-		minWidth: 40,
-		minHeight: 40,
-		justifyContent: 'center',
-		alignItems: 'center',
 	},
 })
+
+interface SliderItemProps {
+	progress: SharedValue<number>
+	data: any[]
+	scrollX: any
+	setProgress: (value: number) => void
+	setSelected: (item: any) => void
+}
+
+const SliderItem: React.FC<SliderItemProps> = (props) => {
+	const { width: SCREEN_WIDTH } = Dimensions.get('window')
+	const { progress, data: collections, scrollX, setProgress, setSelected } = props
+	const min = useSharedValue(0)
+	const max = useSharedValue(collections.length - 1)
+	// State for the timer ID
+	const [timer, setTimer] = useState(null)
+	// Animated value for the slider's opacity
+	const sliderOpacity = useState(new Animated.Value(0))[0]
+	const [sliderVisible, setSliderVisible] = useState(false)
+
+	// Show slider when user presses the bottom of the screen
+	const onTouchStart = () => {
+		if (!sliderVisible) {
+			setSliderVisible(true)
+			Animated.timing(sliderOpacity, {
+				toValue: 1,
+				duration: 300,
+				useNativeDriver: true,
+			}).start()
+		}
+		scheduleTohide()
+	}
+	const scheduleTohide = debounce(() => {
+		if (timer) {
+			clearTimeout(timer)
+		}
+
+		// Set a new timer to hide the slider after 3 seconds
+		const newTimer = setTimeout(hideSlider, 3000)
+		setTimer(newTimer) // Save the new timer ID
+	}, 100)
+	// Hide slider with fade-out effect
+	const hideSlider = () => {
+		Animated.timing(sliderOpacity, {
+			toValue: 0,
+			duration: 300,
+			useNativeDriver: true,
+		}).start(() => setSliderVisible(false))
+	}
+
+	return (
+		<TouchableWithoutFeedback
+			onPress={onTouchStart}
+			style={[
+				styles.container,
+				{
+					position: 'absolute',
+					width: SCREEN_WIDTH * 0.7,
+					left: SCREEN_WIDTH * 0.15,
+					bottom: 0,
+					zIndex: 999,
+				},
+			]}
+		>
+			<Animated.View
+				style={[
+					styles.sliderBar,
+					{ opacity: sliderOpacity },
+					{ width: SCREEN_WIDTH * 0.7, left: SCREEN_WIDTH * 0.15 },
+				]}
+			>
+				<Slider
+					onValueChange={debounce((value: number) => {
+						onTouchStart()
+						setProgress(value)
+						scrollX.setValue(value)
+						setSelected(collections[Math.round(value)])
+					}, 10)}
+					onSlidingComplete={(value) => {
+						setProgress(Math.round(value))
+						scrollX.setValue(Math.round(value))
+					}}
+					renderMark={() => null}
+					renderBubble={() => null}
+					thumbWidth={20}
+					progress={progress}
+					maximumValue={max}
+					minimumValue={min}
+					containerStyle={utilsStyles.slider}
+					theme={{
+						maximumTrackTintColor: colors.maximumTrackTintColor,
+						minimumTrackTintColor: colors.minimumTrackTintColor,
+					}}
+				></Slider>
+			</Animated.View>
+		</TouchableWithoutFeedback>
+	)
+}
+
+export default SliderItem

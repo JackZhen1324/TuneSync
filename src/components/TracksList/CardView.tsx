@@ -4,19 +4,19 @@
  * @flow
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
-import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { StyleSheet, Text, useAnimatedValue, View } from 'react-native'
 
 import { unknownTrackImageUri } from '@/constants/images'
-import { colors } from '@/constants/tokens'
 import useCollections from '@/hooks/useCollections'
 import { utilsStyles } from '@/styles'
-import { Slider } from 'react-native-awesome-slider'
 import FastImage from 'react-native-fast-image'
 import { useSharedValue } from 'react-native-reanimated'
 import CoverFlow from '../CoverFlow'
+import { SENSITIVITY_LOW } from '../CoverFlow/constants'
 import FrostedBackground from '../FrostedBackground'
 import Image from '../Image'
+import SliderItem from './SlideItem'
 
 /* eslint-disable global-require */
 
@@ -65,31 +65,30 @@ const styles = StyleSheet.create({
 })
 
 const CoverFlowDemo = () => {
-	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
-	const [spacing] = useState(180)
+	const [spacing] = useState(160)
 	const [wingSpan] = useState(40)
-	const [rotation] = useState(45)
+	const [rotation] = useState(55)
 	const [perspective] = useState(800)
 	const [scaleDown] = useState(0.7)
 	const [scaleFurther] = useState(0.65)
-	const [midRotation] = useState(0)
+	const [midRotation] = useState(55)
 	const [isDetail, setDetail] = useState(false)
 	const { collections } = useCollections()
-	const min = useSharedValue(0)
-	const max = useSharedValue(collections.length - 1)
+
 	const [currentProgress, setProgress] = useState(Math.round(collections.length / 2))
 	const progress = useSharedValue(Math.round(collections.length / 2))
-	useEffect(() => {
-		scrollX.setValue(currentProgress)
-	}, [])
+
 	progress.value = currentProgress
 	const [selected, setSelected] = useState(collections[Math.round(collections.length / 2)])
 	const [imageColors, setImageUrl] = useState(unknownTrackImageUri)
-	const [scrollX] = useState(new Animated.Value(collections.length / 2))
-
+	const scrollX = useRef(useAnimatedValue(collections.length / 2)).current
+	// const scrollX = useRef(new Animated.Value(collections.length / 2)).current
+	useEffect(() => {
+		scrollX.setValue(currentProgress)
+	}, [])
 	// 处理卡片变更
 	const onChange = useCallback(
-		(item) => {
+		(item: number) => {
 			setSelected(collections[item])
 			setImageUrl(collections[item]?.artworkPreview)
 			setDetail(false)
@@ -98,13 +97,13 @@ const CoverFlowDemo = () => {
 		[collections],
 	)
 
-	// 处理卡片点击
-	const onPress = useCallback((item, isDetail) => {
+	// 处理卡片点击c
+	const onPress = useCallback((item: any, isDetail: boolean) => {
 		setDetail(isDetail)
 	}, [])
 
 	const getCards = () => {
-		const res = []
+		const res: JSX.Element[] = []
 
 		collections.forEach((element) => {
 			res.push(
@@ -113,11 +112,10 @@ const CoverFlowDemo = () => {
 					source={element.artworkPreview}
 					resizeMode="contain"
 					style={{
-						width: 250,
-						alignItems: 'center',
-						justifyContent: 'center',
-						height: '80%',
-						borderRadius: 20,
+						width: '100%',
+						height: '100%',
+						resizeMode: 'cover',
+						borderRadius: 12,
 					}}
 				/>,
 			)
@@ -135,8 +133,15 @@ const CoverFlowDemo = () => {
 			/>
 		</View>
 	) : (
-		<FrostedBackground source={imageColors} selected={isDetail ? {} : selected}>
+		<FrostedBackground
+			setDetail={setDetail}
+			source={imageColors}
+			selected={isDetail ? {} : selected}
+		>
 			<CoverFlow
+				setDetail={setDetail}
+				isDetail={isDetail}
+				sensitivity={SENSITIVITY_LOW}
 				scrollX={scrollX}
 				style={styles.container}
 				onChange={onChange}
@@ -154,32 +159,13 @@ const CoverFlowDemo = () => {
 			</CoverFlow>
 
 			{!isDetail && (
-				<Slider
-					style={{
-						position: 'absolute',
-						width: SCREEN_WIDTH * 0.7,
-						left: SCREEN_WIDTH * 0.15,
-						bottom: 40,
-						zIndex: 999,
-					}}
-					onValueChange={(value) => {
-						setProgress(value)
-						scrollX.setValue(value)
-					}}
-					onSlidingComplete={(value) => {
-						scrollX.setValue(Math.round(value))
-						setProgress(Math.round(value))
-					}}
-					thumbWidth={20}
+				<SliderItem
+					data={collections}
+					setProgress={setProgress}
+					scrollX={scrollX}
+					setSelected={setSelected}
 					progress={progress}
-					maximumValue={max}
-					minimumValue={min}
-					containerStyle={utilsStyles.slider}
-					theme={{
-						maximumTrackTintColor: colors.maximumTrackTintColor,
-						minimumTrackTintColor: colors.minimumTrackTintColor,
-					}}
-				></Slider>
+				></SliderItem>
 			)}
 		</FrostedBackground>
 	)
