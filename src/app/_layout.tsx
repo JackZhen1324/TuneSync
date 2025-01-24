@@ -122,6 +122,7 @@ const RootNavigation = () => {
 			<Stack.Screen
 				name="player"
 				options={{
+					orientation: 'portrait',
 					presentation: 'card',
 					gestureEnabled: true,
 					gestureDirection: 'vertical',
