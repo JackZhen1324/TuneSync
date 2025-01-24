@@ -75,7 +75,6 @@ const Coverflow = ({
 		({ value }: { value: number }) => {
 			if (Math.abs(scrollPos.current - value) < 10 || scrollStart.current === 0) {
 				scrollPos.current = value
-
 				const newSelection = clamp(Math.round(value), 0, React.Children.count(children) - 1)
 				if (newSelection !== selection) {
 					setSelection(newSelection)
@@ -106,7 +105,9 @@ const Coverflow = ({
 					toValue: finalPos,
 					bounciness: 1,
 					useNativeDriver: true,
-				}).start()
+				}).start(() => {
+					scrollX.setValue(finalPos)
+				})
 			}
 		},
 		[children, onChange, scrollX],
@@ -126,7 +127,6 @@ const Coverflow = ({
 					if ([0].includes(Math.round(scrollPos.current)) && gestureState.dx > 0) {
 						scrollX.setValue(-(gestureState.dx / 1000))
 					} else {
-						// scrollX.setValue(scrollPos.current - gestureState.dx / sensitivityValue)
 						scrollX.setValue(-(gestureState.dx / sensitivityValue))
 					}
 				},
