@@ -1,6 +1,6 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import React, { useState } from 'react'
-import { ImageProps, ImageStyle } from 'react-native'
+import { Dimensions, ImageProps, ImageStyle, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 interface FallbackImageProps extends Omit<ImageProps, 'source'> {
 	source: string // Primary image source
@@ -10,23 +10,25 @@ interface FallbackImageProps extends Omit<ImageProps, 'source'> {
 
 const Image: React.FC<FallbackImageProps> = ({ source, fallbackSource, style, ...props }) => {
 	const [uri, setUri] = useState(source)
-
+	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 	return (
-		<FastImage
-			source={{
-				uri: uri,
-				priority: FastImage.priority.high,
+		<View
+			style={{
+				width: SCREEN_HEIGHT * 0.6,
+				height: SCREEN_HEIGHT * 0.6,
+				transform: [{ translateY: -20 }],
 			}}
-			onError={() => setUri(fallbackSource || unknownTrackImageUri)}
-			style={style}
-			{...props}
-		/>
-		// <ImageNative
-		// 	source={{ uri }}
-		// 	style={style}
-		// 	onError={() => setUri(unknownTrackImageUri)} // Switch to fallback
-		// 	{...props}
-		// />
+		>
+			<FastImage
+				source={{
+					uri: uri,
+					priority: FastImage.priority.high,
+				}}
+				onError={() => setUri(fallbackSource || unknownTrackImageUri)}
+				style={style}
+				{...props}
+			/>
+		</View>
 	)
 }
 

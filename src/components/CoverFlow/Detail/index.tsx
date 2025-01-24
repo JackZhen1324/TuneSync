@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginBottom: 20,
-		borderRadius: 10,
+		borderRadius: 20,
 	},
 	song: {
 		padding: 15,
@@ -43,6 +43,7 @@ const Detail = ({ id }: { id: number }) => {
 			<TouchableWithoutFeedback
 				onPress={(e) => {
 					e.stopPropagation()
+					e.preventDefault()
 				}}
 			>
 				<Animated.View style={{ ...styles.item, width: SCREEN_WIDTH * 0.4, height: SCREEN_HEIGHT }}>

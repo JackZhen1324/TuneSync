@@ -10,6 +10,7 @@ import {
 	SENSITIVITY_NORMAL,
 } from './constants'
 
+import { useCoverflowStore } from '@/store/coverflow'
 import Item from './Item'
 import clamp from './clamp'
 import convertSensitivity from './convertSensitivity'
@@ -36,9 +37,12 @@ type CoverflowProps = {
 	children: any
 	onPress?: any
 	onChange?: any
+	isDetail?: boolean
 	style?: any
+	setDetail: (isDetail: boolean) => void
 }
 const Coverflow = ({
+	isDetail,
 	scrollX,
 	sensitivity = SENSITIVITY_NORMAL,
 	deceleration = DECELERATION_NORMAL,
@@ -54,24 +58,29 @@ const Coverflow = ({
 	onPress,
 	onChange,
 	style,
+	setDetail,
 	...props
 }: CoverflowProps) => {
 	const [selection, setSelection] = useState(initialSelection)
 	const [layoutWidth, setLayoutWidth] = useState(0)
+	const scrollStart = useRef(0)
 	const [childElements, setChildElements] = useState(
 		fixChildrenOrder({ children }, initialSelection),
 	)
+	const { togleDetail } = useCoverflowStore()
 	const sensitivityValue = useMemo(() => convertSensitivity(sensitivity), [sensitivity])
 	const scrollPos = useRef(initialSelection)
 
 	const onScroll = useCallback(
 		({ value }: { value: number }) => {
-			scrollPos.current = value
+			if (Math.abs(scrollPos.current - value) < 10 || scrollStart.current === 0) {
+				scrollPos.current = value
 
-			const newSelection = clamp(Math.round(value), 0, React.Children.count(children) - 1)
-			if (newSelection !== selection) {
-				setSelection(newSelection)
-				setChildElements(fixChildrenOrder({ children }, newSelection))
+				const newSelection = clamp(Math.round(value), 0, React.Children.count(children) - 1)
+				if (newSelection !== selection) {
+					setSelection(newSelection)
+					setChildElements(fixChildrenOrder({ children }, newSelection))
+				}
 			}
 		},
 		[selection, children],
@@ -82,47 +91,7 @@ const Coverflow = ({
 		return () => {
 			scrollX.removeListener(listenerId)
 		}
-	}, [scrollX, onScroll])
-
-	const panResponder = useMemo(
-		() =>
-			PanResponder.create({
-				onStartShouldSetPanResponder: () => true,
-				onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dx) > 10,
-				onPanResponderGrant: () => {
-					scrollX.stopAnimation()
-					scrollX.extractOffset()
-				},
-				onPanResponderMove: (_, gestureState) => {
-					scrollX.setValue(-(gestureState.dx / sensitivityValue))
-				},
-				onPanResponderRelease: (_, gestureState) => {
-					scrollX.flattenOffset()
-
-					const count = React.Children.count(children)
-					const newSelection = Math.round(scrollPos.current)
-
-					if (newSelection > 0 && newSelection < count - 2 && Math.abs(gestureState.vx) > 1) {
-						const velocity =
-							-Math.sign(gestureState.vx) *
-							(clamp(Math.abs(gestureState.vx), 3, 5) / sensitivityValue)
-
-						Animated.decay(scrollX, {
-							velocity,
-							deceleration,
-							useNativeDriver: true,
-						}).start(({ finished }) => {
-							if (finished) {
-								snapToPosition()
-							}
-						})
-					} else {
-						snapToPosition()
-					}
-				},
-			}),
-		[scrollX, sensitivityValue, children, deceleration],
-	)
+	}, [onScroll, scrollX])
 
 	const snapToPosition = useCallback(
 		(pos = scrollPos.current) => {
@@ -142,7 +111,62 @@ const Coverflow = ({
 		},
 		[children, onChange, scrollX],
 	)
+	const panResponder = useMemo(
+		() =>
+			PanResponder.create({
+				onStartShouldSetPanResponder: () => true,
+				onMoveShouldSetPanResponder: (_, gestureState) =>
+					Math.abs(gestureState.dx) > 10 && !isDetail,
+				onPanResponderGrant: () => {
+					scrollX.stopAnimation()
+					scrollX.extractOffset()
+					scrollStart.current = 1
+				},
+				onPanResponderMove: (_, gestureState) => {
+					if ([0].includes(Math.round(scrollPos.current)) && gestureState.dx > 0) {
+						scrollX.setValue(-(gestureState.dx / 1000))
+					} else {
+						// scrollX.setValue(scrollPos.current - gestureState.dx / sensitivityValue)
+						scrollX.setValue(-(gestureState.dx / sensitivityValue))
+					}
+				},
+				onPanResponderRelease: (_, gestureState) => {
+					scrollStart.current = 0
+					scrollX.flattenOffset()
+					const count = React.Children.count(children)
+					const newSelection = Math.round(scrollPos.current)
 
+					if (newSelection > 0 && newSelection < count - 2 && Math.abs(gestureState.vx) > 1) {
+						const velocity =
+							-Math.sign(gestureState.vx) * (clamp(Math.abs(gestureState.vx), 3, 5) / 60)
+
+						Animated.decay(scrollX, {
+							velocity,
+							deceleration,
+							useNativeDriver: true,
+						}).start(({ finished }) => {
+							if (finished) {
+								snapToPosition()
+							}
+						})
+					} else {
+						togleDetail(true)
+						setDetail(false)
+						snapToPosition()
+					}
+				},
+			}),
+		[
+			isDetail,
+			scrollX,
+			sensitivityValue,
+			children,
+			deceleration,
+			snapToPosition,
+			togleDetail,
+			setDetail,
+		],
+	)
 	const onLayout = ({ nativeEvent }: { nativeEvent: { layout: { width: number } } }) => {
 		setLayoutWidth(nativeEvent.layout.width)
 	}
