@@ -12,6 +12,7 @@ import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import 'intl-pluralrules'
 import { useCallback, useEffect } from 'react'
+import RNFS from 'react-native-fs'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import TrackPlayer, { Event, useTrackPlayerEvents } from 'react-native-track-player'
@@ -35,7 +36,10 @@ const App = () => {
 			const nextIndex = activeTrackIndex + 1 < queue.length ? activeTrackIndex + 1 : 0
 			const pendingRecache = [queue[activeTrackIndex], queue[previousIndex], queue[nextIndex]]
 			pendingRecache.forEach(async (el) => {
-				await reCached(el.originalUrl, el.basename, el.cachedUrl)
+				const fileExtension = el.basename.split('.').pop() || ''
+				const fileName = `${el.basename}.${fileExtension}`
+				const filePath = `${RNFS.DocumentDirectoryPath}/music_cache/${fileName}`
+				await reCached(el.originalUrl, el.basename, filePath)
 			})
 			await TrackPlayer.setQueue(queue)
 			await TrackPlayer.skip(activeTrackIndex)
@@ -51,7 +55,10 @@ const App = () => {
 			const nextIndex = activeTrackIndex + 1 < queue.length ? activeTrackIndex + 1 : 0
 			const pendingRecache = [queue[activeTrackIndex], queue[previousIndex], queue[nextIndex]]
 			pendingRecache.forEach(async (el) => {
-				await reCached(el.originalUrl, el.basename, el.cachedUrl)
+				const fileExtension = el.basename.split('.').pop() || ''
+				const fileName = `${el.basename}.${fileExtension}`
+				const filePath = `${RNFS.DocumentDirectoryPath}/music_cache/${fileName}`
+				await reCached(el.originalUrl, el.basename, filePath)
 			})
 			fireCacheResetTrigger()
 		}

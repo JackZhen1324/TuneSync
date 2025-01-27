@@ -1,5 +1,4 @@
 import { TracksList } from '@/components/TracksList'
-import { screenPadding } from '@/constants/tokens'
 import { trackTitleFilter } from '@/helpers/filter'
 import { generateTracksListId } from '@/helpers/miscellaneous'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
@@ -28,10 +27,6 @@ const SongsScreen = () => {
 	return (
 		<SafeAreaView style={defaultStyles.container}>
 			<TracksList
-				style={{
-					paddingHorizontal: screenPadding.horizontal,
-					// paddingTop: search ? 20 : 200,
-				}}
 				id={generateTracksListId('songs', search)}
 				tracks={filteredTracks}
 				scrollEnabled={true}

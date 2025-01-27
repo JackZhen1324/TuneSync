@@ -56,7 +56,16 @@ export const useTrackPlayerQueue = () => {
 		}
 		// cache hit
 		else if (fileExists) {
+			await TrackPlayer.add(
+				{
+					...track,
+					url: cachePath,
+				},
+				index,
+			)
+			await remove(index + 1)
 			await TrackPlayer.skip(index)
+			setQueueListContent(queue)
 		} else {
 			await reCached(track.originalUrl, track.basename, track.cachedUrl)
 			await TrackPlayer.skip(index)
@@ -65,23 +74,34 @@ export const useTrackPlayerQueue = () => {
 	const addTrackToPlayer = async (track: Track): Promise<void> => {
 		const { url, from, basename, id } = track
 		let trackUrl
+		let cache_dir_base
 		let cache_dir
 		if (from === 'local') {
 			trackUrl = url
 		} else {
-			const { filePath, CACHE_DIR } = await getCachedTrack(url, basename || id)
+			const {
+				trackUrl: rawUrl,
+				CACHE_DIR,
+				CACHE_DIR_BASE,
+			} = await getCachedTrack(url, basename || id)
+			cache_dir_base = CACHE_DIR_BASE
+			trackUrl = rawUrl
 			cache_dir = CACHE_DIR
-			trackUrl = filePath
 		}
 
 		const trackToAdd = {
 			...track,
 			originalUrl: track.url,
-			cachedUrl: trackUrl || '',
+			cachedUrl: cache_dir || '',
 			url: trackUrl || '',
-			cache_dir: cache_dir,
+			cache_dir: cache_dir_base,
 		}
-
+		console.log('trackToAdd', {
+			originalUrl: track.url,
+			cachedUrl: cache_dir || '',
+			url: trackUrl || '',
+			cache_dir: cache_dir_base,
+		})
 		await TrackPlayer.add(trackToAdd)
 	}
 	useEffect(() => {
