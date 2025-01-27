@@ -1,13 +1,13 @@
 import RNFS from 'react-native-fs'
 import TrackPlayer from 'react-native-track-player'
 
-const CACHE_DIR = `${RNFS.DocumentDirectoryPath}/music_cache` // 使用缓存目录
+export const CACHE_DIR_BASE = `${RNFS.DocumentDirectoryPath}/music_cache` // 使用缓存目录
 
 // 初始化缓存目录
 export const initCacheDirectory = async () => {
-	const exists = await RNFS.exists(CACHE_DIR)
+	const exists = await RNFS.exists(CACHE_DIR_BASE)
 	if (!exists) {
-		await RNFS.mkdir(CACHE_DIR)
+		await RNFS.mkdir(CACHE_DIR_BASE)
 	}
 }
 
@@ -25,17 +25,18 @@ export const getCachedTrack = async (
 	trackUrl: string,
 	trackId: string,
 ): Promise<{
-	filePath?: string
+	trackUrl?: string
+	CACHE_DIR_BASE: string
 	CACHE_DIR: string
 }> => {
 	const fileExtension = trackUrl.split('.').pop() || ''
 	const fileName = `${trackId}.${fileExtension}`
-	const filePath = `${CACHE_DIR}/${fileName}`
+	const filePath = `${CACHE_DIR_BASE}/${fileName}`
 
 	const fileExists = await RNFS.exists(filePath)
 
 	if (fileExists) {
-		return { filePath, CACHE_DIR }
+		return { trackUrl, CACHE_DIR_BASE, CACHE_DIR: filePath }
 	} else {
 		try {
 			const options = {
@@ -45,19 +46,20 @@ export const getCachedTrack = async (
 				discretionary: true,
 			}
 
-			const downloadResult = await RNFS.downloadFile(options)
-			const result = await downloadResult.promise
+			RNFS.downloadFile(options)
+			return { trackUrl, CACHE_DIR_BASE, CACHE_DIR: filePath }
+			// const result = await downloadResult.promise
 
-			if (result.statusCode === 200) {
-				console.log('start playing from cache', filePath)
-				return { filePath, CACHE_DIR } // 返回已下载的文件路径
-			} else {
-				console.error('文件下载失败')
-				return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
-			}
+			// if (result.statusCode === 200) {
+			// 	console.log('start playing from cache', filePath)
+			// 	return { filePath, CACHE_DIR } // 返回已下载的文件路径
+			// } else {
+			// 	console.error('文件下载失败')
+			// 	return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
+			// }
 		} catch (error) {
 			console.error('缓存音轨时出错:', error)
-			return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
+			return { trackUrl, CACHE_DIR_BASE, CACHE_DIR: filePath } // 返回远程 URL 作为回退
 		}
 	}
 }
@@ -67,13 +69,13 @@ export const reCached = async (
 	oldCache: string,
 ): Promise<{
 	filePath?: string
-	CACHE_DIR: string
+	CACHE_DIR_BASE: string
 }> => {
 	const filePath = oldCache
 
 	const fileExists = await RNFS.exists(oldCache)
 	if (fileExists) {
-		return { filePath, CACHE_DIR }
+		return { filePath, CACHE_DIR_BASE }
 	} else {
 		try {
 			const options = {
@@ -82,20 +84,19 @@ export const reCached = async (
 				background: true,
 				discretionary: true,
 			}
-
 			const downloadResult = await RNFS.downloadFile(options)
 			const result = await downloadResult.promise
 
 			if (result.statusCode === 200) {
 				console.log('start playing from cache', filePath)
-				return { filePath, CACHE_DIR } // 返回已下载的文件路径
+				return { filePath, CACHE_DIR_BASE } // 返回已下载的文件路径
 			} else {
 				console.error('文件下载失败')
-				return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
+				return { filePath: trackUrl, CACHE_DIR_BASE } // 返回远程 URL 作为回退
 			}
 		} catch (error) {
 			console.error('缓存音轨时出错:', error)
-			return { filePath: trackUrl, CACHE_DIR } // 返回远程 URL 作为回退
+			return { filePath: trackUrl, CACHE_DIR_BASE } // 返回远程 URL 作为回退
 		}
 	}
 }

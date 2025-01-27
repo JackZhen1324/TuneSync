@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, useAnimatedValue, View } from 'react-native'
 
 import { unknownTrackImageUri } from '@/constants/images'
@@ -81,7 +81,7 @@ const CoverFlowDemo = () => {
 	progress.value = currentProgress
 	const [selected, setSelected] = useState(collections[Math.round(collections.length / 2)])
 	const [imageColors, setImageUrl] = useState(unknownTrackImageUri)
-	const scrollX = useRef(useAnimatedValue(collections.length / 2)).current
+	const scrollX = useAnimatedValue(collections.length / 2)
 	// const scrollX = useRef(new Animated.Value(collections.length / 2)).current
 	useEffect(() => {
 		scrollX.setValue(currentProgress)

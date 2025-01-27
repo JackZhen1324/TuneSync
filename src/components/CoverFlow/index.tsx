@@ -63,7 +63,6 @@ const Coverflow = ({
 }: CoverflowProps) => {
 	const [selection, setSelection] = useState(initialSelection)
 	const [layoutWidth, setLayoutWidth] = useState(0)
-	const scrollStart = useRef(0)
 	const [childElements, setChildElements] = useState(
 		fixChildrenOrder({ children }, initialSelection),
 	)
@@ -73,9 +72,8 @@ const Coverflow = ({
 
 	const onScroll = useCallback(
 		({ value }: { value: number }) => {
-			if (Math.abs(scrollPos.current - value) < 10 || scrollStart.current === 0) {
+			if (Math.abs(selection - value) < 10) {
 				scrollPos.current = value
-
 				const newSelection = clamp(Math.round(value), 0, React.Children.count(children) - 1)
 				if (newSelection !== selection) {
 					setSelection(newSelection)
@@ -106,7 +104,9 @@ const Coverflow = ({
 					toValue: finalPos,
 					bounciness: 1,
 					useNativeDriver: true,
-				}).start()
+				}).start(() => {
+					scrollX.setValue(finalPos)
+				})
 			}
 		},
 		[children, onChange, scrollX],
@@ -120,25 +120,18 @@ const Coverflow = ({
 				onPanResponderGrant: () => {
 					scrollX.stopAnimation()
 					scrollX.extractOffset()
-					scrollStart.current = 1
 				},
 				onPanResponderMove: (_, gestureState) => {
-					if ([0].includes(Math.round(scrollPos.current)) && gestureState.dx > 0) {
-						scrollX.setValue(-(gestureState.dx / 1000))
-					} else {
-						// scrollX.setValue(scrollPos.current - gestureState.dx / sensitivityValue)
-						scrollX.setValue(-(gestureState.dx / sensitivityValue))
-					}
+					scrollX.setValue(-(gestureState.dx / sensitivityValue))
 				},
 				onPanResponderRelease: (_, gestureState) => {
-					scrollStart.current = 0
 					scrollX.flattenOffset()
 					const count = React.Children.count(children)
 					const newSelection = Math.round(scrollPos.current)
 
 					if (newSelection > 0 && newSelection < count - 2 && Math.abs(gestureState.vx) > 1) {
 						const velocity =
-							-Math.sign(gestureState.vx) * (clamp(Math.abs(gestureState.vx), 3, 5) / 60)
+							-Math.sign(gestureState.vx) * (clamp(Math.abs(gestureState.vx), 3, 5) / 160)
 
 						Animated.decay(scrollX, {
 							velocity,

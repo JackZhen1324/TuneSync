@@ -3,6 +3,7 @@ import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'reac
 
 import { colors } from '@/constants/tokens'
 import { debounce } from '@/helpers/debounce'
+import { throttle } from '@/helpers/utils'
 import { utilsStyles } from '@/styles'
 import { Slider } from 'react-native-awesome-slider'
 import { SharedValue, useSharedValue } from 'react-native-reanimated'
@@ -105,13 +106,14 @@ const SliderItem: React.FC<SliderItemProps> = (props) => {
 				]}
 			>
 				<Slider
-					onValueChange={debounce((value: number) => {
+					onValueChange={throttle((value: number) => {
 						onTouchStart()
 						setProgress(value)
 						scrollX.setValue(value)
 						setSelected(collections[Math.round(value)])
-					}, 10)}
+					}, 500)}
 					onSlidingComplete={(value) => {
+						scrollX.stopAnimation()
 						setProgress(Math.round(value))
 						scrollX.setValue(Math.round(value))
 					}}

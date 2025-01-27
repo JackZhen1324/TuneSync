@@ -1,10 +1,12 @@
 import { colors } from '@/constants/tokens'
 import { reCached } from '@/helpers/cache'
+import useCacheRefresh from '@/hooks/useCacheRefresh'
 import { useIsPlaying } from '@/hooks/useIsPlaying'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { useDebounceFn } from 'ahooks'
 import { memo, useMemo, useRef } from 'react'
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
+import RNFS from 'react-native-fs'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import TrackPlayer from 'react-native-track-player'
 type PlayerControlsProps = {
@@ -32,6 +34,7 @@ export const PlayerControls = memo(({ style }: PlayerControlsProps) => {
 
 export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps) => {
 	const { playing: playing, setIsPlaying: setIsPlay } = useIsPlaying()
+	const { cacheRefresh } = useCacheRefresh()
 	const scaleAnim = useSharedValue(1)
 	// const { skip } = useTrackPlayerQueue()
 
@@ -49,16 +52,15 @@ export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps
 	}
 
 	const handlePressOut = () => {
-		// const handle = InteractionManager.createInteractionHandle()
 		setIsPlay(!isPlay)
 		scaleAnim.value = withSpring(1) // 松开时恢复原样
-		// InteractionManager.clearInteractionHandle(handle)
 	}
 	const handlePlay = () => {
 		if (isPlay) {
 			TrackPlayer.pause()
 		} else {
 			TrackPlayer.play()
+			cacheRefresh()
 		}
 	}
 	return (
@@ -99,7 +101,11 @@ export const SkipToNextButton = memo(({ iconSize = 30 }) => {
 				await TrackPlayer.skipToNext()
 			} else {
 				const current = queue[targetIndex]
-				await reCached(current.originalUrl, current.basename, current.cachedUrl)
+				const fileExtension = current.basename.split('.').pop() || ''
+				const fileName = `${current.basename}.${fileExtension}`
+				const filePath = `${RNFS.DocumentDirectoryPath}/music_cache/${fileName}`
+				await reCached(current.originalUrl, current.basename, filePath)
+
 				await TrackPlayer.skip(targetIndex)
 			}
 		},
@@ -144,7 +150,10 @@ export const SkipToPreviousButton = ({ iconSize = 30 }: PlayerButtonProps) => {
 				await TrackPlayer.skipToPrevious()
 			} else {
 				const current = queue[targetIndex]
-				await reCached(current.originalUrl, current.basename, current.cachedUrl)
+				const fileExtension = current.basename.split('.').pop() || ''
+				const fileName = `${current.basename}.${fileExtension}`
+				const filePath = `${RNFS.DocumentDirectoryPath}/music_cache/${fileName}`
+				await reCached(current.originalUrl, current.basename, filePath)
 				await TrackPlayer.skip(targetIndex)
 			}
 		},

@@ -1,17 +1,19 @@
-export function throttled(fn, delay) {
-	let timer = null
-	let starttime = Date.now()
-	return function () {
-		const curTime = Date.now() // 当前时间
-		const remaining = delay - (curTime - starttime) // 从上一次到现在，还剩下多少多余时间
-		const context = this
-		const args = arguments
-		clearTimeout(timer)
-		if (remaining <= 0) {
-			fn.apply(context, args)
-			starttime = Date.now()
-		} else {
-			timer = setTimeout(fn, remaining)
+/**
+ * throttle函数：在 wait 时间间隔内，仅允许 fn 执行一次
+ * @param {Function} fn     - 需要被截流的目标函数
+ * @param {number} wait     - 时间间隔（毫秒）
+ * @returns {Function}      - 加强版函数（已被截流）
+ */
+export function throttle(fn, wait) {
+	let lastCallTime = 0
+
+	return function (...args) {
+		const now = Date.now()
+
+		// 如果距离上次执行已超过 wait，则执行 fn
+		if (now - lastCallTime >= wait) {
+			lastCallTime = now
+			fn.apply(this, args)
 		}
 	}
 }
