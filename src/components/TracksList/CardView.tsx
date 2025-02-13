@@ -16,6 +16,7 @@ import CoverFlow from '../CoverFlow'
 import { SENSITIVITY_LOW } from '../CoverFlow/constants'
 import FrostedBackground from '../FrostedBackground'
 import Image from '../Image'
+import SliderItem from './SlideItem'
 
 /* eslint-disable global-require */
 
@@ -156,8 +157,8 @@ const CoverFlowDemo = () => {
 			>
 				{getCards()}
 			</CoverFlow>
-			{/* hidden for now, still have issues to be resolved */}
-			{/* {!isDetail && (
+
+			{!isDetail && (
 				<SliderItem
 					data={collections}
 					setProgress={setProgress}
@@ -165,7 +166,7 @@ const CoverFlowDemo = () => {
 					setSelected={setSelected}
 					progress={progress}
 				></SliderItem>
-			)} */}
+			)}
 		</FrostedBackground>
 	)
 }
