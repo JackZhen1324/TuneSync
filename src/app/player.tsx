@@ -8,9 +8,9 @@ import { PlaylistsList } from '@/components/PlaylistsList'
 import PlaylistToggle from '@/components/PlaylistToggle'
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize, screenPadding } from '@/constants/tokens'
+import { useLrcLoader } from '@/helpers/LyricLoader'
 import useModalView from '@/hooks/useModalView'
 import { usePlayerBackground } from '@/hooks/usePlayerBackground'
-import { searchLyricViaNetease, searchSongsViaNetease } from '@/service/neteaseData'
 import { useFavorateStore } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
@@ -167,12 +167,26 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 
 const LyricsRoute = ({ lyrics }: any) => (
 	<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-		<LyricsDisplay lyrics={lyrics} />
+		{lyrics.length > 0 ? (
+			<LyricsDisplay lyrics={lyrics} />
+		) : (
+			<View
+				style={{
+					height: '80%',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<ActivityIndicator color={'#fff'} />
+			</View>
+		)}
 	</View>
 )
 
 const PlayerScreen = () => {
 	const activeTrackObj = useActiveTrack()
+	const { lyrics, loadLrc } = useLrcLoader(activeTrackObj)
 	const { imageColors } = usePlayerBackground(activeTrackObj?.artwork ?? unknownTrackImageUri)
 	const { top, bottom } = useSafeAreaInsets()
 	const [lyricsInfo, setLyrics] = useState([])
@@ -190,38 +204,7 @@ const PlayerScreen = () => {
 	})
 	useEffect(() => {
 		if (!activeTrackObj?.formatedTitle) return
-		const params = {
-			s: activeTrackObj?.formatedTitle || '',
-		}
-		const parseTime = (timeString: { split: (arg0: string) => [any, any] }) => {
-			const [minutes, seconds] = timeString.split(':')
-			const [secs, millis] = seconds.split('.')
-
-			return parseInt(minutes) * 60 + parseInt(secs) + parseInt(millis || 0) / 1000
-		}
-		searchSongsViaNetease(params).then((el) => {
-			const id = el?.result?.songs?.[0]?.id
-
-			searchLyricViaNetease({ id }).then((lyric) => {
-				const raw = lyric?.lrc?.lyric
-				const formatedLyric = raw
-					.split('\n')
-					.map((l: string) => {
-						const regex = /\[([0-9]{2,3}:[0-9]{2,3}\.[0-9]{2,3})\]\s*(.*)/
-						const match = l.match(regex)
-						if (match) {
-							const timestamp = parseTime(match[1])
-							const content = match[2]
-							return {
-								time: timestamp,
-								line: content,
-							}
-						}
-					})
-					.filter((el: any) => el)
-				setLyrics(formatedLyric)
-			})
-		})
+		loadLrc(activeTrackObj.filename, activeTrackObj.formatedTitle)
 	}, [activeTrackObj])
 
 	const renderScene = ({ route }) => {
@@ -239,7 +222,7 @@ const PlayerScreen = () => {
 					/>
 				)
 			case 'lyrics':
-				return LyricsRoute({ lyrics: lyricsInfo })
+				return LyricsRoute({ lyrics: lyrics })
 			default:
 				return null
 		}
