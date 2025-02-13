@@ -1,191 +1,269 @@
-import { fontSize, screenPadding } from '@/constants/tokens'
-import { defaultStyles } from '@/styles'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import TrackPlayer from 'react-native-track-player'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import TrackPlayer, { useProgress } from 'react-native-track-player'
 import { PlayerControls } from '../PlayerControls'
 import { PlayerProgressBar } from '../PlayerProgressbar'
+
+/** 单句歌词 */
+type LyricLine = {
+	time: number
+	line: string
+}
+
+/** 组件 Props */
 type LyricsDisplayProps = {
-	lyrics: any
+	lyrics: LyricLine[]
+}
+
+/**
+ * 找到当前行索引
+ * （如果没找到，返回 -1）
+ */
+function findCurrentLineIndex(lyrics: LyricLine[], position: number) {
+	return lyrics.findIndex(
+		(lyric, i) => lyric.time <= position && position < (lyrics[i + 1]?.time ?? lyric.time + 99999),
+	)
+}
+
+/**
+ * 对某行计算进度(0~1)：当前时间在 [startTime, nextStartTime] 区间的归一化
+ */
+function getLineProgress(lyrics: LyricLine[], index: number, currentTime: number): number {
+	if (index < 0 || index >= lyrics.length) return 0
+	const start = lyrics[index].time
+	const end = lyrics[index + 1]?.time ?? start + 5
+	if (currentTime <= start) return 0
+	if (currentTime >= end) return 1
+	return (currentTime - start) / (end - start)
+}
+
+/**
+ * 一个简易的 Easing 函数，让进度曲线更平滑
+ * 这里用二次缓动 (easeInOutQuad) 举例
+ */
+function easeInOutQuad(t: number) {
+	return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+}
+
+/**
+ * 最简单的颜色插值：灰 -> 白
+ * 如果想扩展可以用其他颜色或使用三方库做更复杂插值
+ */
+function interpolateGrayToWhite(progress: number) {
+	const clamp = (val: number) => Math.min(Math.max(val, 0), 1)
+	const p = clamp(progress)
+
+	// 灰 (128,128,128) -> 白 (255,255,255)
+	const start = 128
+	const end = 255
+	const c = start + (end - start) * p
+	const colorVal = Math.round(c)
+	return `rgb(${colorVal},${colorVal},${colorVal})`
+}
+
+/**
+ * 按字符拆分，对每个字符做局部“丝滑”上色的 Text 行
+ * 并且只有“当前行”才会根据进度来着色；其他行恢复灰色
+ */
+const CharColoredLine: React.FC<{
+	lyric: LyricLine
+	lineProgress: number // 0~1
+	isActiveLine: boolean
+	onPress: () => void
+}> = ({ lyric, lineProgress, isActiveLine, onPress }) => {
+	// 将一句拆分为字符数组
+	const chars = lyric.line.split('')
+	const totalChars = chars.length
+
+	return (
+		<TouchableOpacity style={[styles.lineItem]} onPress={onPress} activeOpacity={0.8}>
+			<Text
+				style={[
+					styles.baseLineText,
+					isActiveLine ? styles.activeLineText : styles.inactiveLineText,
+				]}
+			>
+				{chars.map((char, i) => {
+					// 如果不是当前行，progress=0 => 不高亮；如果是当前行，计算真实进度
+					if (!isActiveLine) {
+						return (
+							<Text key={`char-${i}`} style={{ color: '#888' }}>
+								{char}
+							</Text>
+						)
+					}
+
+					// 计算出该字符的“局部进度”
+					// 例如 lineProgress=0.3, total=10 => 0.3*10=3 => 第 0~2 字基本全白，第 3~4 在过渡
+					const floatIndex = lineProgress * totalChars
+					const distance = floatIndex - i
+
+					// 做一个 clamp + ease 让颜色变更更平滑
+					const localProgress = easeInOutQuad(Math.min(Math.max(distance, 0), 1))
+					const color = interpolateGrayToWhite(localProgress)
+
+					return (
+						<Text key={`char-${i}`} style={{ color }}>
+							{char}
+						</Text>
+					)
+				})}
+			</Text>
+		</TouchableOpacity>
+	)
 }
 
 const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics }) => {
-	const scrollViewRef = useRef<ScrollView>(null)
-
-	const [currentPosition, setCurrentPosition] = useState<number>(0)
+	const flatListRef = useRef<FlatList<LyricLine>>(null)
+	const [currentIndex, setCurrentIndex] = useState(0)
 	const [isManualScroll, setIsManualScroll] = useState(false)
+	const manualScrollTimeout = useRef<NodeJS.Timeout | null>(null)
 
-	const scrollToCurrentLyric = useCallback(
-		(position: number) => {
-			const index = lyrics.findIndex(
-				(lyric: { time: number }) => lyric.time <= position && position < lyric.time + 10,
-			)
-			if (index !== -1 && scrollViewRef.current) {
-				scrollViewRef.current.scrollTo({ y: index * 45 - 150, animated: true })
+	// 使用 useProgress 获取更频繁的播放时间更新（这里每16.67ms更新一次）
+	const { position } = useProgress(16.67)
+
+	/**
+	 * 如果没有在手动滚动，则根据播放进度自动滚动到当前行
+	 */
+	useEffect(() => {
+		if (!isManualScroll) {
+			const idx = findCurrentLineIndex(lyrics, position)
+			if (idx !== -1 && idx !== currentIndex) {
+				setCurrentIndex(idx)
+				scrollToIndex(idx)
+			}
+		}
+	}, [position, isManualScroll, currentIndex, lyrics])
+
+	/**
+	 * 滚动到指定行——让当前行置顶
+	 */
+	const scrollToIndex = useCallback(
+		(index: number) => {
+			if (flatListRef.current) {
+				flatListRef.current.scrollToIndex({
+					index,
+					animated: true,
+					viewPosition: 0,
+				})
 			}
 		},
 		[lyrics],
 	)
-	useEffect(() => {
-		const checkPosition = async () => {
-			const position = await TrackPlayer.getPosition()
-			setCurrentPosition(position)
-			if (!isManualScroll) {
-				scrollToCurrentLyric(position)
-			}
-		}
 
-		const interval = setInterval(checkPosition, 300)
-		return () => {
-			clearInterval(interval)
-			clearTimeout('')
-		}
-	}, [lyrics, isManualScroll, scrollToCurrentLyric])
-	const handleScrollBegin = () => {
+	// 用户手动滚动时，暂停自动滚动
+	const handleScrollBeginDrag = () => {
 		setIsManualScroll(true)
+		if (manualScrollTimeout.current) {
+			clearTimeout(manualScrollTimeout.current)
+		}
 	}
 
-	const handleScrollEnd = () => {
-		setTimeout(() => setIsManualScroll(false), 2000)
+	// 停止滚动后，2s 后恢复自动滚动
+	const handleScrollEndDrag = () => {
+		manualScrollTimeout.current = setTimeout(() => {
+			setIsManualScroll(false)
+		}, 2000)
 	}
 
-	const handleLyricPress = (time: number) => {
+	// 点击某行 => 跳转到该时间
+	const handlePressLine = (time: number, index: number) => {
 		TrackPlayer.seekTo(time)
-		scrollToCurrentLyric(time)
+		setCurrentIndex(index)
+		scrollToIndex(index)
 	}
-	if (lyrics?.length > 0) {
-		return (
-			<>
-				<ScrollView
-					onScrollBeginDrag={handleScrollBegin}
-					onScrollEndDrag={handleScrollEnd}
-					// onMomentumScrollEnd={handleScrollEnd}
-					ref={scrollViewRef}
-					style={styles.scrollView}
-				>
-					{lyrics.map(
-						(
-							lyric: {
-								time: number
-								line:
-									| string
-									| number
-									| boolean
-									| React.ReactElement<any, string | React.JSXElementConstructor<any>>
-									| Iterable<React.ReactNode>
-									| React.ReactPortal
-									| null
-									| undefined
-							},
-							index: number,
-						) => (
-							<TouchableOpacity key={index} onPress={() => handleLyricPress(lyric.time)}>
-								<Text
-									style={[
-										styles.lyricText,
-										{
-											color:
-												lyric.time <= currentPosition &&
-												currentPosition < (lyrics[index + 1]?.time || lyric.time + 10)
-													? 'white'
-													: 'gray',
-											fontWeight:
-												lyric.time <= currentPosition &&
-												currentPosition < (lyrics[index + 1]?.time || lyric.time + 10)
-													? 'bold'
-													: 'normal',
-										},
-									]}
-								>
-									{lyric.line}
-								</Text>
-							</TouchableOpacity>
-						),
-					)}
-				</ScrollView>
-				<View style={styles.controlerContainer}>
-					<View style={{ marginTop: 'auto' }}>
-						<PlayerProgressBar style={{ marginTop: 32 }} />
 
-						<PlayerControls style={{ marginTop: 40 }} />
-					</View>
-				</View>
-			</>
+	// 渲染列表每行
+	const renderItem = ({ item, index }: { item: LyricLine; index: number }) => {
+		// 如果不是当前行，progress=0；如果是当前行，计算真实进度
+		const isActiveLine = index === currentIndex
+		const lineProgress = isActiveLine ? getLineProgress(lyrics, index, position) : 0
+
+		return (
+			<CharColoredLine
+				lyric={item}
+				lineProgress={lineProgress}
+				isActiveLine={isActiveLine}
+				onPress={() => handlePressLine(item.time, index)}
+			/>
 		)
 	}
+
+	// 优化布局
+	const getItemLayout = (_: LyricLine[] | null, index: number) => ({
+		length: ITEM_HEIGHT,
+		offset: ITEM_HEIGHT * index,
+		index,
+	})
+
+	if (!lyrics || lyrics.length === 0) {
+		return (
+			<View style={styles.noLyricsContainer}>
+				<Text style={{ color: '#fff' }}>暂无歌词</Text>
+			</View>
+		)
+	}
+
 	return (
-		<View>
-			<Text
-				style={{
-					color: 'white',
-				}}
-			>
-				暂无歌词
-			</Text>
-		</View>
+		<>
+			<View style={styles.container}>
+				<FlatList
+					ref={flatListRef}
+					data={lyrics}
+					keyExtractor={(_, i) => String(i)}
+					renderItem={renderItem}
+					getItemLayout={getItemLayout}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ paddingVertical: 50 }}
+					onScrollBeginDrag={handleScrollBeginDrag}
+					onScrollEndDrag={handleScrollEndDrag}
+				/>
+			</View>
+			{/* 这里可放进度条/播放控制等 */}
+			<View style={styles.controlerContainer}>
+				<View style={{ marginTop: 'auto' }}>
+					<PlayerProgressBar style={{ marginTop: 32 }} />
+					<PlayerControls style={{ marginTop: 40 }} />
+				</View>
+			</View>
+		</>
 	)
 }
 
+// 视觉样式
+const ITEM_HEIGHT = 50
+
 const styles = StyleSheet.create({
 	controlerContainer: {
-		height: 100,
+		height: 126,
 		width: '100%',
 	},
-	scrollView: {
+	container: {
 		flex: 1,
-		marginBottom: 40,
-		width: '100%',
-		backgroundColor: 'transparent',
-		borderRadius: 10,
-		paddingVertical: 20,
 	},
-	lyricText: {
+	noLyricsContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	lineItem: {
+		height: ITEM_HEIGHT,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	baseLineText: {
 		fontSize: 16,
-		padding: 10,
 		textAlign: 'center',
-		lineHeight: 24,
 	},
-	overlayContainer: {
-		...defaultStyles.container,
-		paddingHorizontal: screenPadding.horizontal,
-		backgroundColor: 'rgba(0,0,0,0.5)',
+	// 当前行可做更突出的样式
+	activeLineText: {
+		fontSize: 18,
+		fontWeight: 'bold',
 	},
-	header: {
-		display: 'flex',
-		justifyContent: 'center',
-		color: 'white',
-	},
-	artworkImageContainer: {
-		shadowOffset: {
-			width: 0,
-			height: 8,
-		},
-		shadowOpacity: 0.44,
-		shadowRadius: 11.0,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		height: '45%',
-	},
-	artworkImage: {
-		width: '100%',
-		height: '100%',
-		resizeMode: 'cover',
-		borderRadius: 12,
-	},
-	trackTitleContainer: {
-		flex: 1,
-		overflow: 'hidden',
-	},
-	trackTitleText: {
-		...defaultStyles.text,
-		fontSize: 22,
-		fontWeight: '700',
-	},
-	trackArtistText: {
-		...defaultStyles.text,
-		fontSize: fontSize.base,
-		opacity: 0.8,
-		maxWidth: '90%',
+	// 非当前行可做更暗的样式
+	inactiveLineText: {
+		color: '#666',
+		fontWeight: 'bold',
 	},
 })
 
