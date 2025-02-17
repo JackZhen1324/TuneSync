@@ -8,6 +8,7 @@
 		"lint": "eslint ."
 	},
 	"dependencies": {
+		"@gorhom/bottom-sheet": "^5.1.1",
 		"@react-native-async-storage/async-storage": "^1.24.0",
 		"@react-native-community/blur": "^4.4.0",
 		"@react-native-menu/menu": "^0.9.1",
