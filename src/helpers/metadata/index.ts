@@ -5,14 +5,12 @@ import { fallbackMetadataMiddleware } from './middleware/fallbackMetadataMiddlew
 import { runMiddlewares } from './onion'
 import { FetchParams, MetadataContext } from './types'
 
-export async function fetchMetadata(params: FetchParams, abortSignal: AbortSignal) {
+export async function fetchMetadata(params: FetchParams) {
 	const ctx: MetadataContext = {
 		params,
-		abortSignal,
 		metadata: { pendingMeta: true },
 	}
 	const middlewareConfig = params.middlewareConfigs
-
 	const middlewarePipeline = middlewareConfig
 		.sort((a, b) => a.order - b.order)
 		.filter((el) => el.enabled)
@@ -29,6 +27,7 @@ export async function fetchMetadata(params: FetchParams, abortSignal: AbortSigna
 
 	try {
 		await runMiddlewares(ctx, middlewarePipeline)
+
 		return ctx.metadata
 	} catch (error: any) {
 		if (error.message.includes('Aborted')) {

@@ -2,6 +2,7 @@ import { FloatingPlayer } from '@/components/FloatingPlayer'
 import ReanimatedCarousel from '@/components/TracksList/CardView'
 import { colors, fontSize } from '@/constants/tokens'
 import { useIsLandscape } from '@/hooks/useIsLandcape'
+import { useShouldUpdate } from '@/hooks/useShouldUpdate'
 import { AntDesign, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { BlurView } from 'expo-blur'
 import { Tabs } from 'expo-router'
@@ -13,6 +14,7 @@ const TabsNavigation = () => {
 	const animatedValue = useRef(new Animated.Value(0)).current
 
 	const isLandscape = useIsLandscape()
+	useShouldUpdate()
 	useEffect(() => {
 		Animated.timing(animatedValue, {
 			toValue: 1,

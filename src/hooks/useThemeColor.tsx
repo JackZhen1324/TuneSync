@@ -9,5 +9,6 @@ export default () => {
 	const colorScheme = useColorScheme()
 	const isDarkMode = colorScheme === 'dark'
 	const theme = isDarkMode ? PaperDarkTheme : PaperDefaultTheme
+	theme.colors.background = colors.background
 	return theme
 }

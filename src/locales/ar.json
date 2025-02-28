@@ -1,4 +1,29 @@
 {
+	"common": {
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"confirm": "Confirm",
+		"save": "Save",
+		"search": "Search",
+		"add": "Add",
+		"edit": "Edit",
+		"success": "Success",
+		"error": "Error",
+		"warning": "Warning",
+		"info": "Info",
+		"prev": "Prev",
+		"next": "Next",
+		"play": "Play",
+		"pause": "Pause",
+		"close": "Close",
+		"refresh": "Refresh",
+		"loading": "Loading",
+		"empty": "Empty",
+		"select": "Select",
+		"selectAll": "Select All",
+		"unselectAll": "Unselect All",
+		"noData": "No Data"
+	},
 	"routes": {
 		"favorites": "المفضلة",
 		"collections": "المجموعات",
@@ -36,6 +61,15 @@
 		"language": "اللغة",
 		"cacheManagement": "إدارة الذاكرة المؤقتة",
 		"middlewareManagement": "إدارة الوسائط"
+	},
+	"statistics": {
+		"songs": "Songs",
+		"artists": "Artists",
+		"albums": "Albums",
+		"currentTask": "Current Task",
+		"logs": "logs",
+		"noRunningTask": "No task running",
+		"noLogs": "No logs"
 	},
 	"webdavAdd": {
 		"configName": "اسم المصدر",

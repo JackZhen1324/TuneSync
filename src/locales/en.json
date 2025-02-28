@@ -1,4 +1,29 @@
 {
+	"common": {
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"confirm": "Confirm",
+		"save": "Save",
+		"search": "Search",
+		"add": "Add",
+		"edit": "Edit",
+		"success": "Success",
+		"error": "Error",
+		"warning": "Warning",
+		"info": "Info",
+		"prev": "Prev",
+		"next": "Next",
+		"play": "Play",
+		"pause": "Pause",
+		"close": "Close",
+		"refresh": "Refresh",
+		"loading": "Loading",
+		"empty": "Empty",
+		"select": "Select",
+		"selectAll": "Select All",
+		"unselectAll": "Unselect All",
+		"noData": "No Data"
+	},
 	"routes": {
 		"favorites": "Favorites",
 		"collections": "Collections",
@@ -35,9 +60,18 @@
 		"about": "About",
 		"language": "Language",
 		"cacheManagement": "Cache",
-		"middlewareManagement": "Middleware"
+		"middlewareManagement": "Middleware",
+		"statistics": "Media Center"
 	},
-
+	"statistics": {
+		"songs": "Songs",
+		"artists": "Artists",
+		"albums": "Albums",
+		"currentTask": "Current Task",
+		"logs": "logs",
+		"noRunningTask": "No task running",
+		"noLogs": "No logs"
+	},
 	"webdavAdd": {
 		"configName": "Resource Name",
 		"location": "Resource Location (Domain or IP)",

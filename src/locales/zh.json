@@ -1,4 +1,29 @@
 {
+	"common": {
+		"delete": "删除",
+		"cancel": "取消",
+		"confirm": "确认",
+		"save": "保存",
+		"search": "搜索",
+		"add": "增加",
+		"edit": "编辑",
+		"success": "成功",
+		"error": "错误",
+		"warning": "警告",
+		"info": "提示",
+		"prev": "前一个",
+		"next": "下一个",
+		"play": "播放",
+		"pause": "暂停",
+		"close": "关闭",
+		"refresh": "刷新",
+		"loading": "加载中",
+		"empty": "空的",
+		"select": "选择",
+		"selectAll": "选择所有",
+		"unselectAll": "反选所有",
+		"noData": "暂无数据"
+	},
 	"routes": {
 		"favorites": "喜欢的歌曲",
 		"collections": "合集",
@@ -35,7 +60,17 @@
 		"about": "关于",
 		"language": "语言",
 		"cacheManagement": "缓存管理",
-		"middlewareManagement": "中间件管理"
+		"middlewareManagement": "中间件管理",
+		"statistics": "媒体中心"
+	},
+	"statistics": {
+		"songs": "歌曲数",
+		"artists": "歌手数",
+		"albums": "专辑数",
+		"currentTask": "当前任务",
+		"logs": "日志",
+		"noRunningTask": "暂无任务",
+		"noLogs": "暂无日志"
 	},
 	"cache": {
 		"size": "缓存大小",
