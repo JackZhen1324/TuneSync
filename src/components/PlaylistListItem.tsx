@@ -33,7 +33,7 @@ const PlayListItemComponent = ({
 	}, [handleTrackSelect, track, index])
 
 	return (
-		<TouchableRipple centered={true} rippleColor="rgba(255, 255, 255, .005)" onPress={handlePress}>
+		<TouchableRipple centered={true} rippleColor="transparent" onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
 				<View>
 					{isActive ? (

@@ -25,7 +25,7 @@ export default ({ playlist, ...props }: PlaylistListItemProps) => {
 							onPress={() => {
 								// router.push('/(tabs)/setting/resource')
 							}}
-							rippleColor="rgba(0, 0, 0, .32)"
+							rippleColor="transparent"
 						>
 							<View style={styles.item}>
 								<MaterialIcons name="add" size={50} color={colors.primary} />

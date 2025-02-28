@@ -27,7 +27,6 @@ export interface FetchParams {
 export interface MetadataContext {
 	params: FetchParams
 	metadata: Partial<Metadata>
-	abortSignal: AbortSignal
 }
 
 // 定义中间件类型

@@ -1,7 +1,7 @@
 export const colors = {
 	errorColor: 'red',
 	primary: '#E76F51',
-	background: '#000',
+	background: '#121212',
 	text: '#fff',
 	textMuted: '#9ca3af',
 	icon: '#fff',

@@ -9,7 +9,7 @@ import { uniqBy } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { Track } from 'react-native-track-player'
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, subscribeWithSelector } from 'zustand/middleware'
 import { storage } from './mkkv'
 
 interface LibraryState {
@@ -18,6 +18,7 @@ interface LibraryState {
 	tracksMap: any
 	setTracks: any
 	update: any
+	batchUpdate: any
 	toggleTrackFavorite: (track: Track) => void
 	addToPlaylist: (track: Track, playlistName: string) => void
 }
@@ -29,6 +30,7 @@ interface IndexState {
 	percentage: number
 	loading: boolean
 	current: string
+	remove: (name: string) => void
 	setLoading: ({
 		loading,
 		percentage,
@@ -132,13 +134,22 @@ export const useLibraryStore = create<LibraryState>()(
 )
 export const useIndexStore = create<IndexState>()(
 	persist(
-		(set) => {
+		subscribeWithSelector((set) => {
 			return {
 				current: '',
 				needUpdate: false,
 				setNeedUpdate: (needUpdate: any) => set({ needUpdate: needUpdate }),
 				indexingList: [],
 				loading: false,
+				remove: (name: string) => {
+					set((state: any) => {
+						return {
+							indexingList: state.indexingList.filter(
+								(item: { name: string }) => item.dir !== name,
+							),
+						}
+					})
+				},
 				setIndexingList: (list: any) => {
 					set({
 						indexingList: list,
@@ -154,7 +165,7 @@ export const useIndexStore = create<IndexState>()(
 					})
 				},
 			}
-		},
+		}),
 		{
 			name: 'indexList', // 存储在 AsyncStorage 中的键名
 			storage: {
@@ -397,6 +408,11 @@ export const useSetting = () => {
 			id: 'folder',
 			title: t('setting.folder'),
 			icon: <AntDesign name="folder1" size={24} color="#E76F51" />,
+		},
+		{
+			id: 'statistics',
+			title: t('setting.statistics') || 'Media Center',
+			icon: <AntDesign name="playcircleo" size={24} color="#E76F51" />,
 		},
 		{
 			id: 'language',

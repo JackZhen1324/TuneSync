@@ -1,3 +1,4 @@
+import GridBackground from '@/components/GridBackground'
 import LyricsDisplay from '@/components/LyricsDisplay'
 import { MovingText } from '@/components/MovingText'
 import { PlayerControls } from '@/components/PlayerControls'
@@ -8,14 +9,13 @@ import { PlaylistsList } from '@/components/PlaylistsList'
 import PlaylistToggle from '@/components/PlaylistToggle'
 import { unknownTrackImageUri } from '@/constants/images'
 import { colors, fontSize, screenPadding } from '@/constants/tokens'
-import useModalView from '@/hooks/useModalView'
-import { usePlayerBackground } from '@/hooks/usePlayerBackground'
-import { searchLyricViaNetease, searchSongsViaNetease } from '@/service/neteaseData'
+import { useLrcLoader } from '@/helpers/LyricLoader'
+import CustomBottomSheet from '@/hooks/useBottomView'
 import { useFavorateStore } from '@/store/library'
 import { defaultStyles, utilsStyles } from '@/styles'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
-import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useMemo, useState } from 'react'
+import BottomSheet from '@gorhom/bottom-sheet'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
 	showRoutePicker,
 	useAirplayConnectivity,
@@ -26,7 +26,6 @@ import { useTranslation } from 'react-i18next'
 import {
 	ActivityIndicator,
 	Dimensions,
-	InteractionManager,
 	PressableAndroidRippleConfig,
 	StyleProp,
 	StyleSheet,
@@ -63,7 +62,12 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 	}, [activeTrack, favorateTracks])
 	if (!activeTrack) {
 		return (
-			<View style={[defaultStyles.container, { justifyContent: 'center' }]}>
+			<View
+				style={[
+					defaultStyles.container,
+					{ justifyContent: 'center', backgroundColor: 'transparent' },
+				]}
+			>
 				<ActivityIndicator color={colors.icon} />
 			</View>
 		)
@@ -152,7 +156,7 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 					<View style={styles.footer}>
 						<Text>
 							{routes.length && (
-								<Text style={styles.footer.content}>
+								<Text style={styles.footerContent}>
 									iPhone{` -> `}
 									{routes.map((route) => route.portName).join(', ')}
 								</Text>
@@ -167,15 +171,28 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 
 const LyricsRoute = ({ lyrics }: any) => (
 	<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-		<LyricsDisplay lyrics={lyrics} />
+		{lyrics.length > 0 ? (
+			<LyricsDisplay lyrics={lyrics} />
+		) : (
+			<View
+				style={{
+					height: '80%',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<ActivityIndicator color={'#fff'} />
+			</View>
+		)}
 	</View>
 )
 
 const PlayerScreen = () => {
 	const activeTrackObj = useActiveTrack()
-	const { imageColors } = usePlayerBackground(activeTrackObj?.artwork ?? unknownTrackImageUri)
-	const { top, bottom } = useSafeAreaInsets()
-	const [lyricsInfo, setLyrics] = useState([])
+	const { lyrics, loadLrc } = useLrcLoader(activeTrackObj)
+	const modalRef = useRef<BottomSheet>(null)
+	const { top } = useSafeAreaInsets()
 	const [index, setIndex] = useState(0)
 	const { t } = useTranslation()
 	const [routes] = useState([
@@ -183,48 +200,14 @@ const PlayerScreen = () => {
 		{ key: 'lyrics', title: t('player.tabs.lyric') },
 	])
 	// const panelRef = useRef(null)
-	const [panelRef, render] = useModalView({
-		content: () => {
-			return <PlaylistsList />
-		},
-	})
+
 	useEffect(() => {
 		if (!activeTrackObj?.formatedTitle) return
-		const params = {
-			s: activeTrackObj?.formatedTitle || '',
-		}
-		const parseTime = (timeString: { split: (arg0: string) => [any, any] }) => {
-			const [minutes, seconds] = timeString.split(':')
-			const [secs, millis] = seconds.split('.')
 
-			return parseInt(minutes) * 60 + parseInt(secs) + parseInt(millis || 0) / 1000
-		}
-		searchSongsViaNetease(params).then((el) => {
-			const id = el?.result?.songs?.[0]?.id
-
-			searchLyricViaNetease({ id }).then((lyric) => {
-				const raw = lyric?.lrc?.lyric
-				const formatedLyric = raw
-					.split('\n')
-					.map((l: string) => {
-						const regex = /\[([0-9]{2,3}:[0-9]{2,3}\.[0-9]{2,3})\]\s*(.*)/
-						const match = l.match(regex)
-						if (match) {
-							const timestamp = parseTime(match[1])
-							const content = match[2]
-							return {
-								time: timestamp,
-								line: content,
-							}
-						}
-					})
-					.filter((el: any) => el)
-				setLyrics(formatedLyric)
-			})
-		})
+		loadLrc(activeTrackObj.filename, activeTrackObj.formatedTitle)
 	}, [activeTrackObj])
 
-	const renderScene = ({ route }) => {
+	const renderScene = ({ route }: { route: Route }) => {
 		switch (route.key) {
 			case 'songInfo':
 				return (
@@ -232,14 +215,14 @@ const PlayerScreen = () => {
 						setIndex={setIndex}
 						activeTrack={activeTrackObj}
 						togglePlaylist={() => {
-							const handle = InteractionManager.createInteractionHandle()
-							panelRef.current.show()
-							InteractionManager.clearInteractionHandle(handle)
+							if (modalRef.current) {
+								modalRef.current.snapToIndex(2)
+							}
 						}}
 					/>
 				)
 			case 'lyrics':
-				return LyricsRoute({ lyrics: lyricsInfo })
+				return LyricsRoute({ lyrics: lyrics })
 			default:
 				return null
 		}
@@ -292,10 +275,7 @@ const PlayerScreen = () => {
 	)
 
 	return (
-		<LinearGradient
-			style={{ flex: 1 }}
-			colors={imageColors ? [imageColors.background, imageColors.primary] : [colors.background]}
-		>
+		<GridBackground uri={activeTrackObj?.artwork || unknownTrackImageUri}>
 			<View style={styles.overlayContainer}>
 				<DismissPlayerSymbol />
 
@@ -308,8 +288,17 @@ const PlayerScreen = () => {
 					style={{ marginTop: top + 20, marginBottom: top }}
 				/>
 			</View>
-			{render()}
-		</LinearGradient>
+			<CustomBottomSheet
+				onClose={() => {
+					if (modalRef.current) {
+						modalRef.current.snapToIndex(0)
+					}
+				}}
+				modalRef={modalRef}
+				content={<PlaylistsList></PlaylistsList>}
+			></CustomBottomSheet>
+			{/* {render()} */}
+		</GridBackground>
 	)
 }
 
@@ -353,12 +342,7 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	artworkImageContainer: {
-		shadowOffset: {
-			width: 0,
-			height: 8,
-		},
 		shadowOpacity: 0.44,
-		shadowRadius: 11.0,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		height: '45%',
@@ -416,10 +400,9 @@ const styles = StyleSheet.create({
 	footer: {
 		justifyContent: 'center',
 		alignItems: 'center',
-
-		content: {
-			color: colors.text,
-		},
+	},
+	footerContent: {
+		color: colors.text,
 	},
 })
 

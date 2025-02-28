@@ -1,3 +1,11 @@
+/*
+ * @Author: Zhen Qian zqian15@asu.edu
+ * @Date: 2024-11-25 13:33:55
+ * @LastEditors: Zhen Qian zqian15@asu.edu
+ * @LastEditTime: 2025-02-20 17:44:41
+ * @FilePath: /TuneSync/src/components/MenuItem.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { colors } from '@/constants/tokens'
 import { menu } from '@/helpers/types'
 import { useLanguageStore } from '@/store/language'
@@ -17,7 +25,7 @@ export const MenuItem = ({ menu, ...props }: MenuItemProps) => {
 	const { language } = useLanguageStore((state) => state)
 
 	return (
-		<TouchableHighlight activeOpacity={0.8} {...props}>
+		<TouchableHighlight underlayColor="transparent" activeOpacity={0.8} {...props}>
 			<View style={styles.menuItemContainer}>
 				<View
 					style={{

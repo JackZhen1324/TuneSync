@@ -1,3 +1,4 @@
+import LibraryDropdownOptions from '@/components/LibraryDropdownOptions'
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
 import { useTracks } from '@/store/library'
@@ -92,6 +93,20 @@ const PlaylistsScreenLayout = () => {
 						headerBackVisible: true,
 						headerStyle: {
 							backgroundColor: colors.background,
+						},
+						headerTintColor: colors.primary,
+					}}
+				/>
+				<Stack.Screen
+					name="mediaCenter/index"
+					options={{
+						headerTitle: `${t('setting.statistics')}`,
+						headerBackVisible: true,
+						headerStyle: {
+							backgroundColor: colors.background,
+						},
+						headerRight: () => {
+							return <LibraryDropdownOptions></LibraryDropdownOptions>
 						},
 						headerTintColor: colors.primary,
 					}}

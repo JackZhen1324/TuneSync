@@ -1,3 +1,11 @@
+/*
+ * @Author: Zhen Qian zqian15@asu.edu
+ * @Date: 2025-02-13 18:25:50
+ * @LastEditors: Zhen Qian zqian15@asu.edu
+ * @LastEditTime: 2025-02-20 03:43:34
+ * @FilePath: /TuneSync/src/helpers/utils.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /**
  * throttle函数：在 wait 时间间隔内，仅允许 fn 执行一次
  * @param {Function} fn     - 需要被截流的目标函数
@@ -55,4 +63,19 @@ export const equals = (objA, objB) => {
 	}
 
 	return true // 所有第一层属性值都相同
+}
+
+export const getFormatedDate = () => {
+	const today = new Date()
+
+	//日期
+	const DD = String(today.getDate()).padStart(2, '0') // 获取日
+	const MM = String(today.getMonth() + 1).padStart(2, '0') //获取月份，1 月为 0
+	const yyyy = today.getFullYear() // 获取年
+
+	// 时间
+	const hh = String(today.getHours()).padStart(2, '0') //获取当前小时数(0-23)
+	const mm = String(today.getMinutes()).padStart(2, '0') //获取当前分钟数(0-59)
+	const ss = String(today.getSeconds()).padStart(2, '0') //获取当前秒数(0-59)
+	return '[' + yyyy + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss + ']'
 }

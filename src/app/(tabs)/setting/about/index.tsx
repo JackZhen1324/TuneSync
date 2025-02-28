@@ -1,4 +1,5 @@
 import logo from '@/assets/icon.png'
+import { colors } from '@/constants/tokens'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -65,7 +66,7 @@ const AboutPage = () => {
 const styles = StyleSheet.create({
 	container: {
 		flexGrow: 1,
-		backgroundColor: 'black',
+		backgroundColor: colors.background,
 	},
 	header: {
 		flexDirection: 'row',

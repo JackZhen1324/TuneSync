@@ -1,3 +1,11 @@
+/*
+ * @Author: Zhen Qian zqian15@asu.edu
+ * @Date: 2024-12-24 15:15:35
+ * @LastEditors: Zhen Qian zqian15@asu.edu
+ * @LastEditTime: 2025-02-20 03:26:46
+ * @FilePath: /TuneSync/src/app/(tabs)/setting/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import BottomUpPanel from '@/components/BottomUpPanel'
 import { Setting } from '@/components/Setting'
 import { screenPadding } from '@/constants/tokens'
@@ -16,6 +24,9 @@ const SettingScreen = () => {
 		switch (id) {
 			case 'add':
 				router.push(`/(tabs)/setting/resource`)
+				break
+			case 'statistics':
+				router.push(`/(tabs)/setting/mediaCenter`)
 				break
 			case 'folder':
 				router.push(`/(tabs)/setting/folder`)

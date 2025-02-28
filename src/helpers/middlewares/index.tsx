@@ -5,7 +5,6 @@ import React, { useCallback, useState } from 'react'
 import {
 	Linking,
 	Pressable,
-	ScrollView,
 	StyleSheet,
 	Switch,
 	Text,
@@ -14,41 +13,47 @@ import {
 	View,
 } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
-import { MiddlewareEntry, middlewareRegistry } from './const'
+import { Checkbox } from 'react-native-paper'
+import { MiddlewareEntry, Target, Task } from './const'
 
 interface Props {
 	onSave?: (updatedList: MiddlewareEntry[]) => void
 }
 
-export const MiddlewareConfigPage: React.FC<Props> = ({ onSave }) => {
+export const MiddlewareConfigPage: React.FC<Props> = () => {
 	const { middlewareConfigs, setConfig: save } = useMiddleware()
 	const [middlewareList, setMiddlewareList] = useState<MiddlewareEntry[]>([...middlewareConfigs])
-
-	// 保存初始状态用于比较
-	const [initialList] = useState(JSON.stringify(middlewareRegistry))
 
 	// 控制API Key的可见性
 	const [apiKeyVisibleMap, setApiKeyVisibleMap] = useState<Record<string, boolean>>({})
 
-	const onDragEnd = useCallback(({ data }) => {
-		const updated = data.map((item: MiddlewareEntry, index: number) => ({ ...item, order: index }))
+	const onDragEnd = useCallback(({ data }: any) => {
+		const updated = data.map(
+			(item: MiddlewareEntry, index: number) => ({ ...item, order: index }) as MiddlewareEntry,
+		) // Ensure type conformity
 		setMiddlewareList(updated)
 	}, [])
 
 	const toggleEnabled = (id: string) => {
-		const newList = middlewareList.map((item) =>
-			item.id === id ? { ...item, enabled: !item.enabled } : item,
-		)
+		const newList = middlewareList.map((item) => {
+			if (item.id === id) {
+				return { ...item, enabled: !item.enabled } as MiddlewareEntry // Ensure type conformity
+			}
+			return item as MiddlewareEntry // Ensure type conformity
+		})
 		setMiddlewareList(newList)
 	}
 
 	const setConfig = (id: string, key: string, value: any) => {
 		const newList = middlewareList.map((item) => {
+			console.log('setConfig', id, key, value, middlewareList)
+
 			if (item.id === id) {
-				return { ...item, config: { ...item.config, [key]: value } }
+				return { ...item, config: { ...item.config, [key]: value } } as MiddlewareEntry
 			}
 			return item
 		})
+
 		setMiddlewareList(newList)
 	}
 
@@ -71,7 +76,7 @@ export const MiddlewareConfigPage: React.FC<Props> = ({ onSave }) => {
 	const renderFallbackConfig = (item: MiddlewareEntry) => {
 		const apiKeyVisible = !!apiKeyVisibleMap[item.id]
 		return (
-			<View style={styles.configContainer}>
+			<>
 				<View style={styles.configRow}>
 					<Text style={styles.configLabel}>API Source:</Text>
 					<TouchableOpacity
@@ -104,11 +109,32 @@ export const MiddlewareConfigPage: React.FC<Props> = ({ onSave }) => {
 						</TouchableOpacity>
 					</View>
 				</View>
-			</View>
+			</>
 		)
 	}
 
 	const renderItem = ({ item, drag, isActive }: RenderItemParams<MiddlewareEntry>) => {
+		let targets = {} as Target
+		let tasks = {} as Task
+		if (item?.config?.targets) {
+			targets = item?.config?.targets
+		} else if (item.id === 'base') {
+			targets = { mp3: true, flac: false, others: true }
+		} else {
+			targets = { mp3: false, flac: true, others: false }
+		}
+		if (item?.config?.tasks) {
+			tasks = item?.config?.tasks
+		} else {
+			tasks = {
+				title: true,
+				description: false,
+				artwork: true,
+				album: true,
+				artist: true,
+				releaseDate: true,
+			}
+		}
 		return (
 			<View style={[styles.itemContainer, isActive && { backgroundColor: '#333' }]}>
 				{/* 拖拽手柄区域 */}
@@ -119,7 +145,63 @@ export const MiddlewareConfigPage: React.FC<Props> = ({ onSave }) => {
 				<View style={styles.infoContainer}>
 					<Text style={styles.itemTitle}>{item.name}</Text>
 					<Text style={styles.itemDesc}>{item.description}</Text>
-					{item.id === 'fallback' && renderFallbackConfig(item)}
+					<View style={styles.configContainer}>
+						<View style={styles.configRow}>
+							<Text style={styles.configLabel}>Targets:</Text>
+							<View style={styles.checkboxContainer}>
+								{Object.keys(targets).map((el) => {
+									return (
+										<View key={el} style={styles.checkboxContainer}>
+											<Text style={styles.checkboxLabel}>{el}</Text>
+											<Checkbox
+												theme={{
+													dark: true,
+													version: 3,
+													mode: 'exact',
+													colors: { primary: colors.primary },
+												}}
+												status={targets[el as keyof Target] ? 'checked' : 'unchecked'}
+												onPress={() => {
+													setConfig(item.id, 'targets', {
+														...targets,
+														[el as keyof Target]: !targets[el as keyof Target],
+													})
+												}}
+											/>
+										</View>
+									)
+								})}
+							</View>
+						</View>
+						<View style={styles.configRow}>
+							<Text style={styles.configLabel}>Tasks:</Text>
+							<View style={styles.checkboxContainer}>
+								{Object.keys(tasks).map((el) => {
+									return (
+										<View key={el} style={styles.checkboxContent}>
+											<Text style={styles.checkboxLabel}>{el}</Text>
+											<Checkbox
+												theme={{
+													dark: true,
+													version: 3,
+													mode: 'exact',
+													colors: { primary: colors.primary },
+												}}
+												status={tasks[el as keyof Task] ? 'checked' : 'unchecked'}
+												onPress={() => {
+													setConfig(item.id, 'tasks', {
+														...tasks,
+														[el]: !tasks[el as keyof Task],
+													})
+												}}
+											/>
+										</View>
+									)
+								})}
+							</View>
+						</View>
+						{item.id === 'fallback' && renderFallbackConfig(item)}
+					</View>
 				</View>
 				<View style={styles.controls}>
 					<Switch
@@ -135,27 +217,44 @@ export const MiddlewareConfigPage: React.FC<Props> = ({ onSave }) => {
 
 	return (
 		<View style={styles.container}>
-			<ScrollView contentContainerStyle={styles.scrollContent}>
-				<View style={{ flex: 1, marginBottom: 16 }}>
-					<DraggableFlatList
-						data={middlewareList.sort((a, b) => a.order - b.order)}
-						keyExtractor={(item) => item.id}
-						renderItem={renderItem}
-						onDragEnd={onDragEnd}
-					/>
-				</View>
-				{modified && (
-					<TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-						<Text style={styles.saveButtonText}>Save</Text>
-					</TouchableOpacity>
-				)}
-			</ScrollView>
+			<View style={{ flex: 1, marginBottom: 20 }}>
+				<DraggableFlatList
+					data={middlewareList.sort((a, b) => a.order - b.order)}
+					keyExtractor={(item) => item.id}
+					renderItem={renderItem}
+					onDragEnd={onDragEnd}
+					ListFooterComponent={() => {
+						return (
+							modified && (
+								<TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+									<Text style={styles.saveButtonText}>Save</Text>
+								</TouchableOpacity>
+							)
+						)
+					}}
+				/>
+			</View>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1, backgroundColor: '#000' },
+	checkboxContainer: {
+		flex: 1,
+		display: 'flex',
+		flexWrap: 'wrap',
+		flexDirection: 'row',
+	},
+	checkboxContent: {
+		width: 80,
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	checkboxLabel: { color: '#ccc' },
+	checkbox: {
+		alignSelf: 'center',
+	},
+	container: { flex: 1, backgroundColor: colors.background, padding: 8, paddingBottom: 80 },
 	scrollContent: {
 		padding: 16,
 	},
@@ -192,13 +291,12 @@ const styles = StyleSheet.create({
 	configContainer: {
 		marginTop: 8,
 		padding: 8,
-		backgroundColor: '#111',
 		borderRadius: 4,
 	},
 	configRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		marginBottom: 8,
+		marginBottom: 20,
 	},
 	configLabel: {
 		color: '#ccc',
@@ -236,12 +334,15 @@ const styles = StyleSheet.create({
 	saveButton: {
 		backgroundColor: colors.primary,
 		padding: 12,
+
 		borderRadius: 4,
+		margin: 16,
 		alignItems: 'center',
 	},
 	saveButtonText: {
 		color: colors.text,
 		fontWeight: 'bold',
 		fontSize: 16,
+		// marginBottom: 16,
 	},
 })

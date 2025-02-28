@@ -35,7 +35,7 @@ const TracksListItemComponent = ({
 	if (!track) return null
 
 	return (
-		<TouchableHighlight onPress={handlePress}>
+		<TouchableHighlight underlayColor="transparent" onPress={handlePress}>
 			<View style={styles.trackItemContainer}>
 				{isActive ? (
 					<TracksListItemHeaderActive
