@@ -6,7 +6,9 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { useIsFocused } from '@react-navigation/native'
 import { router } from 'expo-router'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import { TouchableRipple } from 'react-native-paper'
 
 const numColumns = 3
@@ -15,8 +17,8 @@ const size = Dimensions.get('window').width / numColumns - 12
 const GridView = () => {
 	const [pinnedList, setPinnedList] = useState([] as any)
 	const isFocused = useIsFocused()
-	const { indexingList } = useIndexStore((state) => state)
-
+	const { indexingList, remove } = useIndexStore((state) => state)
+	const { t } = useTranslation()
 	const { setClient } = useCurrentClientStore()
 	useEffect(() => {
 		if (isFocused) {
@@ -85,10 +87,19 @@ const GridView = () => {
 				}}
 				rippleColor="rgba(0, 0, 0, .32)"
 			>
-				<View style={styles.item}>
-					<AntDesign name="star" size={24} color={colors.primary} />
-					<Text style={styles.title}>{truncateFileName(item.title, 12)}</Text>
-				</View>
+				<ContextMenu
+					actions={[{ title: t('common.delete'), systemIcon: 'trash' }]}
+					onPress={(e) => {
+						if (e.nativeEvent.name === '删除') {
+							remove(item.filename)
+						}
+					}}
+				>
+					<View style={styles.item}>
+						<AntDesign name="star" size={24} color={colors.primary} />
+						<Text style={styles.title}>{truncateFileName(item.title, 12)}</Text>
+					</View>
+				</ContextMenu>
 			</TouchableRipple>
 		)
 	}
@@ -101,7 +112,6 @@ const GridView = () => {
 				keyExtractor={(item) => item.title + item.etag}
 				numColumns={numColumns}
 				columnWrapperStyle={styles.row}
-				style={{ backgroundColor: 'black' }}
 			/>
 		</View>
 	)
@@ -111,7 +121,7 @@ const styles = StyleSheet.create({
 	container: {
 		paddingHorizontal: 5,
 		paddingTop: 20,
-		backgroundColor: 'black',
+		backgroundColor: colors.background,
 		flex: 1,
 	},
 	item: {

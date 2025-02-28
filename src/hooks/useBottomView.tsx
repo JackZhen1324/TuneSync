@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import BottomSheet from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 type CustomBottomSheet = {
@@ -16,9 +16,19 @@ const CustomBottomSheet: React.FC<CustomBottomSheet> = (props) => {
 	const { t } = useTranslation()
 
 	// variables
-
-	const snapPoints = useMemo(() => ['1%', '25%', '50%', '90%'], [])
-
+	const snapPoints = useMemo(() => ['1%', '50%', '70%', '90%'], [])
+	const renderBackdrop = useCallback(
+		(props) => (
+			<BottomSheetBackdrop
+				{...props}
+				disappearsOnIndex={-1}
+				appearsOnIndex={0}
+				opacity={0}
+				pressBehavior="close" // 这里让点击空白区域关闭 BottomSheet
+			/>
+		),
+		[],
+	)
 	return (
 		<BottomSheet
 			enablePanDownToClose={true}
@@ -29,6 +39,7 @@ const CustomBottomSheet: React.FC<CustomBottomSheet> = (props) => {
 			index={0}
 			snapPoints={snapPoints}
 			enableDynamicSizing={false}
+			backdropComponent={renderBackdrop}
 		>
 			<BlurView
 				intensity={80}
