@@ -13,6 +13,9 @@ type LyricLine = {
 /** 组件 Props */
 type LyricsDisplayProps = {
 	lyrics: LyricLine[]
+	hideControler?: boolean
+	refreshRate?: number
+	fontSize?: number
 }
 
 /**
@@ -66,13 +69,14 @@ function interpolateGrayToWhite(progress: number) {
  * 并且只有“当前行”才会根据进度来着色；其他行恢复灰色
  */
 const CharColoredLine: React.FC<{
+	fontSize: number
 	isFinished: boolean
 	transY: Animated.Value
 	lyric: LyricLine
 	lineProgress: number // 0~1
 	isActiveLine: boolean
 	onPress: () => void
-}> = ({ isFinished, transY, lyric, lineProgress, isActiveLine, onPress }) => {
+}> = ({ fontSize, isFinished, transY, lyric, lineProgress, isActiveLine, onPress }) => {
 	// 将一句拆分为字符数组
 	const chars = lyric.line.split('')
 	const totalChars = chars.length
@@ -91,6 +95,9 @@ const CharColoredLine: React.FC<{
 					style={[
 						styles.baseLineText,
 						isActiveLine ? styles.activeLineText : styles.inactiveLineText,
+						{
+							fontSize: fontSize,
+						},
 					]}
 				>
 					{chars.map((char, i) => {
@@ -124,7 +131,12 @@ const CharColoredLine: React.FC<{
 	)
 }
 
-const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics }) => {
+const LyricsDisplay: React.FC<LyricsDisplayProps> = ({
+	lyrics,
+	refreshRate,
+	fontSize,
+	hideControler,
+}) => {
 	const flatListRef = useRef<FlatList<LyricLine>>(null)
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const [isManualScroll, setIsManualScroll] = useState(false)
@@ -134,7 +146,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics }) => {
 	const transYs = useRef(lyrics.map(() => new Animated.Value(0)))
 
 	// 使用 useProgress 获取更频繁的播放时间更新（这里每16.67ms更新一次）
-	const { position } = useProgress(16.67)
+	const { position } = useProgress(refreshRate ?? 16.67)
 	useEffect(() => {
 		return () => {
 			// 清理定时器
@@ -226,6 +238,7 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics }) => {
 
 		return (
 			<CharColoredLine
+				fontSize={fontSize ?? 20}
 				isFinished={isFinished}
 				transY={transYs.current[index]}
 				lyric={item}
@@ -262,18 +275,20 @@ const LyricsDisplay: React.FC<LyricsDisplayProps> = ({ lyrics }) => {
 					renderItem={renderItem}
 					getItemLayout={getItemLayout}
 					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ paddingVertical: 80, paddingBottom: 450 }}
+					contentContainerStyle={{ paddingTop: 0, paddingVertical: 80, paddingBottom: 450 }}
 					onScrollBeginDrag={handleScrollBeginDrag}
 					onScrollEndDrag={handleScrollEndDrag}
 				/>
 			</View>
 			{/* 这里可放进度条/播放控制等 */}
-			<View style={styles.controlerContainer}>
-				<View style={{ marginTop: 'auto' }}>
-					<PlayerProgressBar style={{ marginTop: 32 }} />
-					<PlayerControls style={{ marginTop: 40 }} />
+			{!hideControler && (
+				<View style={styles.controlerContainer}>
+					<View style={{ marginTop: 'auto' }}>
+						<PlayerProgressBar style={{ marginTop: 32 }} />
+						<PlayerControls style={{ marginTop: 40 }} />
+					</View>
 				</View>
-			</View>
+			)}
 		</>
 	)
 }

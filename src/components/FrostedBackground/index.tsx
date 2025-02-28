@@ -1,3 +1,4 @@
+import { useLrcLoader } from '@/helpers/LyricLoader'
 import { useCoverflowStore } from '@/store/coverflow'
 import { BlurView } from 'expo-blur'
 import React, { useEffect, useRef } from 'react'
@@ -10,8 +11,9 @@ import {
 	View,
 } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { useIsPlaying } from 'react-native-track-player'
+import { useActiveTrack, useIsPlaying } from 'react-native-track-player'
 import { FloatingPlayer } from '../FloatingPlayer'
+import LyricsDisplay from '../LyricsDisplay'
 
 interface FrostedBackgroundProps {
 	source: string
@@ -32,6 +34,14 @@ const FrostedBackground: React.FC<FrostedBackgroundProps> = ({
 	const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 	const widthAnimiation = useRef(new Animated.Value(80)).current
 	const isPlaying = useIsPlaying()
+	const activeTrackObj = useActiveTrack()
+	const { lyrics, loadLrc } = useLrcLoader(activeTrackObj)
+
+	useEffect(() => {
+		if (!activeTrackObj?.formatedTitle) return
+
+		loadLrc(activeTrackObj.filename, activeTrackObj.formatedTitle)
+	}, [activeTrackObj])
 	const { togleDetail } = useCoverflowStore()
 	useEffect(() => {
 		if (isPlaying.playing) {
@@ -75,6 +85,25 @@ const FrostedBackground: React.FC<FrostedBackgroundProps> = ({
 							bottom: 0,
 						}}
 					/>
+					{isPlaying.playing && (
+						<View
+							style={{
+								height: 50,
+								width: 300,
+								position: 'absolute',
+								right: 10,
+
+								bottom: 10,
+							}}
+						>
+							<LyricsDisplay
+								fontSize={12}
+								refreshRate={33.34}
+								hideControler
+								lyrics={lyrics}
+							></LyricsDisplay>
+						</View>
+					)}
 				</View>
 			</View>
 		</TouchableWithoutFeedback>
