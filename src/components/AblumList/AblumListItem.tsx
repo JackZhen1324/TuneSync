@@ -16,7 +16,7 @@ export const AblumListItem = ({ playlist, ...props }: PlaylistListItemProps) => 
 	const isPlaylist = playlist.type == 'playlist'
 
 	return (
-		<TouchableHighlight activeOpacity={0.8} {...props}>
+		<TouchableHighlight underlayColor="transparent" activeOpacity={0.8} {...props}>
 			<View style={styles.playlistItemContainer}>
 				<View>
 					{isAction ? (
@@ -25,7 +25,7 @@ export const AblumListItem = ({ playlist, ...props }: PlaylistListItemProps) => 
 							onPress={() => {
 								// router.push('/(tabs)/setting/resource')
 							}}
-							rippleColor="rgba(0, 0, 0, .32)"
+							rippleColor="transparent"
 						>
 							<View style={styles.item}>
 								<MaterialIcons name="add" size={50} color={colors.primary} />

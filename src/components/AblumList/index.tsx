@@ -45,18 +45,7 @@ export const AlbumsList = ({
 			setPanelVisible(false)
 		},
 	})
-	// const [panelRef, render] = useModalView({
-	// 	content: renderCreatePlaylist,
-	// 	headerLeft: t('playlistAdd.header'),
-	// 	headerRight: () => (
-	// 		<TouchableOpacity onPress={handleSubmit} disabled={isSubmitDisable}>
-	// 			<Text style={isSubmitDisable ? styles.createButtonDisable : styles.createButton}>
-	// 				{t('playlistAdd.save')}
-	// 			</Text>
-	// 		</TouchableOpacity>
-	// 	),
-	// 	allowDragging: true,
-	// })
+
 	const addItem = () => {
 		return {
 			name: t('collections.addPLaylsit'),
@@ -94,7 +83,8 @@ export const AlbumsList = ({
 					if (playlist.type === 'playlist') {
 						return (
 							<ContextMenu
-								actions={[{ title: '删除', systemIcon: 'trash' }]}
+								previewBackgroundColor="transparent"
+								actions={[{ title: t('common.delete'), systemIcon: 'trash' }]}
 								onPress={(e) => {
 									if (e.nativeEvent.name === '删除') {
 										removePlayList(playlist.name)
