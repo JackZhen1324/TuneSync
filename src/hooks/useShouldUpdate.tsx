@@ -27,7 +27,7 @@ export const useShouldUpdate = () => {
 		// 监听 count 变化
 		const unsubscribe = useIndexStore.subscribe(
 			(state) => state.indexingList.length,
-			(indexingList) => {
+			() => {
 				refreshLibraryWithCache()
 			},
 		)
