@@ -1,3 +1,4 @@
+import { colors } from '@/constants/tokens'
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as RNLocalize from 'react-native-localize'
@@ -103,11 +104,11 @@ const PrivacyPolicy = () => {
 const styles = StyleSheet.create({
 	safeArea: {
 		flex: 1,
-		backgroundColor: 'black',
+		backgroundColor: colors.background,
 	},
 	container: {
 		padding: 16,
-		backgroundColor: 'black',
+		backgroundColor: colors.background,
 	},
 	header: {
 		marginBottom: 16,

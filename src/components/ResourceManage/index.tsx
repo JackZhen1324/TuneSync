@@ -42,11 +42,10 @@ export function getContentAfterFirstDocuments(filePath: string) {
 const ResourceManage = () => {
 	const { t } = useTranslation()
 	const [added, setAdded] = useState([] as any)
-	const { client, setClient } = useCurrentClientStore()
+	const { setClient } = useCurrentClientStore()
 	const isFocused = useIsFocused()
 	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
 	const { setIndexingList, indexingList } = useIndexStore((state) => state)
-	const { setNeedUpdate } = useIndexStore()
 	const pickDirectory = useCallback(async () => {
 		try {
 			const result = await DocumentPicker.pickDirectory()
@@ -102,17 +101,15 @@ const ResourceManage = () => {
 				})
 
 				setIndexingList([...finalIndxingList, ...indexingList])
-				setNeedUpdate(true)
 			}
 		} catch (err) {
-			setNeedUpdate(false)
 			if (DocumentPicker.isCancel(err)) {
 				console.log('User cancelled the picker')
 			} else {
 				console.log('Unknown error: ', err)
 			}
 		}
-	}, [datasourceConfig, indexingList, setDatasourceConfig, setIndexingList, setNeedUpdate])
+	}, [datasourceConfig, indexingList, setDatasourceConfig, setIndexingList])
 
 	const readDirectoryFiles = async (directoryUri: string) => {
 		try {
@@ -170,7 +167,6 @@ const ResourceManage = () => {
 									return indexItem.dir !== child
 								}),
 							)
-							setNeedUpdate(true)
 							RNFS.unlink(pendingRemove)
 						}
 						setDatasourceConfig(
@@ -179,14 +175,7 @@ const ResourceManage = () => {
 					}
 			}
 		},
-		[
-			datasourceConfig,
-			indexingList,
-			pickDirectory,
-			setDatasourceConfig,
-			setIndexingList,
-			setNeedUpdate,
-		],
+		[datasourceConfig, indexingList, pickDirectory, setDatasourceConfig, setIndexingList],
 	)
 
 	useEffect(() => {

@@ -25,7 +25,7 @@ const ConfigScreen = () => {
 	const [errors, setErrors] = useState({})
 	const { selected } = useLocalSearchParams()
 	const [hidePassword, setHidePassword] = React.useState(true)
-	const { setIndexingList, indexingList, setNeedUpdate } = useIndexStore((state) => state)
+	const { setIndexingList, indexingList } = useIndexStore((state) => state)
 	const { datasourceConfig, setDatasourceConfig } = useDatasourceConfig((state) => state)
 
 	const loadConfig = useCallback(async () => {
@@ -75,16 +75,8 @@ const ConfigScreen = () => {
 			(config || [])?.filter((el: { location: string | string[] }) => el.location !== selected),
 		)
 		setIndexingList(indexingList.filter((el) => el?.config?.location === config.location))
-		setNeedUpdate(true)
 		router.back()
-	}, [
-		datasourceConfig,
-		indexingList,
-		selected,
-		setDatasourceConfig,
-		setIndexingList,
-		setNeedUpdate,
-	])
+	}, [datasourceConfig, indexingList, selected, setDatasourceConfig, setIndexingList])
 	const saveConfig = async () => {
 		if (!validate()) {
 			return
@@ -117,7 +109,6 @@ const ConfigScreen = () => {
 
 				setDatasourceConfig(newConfig)
 				router.back()
-				setNeedUpdate(true)
 			} else {
 				Alert.alert('Error', 'config exist!')
 			}

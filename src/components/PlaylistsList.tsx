@@ -5,7 +5,7 @@ import { utilsStyles } from '@/styles'
 import { FlashList } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import { useCallback, useRef, useState } from 'react'
-import { LayoutAnimation, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TrackPlayer, { useActiveTrack as useActiveTrackAlternative } from 'react-native-track-player'
 import { PlayListItem } from './PlaylistListItem'
@@ -36,10 +36,6 @@ export const PlaylistsList = () => {
 			if (currentTrack?.basename === item.title) {
 				TrackPlayer.play()
 			}
-			// This must be called before `LayoutAnimation.configureNext` in order for the animation to run properly.
-			list.current?.prepareForLayoutAnimationRender()
-			// After removing the item, we can start the animation.
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 		},
 		[currentTrack?.basename, remove, setActiveTrack],
 	)

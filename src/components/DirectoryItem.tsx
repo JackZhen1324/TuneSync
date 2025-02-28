@@ -15,10 +15,10 @@ type DirectoryItemProps = {
 
 export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemProps) => {
 	const { basename, type, from } = data
-
+	// const { refreshLibraryWithCache } = useRefreshLibrary()
 	const { client: config } = useCurrentClientStore()
 	const [isPinned, setIsPinned] = useState(pinned)
-	const { indexingList, setIndexingList, setNeedUpdate } = useIndexStore((state) => state)
+	const { indexingList, setIndexingList } = useIndexStore((state) => state)
 	useEffect(() => {
 		setIsPinned(pinned)
 	}, [pinned])
@@ -45,7 +45,7 @@ export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemPro
 		)
 	}, [])
 	return (
-		<TouchableHighlight key={basename} activeOpacity={0.8} {...props}>
+		<TouchableHighlight underlayColor="transparent" key={basename} activeOpacity={0.8} {...props}>
 			<View key={basename} style={styles.dirListItemContainer}>
 				<View
 					style={{
@@ -83,11 +83,11 @@ export const DirectoryItem = ({ mode, data, pinned, ...props }: DirectoryItemPro
 									} else {
 										setIndexingList([{ dir: data.filename, config, from: from }])
 									}
-									setNeedUpdate(true)
+									// refreshLibraryWithCache()
 								} else {
 									el = el.filter((e: { dir: any }) => e.dir !== data.filename)
 									setIndexingList(el)
-									setNeedUpdate(true)
+									// refreshLibraryWithCache()
 									// storage.set('indexList', JSON.stringify(el))
 								}
 							}}
