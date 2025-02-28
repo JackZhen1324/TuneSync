@@ -66,6 +66,13 @@ const ConfigScreen = () => {
 		if (!password) {
 			newErrors.password = 'Password is required'
 		}
+		if (location) {
+			const regex = /^https:\/\/([a-zA-Z0-9.-]+)(:\d+)?$/
+			const isvalid = location.match(regex)
+			if (!isvalid) {
+				newErrors.location = 'Please give a https location'
+			}
+		}
 		setErrors(newErrors)
 		return Object.keys(newErrors).length === 0
 	}
