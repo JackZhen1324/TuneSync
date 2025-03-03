@@ -1,15 +1,11 @@
 import { colors } from '@/constants/tokens'
 import { useAlbums, useArtists, useTracks } from '@/store/library'
 import { useTaskStore } from '@/store/task'
-import { MaterialIcons } from '@expo/vector-icons'
-import { FlashList } from '@shopify/flash-list'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import { StopPropagation } from '../utils/StopPropagation'
 export default function MusicScraperDarkScreen() {
-	const { logs, resetLogs, running } = useTaskStore()
-
+	const { running } = useTaskStore()
 	const scrapingTasks = running ? [running] : []
 
 	// 示例中的本地状态，可替换成真实数据
@@ -92,34 +88,6 @@ export default function MusicScraperDarkScreen() {
 						// keyExtractor={(item) => item.id}
 						renderItem={renderTaskItem}
 					/>
-				)}
-			</View>
-
-			{/* 刮削日志 */}
-			<View style={styles.logSection}>
-				<View style={styles.sectionHeader}>
-					{/* <View style={styles.sectionTitle}> */}
-					<Text style={styles.sectionTitle}>{t('statistics.logs')}</Text>
-					{/* </View> */}
-					<View style={styles.sectionOperation}>
-						<StopPropagation>
-							<MaterialIcons
-								onPress={() => {
-									console.log('reseting')
-
-									resetLogs()
-								}}
-								name="delete-outline"
-								size={20}
-								color={colors.primary}
-							/>
-						</StopPropagation>
-					</View>
-				</View>
-				{logs.length === 0 ? (
-					<Text style={styles.noDataText}>{t('statistics.noLogs')}</Text>
-				) : (
-					<FlashList estimatedItemSize={20} data={logs} renderItem={renderLogItem} />
 				)}
 			</View>
 		</View>
