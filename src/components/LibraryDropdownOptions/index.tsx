@@ -2,7 +2,7 @@
  * @Author: Zhen Qian zqian15@asu.edu
  * @Date: 2025-02-20 17:09:06
  * @LastEditors: zhen qian xhdp123@126.com
- * @LastEditTime: 2025-02-28 14:03:49
+ * @LastEditTime: 2025-03-01 18:54:56
  * @FilePath: /TuneSync/src/hooks/useLibraryRefresh.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,7 +16,7 @@ import { useResumeMetadataExtraction } from '../../hooks/useMetadataExtration'
 import { useRefreshLibrary } from '../../hooks/useRefreshLibrary'
 import useThemeColor from '../../hooks/useThemeColor'
 export default () => {
-	const { refreshLibrary, refreshLibraryWithCache } = useRefreshLibrary()
+	const { refreshLibrary, refreshLibraryWithCacheWithoutDebounce } = useRefreshLibrary()
 	const { refreshMetadata } = useResumeMetadataExtraction()
 	const theme = useThemeColor()
 	const { loading, current } = useIndexStore()
@@ -31,7 +31,7 @@ export default () => {
 			id: 'refresh-library-partial',
 			title: 'Refresh library',
 			image: 'reload',
-			action: refreshLibraryWithCache,
+			action: refreshLibraryWithCacheWithoutDebounce,
 		},
 		{
 			id: 'refresh-library',

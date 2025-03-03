@@ -2,14 +2,14 @@
  * @Author: Zhen Qian zqian15@asu.edu
  * @Date: 2025-02-20 01:46:34
  * @LastEditors: zhen qian xhdp123@126.com
- * @LastEditTime: 2025-02-28 01:36:24
+ * @LastEditTime: 2025-03-03 17:17:16
  * @FilePath: /TuneSync/src/store/task.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 // import library from '@/assets/data/library.json'
 import { getFormatedDate } from '@/helpers/utils'
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, subscribeWithSelector } from 'zustand/middleware'
 import { storage } from './mkkv'
 
 interface TaskState {
@@ -25,6 +25,8 @@ interface TaskState {
 	scanningTaskQueue: any[]
 	scrapingTaskQueue: any[]
 	historyTask: string[]
+	dropTaskSignal: boolean
+	dropOldTask: () => void
 	resetLogs: () => void
 	createLog: (data: { type: 'normal' | 'success' | 'warning' | 'error'; body: string }) => void
 	removeTask: (data: { type: 'scanning' | 'scraping'; body: any }) => void
@@ -34,13 +36,22 @@ interface TaskState {
 const timestamp = getFormatedDate()
 export const useTaskStore = create<TaskState>()(
 	persist(
-		(set) => ({
+		subscribeWithSelector((set) => ({
 			logs: [],
+			dropTaskSignal: false,
 			running: undefined,
 			scrapingTaskSize: 0,
 			scanningTaskQueue: [],
 			scrapingTaskQueue: [],
 			historyTask: [],
+			dropOldTask: () => {
+				set((state) => {
+					const { dropTaskSignal } = state
+					return {
+						dropTaskSignal: !dropTaskSignal,
+					}
+				})
+			},
 			resetTask: () => {
 				set(() => {
 					return {
@@ -98,23 +109,24 @@ export const useTaskStore = create<TaskState>()(
 			},
 
 			setTaskQueue: (data) => {
-				set((state) => {
+				set(() => {
 					const { type, body } = data
-					const log = `[${timestamp}]: ${type} task start`
+					const log = `${type} task start`
 					const running = {
 						id: type,
 						name: type,
 						progress: `0`,
 						status: 'starting',
 					}
-					state.createLog({ type: 'normal', body: log })
+
 					if (type === 'scanning') {
 						return {
 							scanningTaskQueue: body,
-							scrapingTaskSize: 1,
 							running: running,
 						}
 					} else if (type === 'scraping') {
+						console.log('body', body.length)
+
 						return {
 							scrapingTaskQueue: body,
 							scrapingTaskSize: body.length,
@@ -123,7 +135,7 @@ export const useTaskStore = create<TaskState>()(
 					}
 				})
 			},
-		}),
+		})),
 		{
 			name: 'taskQueue', // 存储在 AsyncStorage 中的键名
 			storage: {

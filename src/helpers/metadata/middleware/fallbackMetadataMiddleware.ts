@@ -1,8 +1,8 @@
 /*
  * @Author: Zhen Qian zqian15@asu.edu
  * @Date: 2024-12-24 15:15:35
- * @LastEditors: Zhen Qian zqian15@asu.edu
- * @LastEditTime: 2025-02-20 02:58:49
+ * @LastEditors: zhen qian xhdp123@126.com
+ * @LastEditTime: 2025-03-02 21:57:23
  * @FilePath: /TuneSync/src/helpers/metadata/middleware/fallbackMetadataMiddleware.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,11 +17,12 @@ const singerInfoCache: Record<string, any> = {}
 
 export const fallbackMetadataMiddleware: MetadataMiddleware = async (ctx, next) => {
 	const { metadata, params } = ctx
+	const { signal } = params
 	const config = params.middlewareConfigs.find((el) => el.id === 'fallback')
 	const supportedList = getSupportList(config?.config)
 	const isSupport = supportedList.find((el) => params.title.includes(el))
 
-	if (isSupport) {
+	if (isSupport && !signal.aborted) {
 		const tasks = config?.config?.tasks
 		const configs = {
 			api_key: config?.config?.apiKey || 'cff50af5e282bff668e6439cc947756f',

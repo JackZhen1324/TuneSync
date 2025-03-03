@@ -1,8 +1,8 @@
 /*
  * @Author: Zhen Qian zqian15@asu.edu
  * @Date: 2025-02-13 18:25:50
- * @LastEditors: Zhen Qian zqian15@asu.edu
- * @LastEditTime: 2025-02-20 03:43:34
+ * @LastEditors: zhen qian xhdp123@126.com
+ * @LastEditTime: 2025-03-03 17:19:09
  * @FilePath: /TuneSync/src/helpers/utils.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -78,4 +78,19 @@ export const getFormatedDate = () => {
 	const mm = String(today.getMinutes()).padStart(2, '0') //获取当前分钟数(0-59)
 	const ss = String(today.getSeconds()).padStart(2, '0') //获取当前秒数(0-59)
 	return '[' + yyyy + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss + ']'
+}
+
+export function filterOuterPaths(paths: string[]) {
+	const sortedPaths = paths.sort((a, b) => a.dir.length - b.dir.length)
+	const resultTemp = new Set<string>()
+	sortedPaths.forEach(({ dir: path }) => {
+		const check = ![...resultTemp].some((el) => {
+			return path.startsWith(el)
+		})
+		if (check) {
+			resultTemp.add(path)
+		}
+	})
+	const result = sortedPaths.filter((el) => [...resultTemp].includes(el.dir))
+	return [...result]
 }
