@@ -22,6 +22,7 @@ export interface FetchParams {
 	title: string
 	webdavUrl: string
 	middlewareConfigs: MiddlewareEntry[]
+	signal: AbortSignal
 }
 
 export interface MetadataContext {

@@ -1,8 +1,8 @@
 /*
  * @Author: Zhen Qian zqian15@asu.edu
  * @Date: 2024-12-24 15:15:35
- * @LastEditors: Zhen Qian zqian15@asu.edu
- * @LastEditTime: 2025-02-20 02:58:57
+ * @LastEditors: zhen qian xhdp123@126.com
+ * @LastEditTime: 2025-03-02 21:56:59
  * @FilePath: /TuneSync/src/helpers/metadata/middleware/baseMetadataMiddleware.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,11 +15,12 @@ import { getSupportList } from '../utils'
 
 export const baseMetadataMiddleware: MetadataMiddleware = async (ctx, next) => {
 	const { params, metadata } = ctx
-	const { title, webdavUrl } = params
+	const { title, webdavUrl, signal } = params
+
 	const config = params.middlewareConfigs.find((el) => el.id === 'base')
 	const supportedList = getSupportList(config?.config)
 	const isSupport = supportedList.find((el) => title.includes(el))
-	if (isSupport) {
+	if (isSupport && !signal.aborted) {
 		const rawData: any = await extractMetadataFromURL(webdavUrl)
 		const tasks = config?.config?.tasks
 		const { artwork: rawImage, ...meta } = rawData

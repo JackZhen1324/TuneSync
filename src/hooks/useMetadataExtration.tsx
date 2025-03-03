@@ -1,10 +1,17 @@
+/*
+ * @Author: zhen qian xhdp123@126.com
+ * @Date: 2025-02-20 15:32:13
+ * @LastEditors: zhen qian xhdp123@126.com
+ * @LastEditTime: 2025-03-03 17:17:35
+ * @FilePath: /TuneSync/src/hooks/useMetadataExtration.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { fetchMetadata } from '@/helpers/metadata'
 import { useActiveTrack, useLibraryStore } from '@/store/library'
 import { useTaskStore } from '@/store/task'
-import { useCallback, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import TrackPlayer from 'react-native-track-player'
 // import { asyncPool } from '@/utils/asyncPool' // 你可以把 asyncPool 单独封装一个工具文件
-import { debounce } from '@/helpers/debounce'
 import { useMiddleware } from '@/store/middleware'
 import { useTrackPlayerQueue } from './useTrackPlayerQueue'
 export const asyncPool = async (
@@ -14,6 +21,7 @@ export const asyncPool = async (
 ) => {
 	const ret = [] // 用来存储所有任务对应的 Promise
 	const executing: any[] = [] // 用来存储当前正在执行的任务（Promise）
+
 	for (const item of array) {
 		// 使用 Promise.resolve().then(...) 是为了保证 iteratorFn 返回的是一个 promise
 		const p = Promise.resolve().then(() => iteratorFn(item))
@@ -40,98 +48,86 @@ export const asyncPool = async (
 let updates: Array<{ title: string; url: string; pendingMeta?: boolean }> = []
 
 export function useResumeMetadataExtraction() {
-	const BATCH_SIZE = 1
-	const {
-		scrapingTaskQueue: taskQueue,
-		running,
-		removeTask,
-		createLog,
-		setTaskQueue,
-	} = useTaskStore()
+	const abortControllerRef = useRef<AbortController | null>(null) // 用于存储 AbortController 实例
+	const BATCH_SIZE = 50
+	const { scrapingTaskQueue: taskQueue, removeTask, setTaskQueue } = useTaskStore()
 
 	const { update } = useTrackPlayerQueue()
 	const { batchUpdate, tracks } = useLibraryStore()
 	const { setActiveTrack } = useActiveTrack()
 	const { middlewareConfigs } = useMiddleware()
-
-	// 防止重复执行的标志
-	const isBusy = useRef(false)
+	useEffect(() => {
+		useTaskStore.subscribe(
+			(state) => state.dropTaskSignal,
+			() => {
+				abortControllerRef.current?.abort()
+			},
+		)
+	}, [])
 	const refreshMetadata = () => {
 		setTaskQueue({
 			type: 'scraping',
 			body: tracks,
 		})
-		resumeMetadataExtraction()
+		resumeMetadataExtraction(tracks)
 	}
 
 	// 真正执行扫描、获取元数据的函数
-	const resumeMetadataExtraction = useCallback(
-		debounce(async () => {
-			console.log('resumeMetadataExtraction', taskQueue.length)
+	const resumeMetadataExtraction = async (queue = taskQueue) => {
+		let tasksQueue
+		if (queue) {
+			tasksQueue = queue
+		} else {
+			tasksQueue = taskQueue
+		}
+		console.log('tasksQueue', tasksQueue.length, queue.length)
 
-			// Clear updates array before starting
-			updates = []
-			isBusy.current = true
-			// Use asyncPool to limit concurrency
-			await asyncPool(5, taskQueue, async (el) => {
-				const { title, artist } = el
+		// 取消之前的任务
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort()
+		}
 
-				try {
-					// skip metadata fetching if it's already in the queue
-					if (!artist) {
-						const meta = await fetchMetadata({ title, webdavUrl: el.url, middlewareConfigs })
-						meta.title = title
-						// if (!signal.aborted) {
-						updates.push(meta)
-						if (updates.length % BATCH_SIZE === 0) {
-							batchUpdate(updates)
-							update(updates)
-							updates = []
-						}
+		// 创建新的 AbortController
+		abortControllerRef.current = new AbortController()
+		const { signal } = abortControllerRef.current
+		updates = []
+		if (signal.aborted) return
 
-						removeTask({
-							type: 'scraping',
-							body: el,
-						})
-						createLog({
-							type: 'success',
-							body: `${el.title} success`,
-						})
-						const currentSong = await TrackPlayer.getActiveTrack()
-						if (currentSong && currentSong.basename === el.title) {
-							setActiveTrack(meta)
-						}
-					} else {
-						removeTask({
-							type: 'scraping',
-							body: el,
-						})
-						createLog({
-							type: 'warning',
-							body: `Cache hitting, skip ${el.title} scraping!`,
-						})
+		await asyncPool(5, tasksQueue, async (el) => {
+			if (signal.aborted) return
+			const { title, artist } = el
+
+			try {
+				if (!artist) {
+					const meta = await fetchMetadata({ title, webdavUrl: el.url, middlewareConfigs, signal })
+					meta.title = title
+					updates.push(meta)
+
+					if (updates.length % BATCH_SIZE === 0) {
+						batchUpdate(updates)
+						update(updates)
+						updates = []
 					}
-					// Fetch metadata
-
-					// }
-				} catch (error) {
-					createLog({
-						type: 'error',
-						body: `Error fetching metadata for ${title}, ${error}`,
-					})
 					removeTask({ type: 'scraping', body: el })
-					console.error(`Error fetching metadata for ${title},  ${error}`)
-				}
-			})
 
-			// Process any remaining updates
-			if (updates.length > 0) {
-				batchUpdate(updates)
-				update(updates)
+					const currentSong = await TrackPlayer.getActiveTrack()
+					if (currentSong && currentSong.basename === el.title) {
+						setActiveTrack(meta)
+					}
+				} else {
+					removeTask({ type: 'scraping', body: el })
+				}
+			} catch (error) {
+				removeTask({ type: 'scraping', body: el })
+				console.error(`Error fetching metadata for ${title}, ${error}`)
 			}
-		}, 200),
-		[batchUpdate, createLog, middlewareConfigs, removeTask, setActiveTrack, taskQueue, update],
-	)
+		})
+
+		if (updates.length > 0) {
+			batchUpdate(updates)
+			update(updates)
+		}
+	}
 
 	// 当 taskQueue 有变化且没有在执行的时候，自动执行一次
 
@@ -139,6 +135,5 @@ export function useResumeMetadataExtraction() {
 	return {
 		refreshMetadata,
 		resumeMetadataExtraction,
-		isBusy,
 	}
 }

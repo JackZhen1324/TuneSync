@@ -46,8 +46,6 @@ export const MiddlewareConfigPage: React.FC<Props> = () => {
 
 	const setConfig = (id: string, key: string, value: any) => {
 		const newList = middlewareList.map((item) => {
-			console.log('setConfig', id, key, value, middlewareList)
-
 			if (item.id === id) {
 				return { ...item, config: { ...item.config, [key]: value } } as MiddlewareEntry
 			}
@@ -151,7 +149,7 @@ export const MiddlewareConfigPage: React.FC<Props> = () => {
 							<View style={styles.checkboxContainer}>
 								{Object.keys(targets).map((el) => {
 									return (
-										<View key={el} style={styles.checkboxContainer}>
+										<View key={el} style={styles.checkboxContent}>
 											<Text style={styles.checkboxLabel}>{el}</Text>
 											<Checkbox
 												theme={{
