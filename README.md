@@ -88,3 +88,7 @@ Not ready to release
 ### iOS
 
 Distribute via TestFlight. Try install from https://testflight.apple.com/join/HBQ91aZW or contack me via zqian15@asu.edu for helps.
+
+## Acknowledgements
+This app was greatly inspired and enhanced by [Gionathas](https://github.com/gionathas)’s music app project. Building upon his work, I implemented features such as WebDAV support, song management, metadata scraping, and lyrics display. His contributions provided a solid foundation, and I truly appreciate his efforts. Thanks to his work, this project is open to contributions and redistribution, and I welcome anyone interested in improving and expanding it further.
+
