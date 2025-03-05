@@ -3,7 +3,7 @@ import { colors } from '@/constants/tokens'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const AboutPage = () => {
 	const { t } = useTranslation()
@@ -30,7 +30,7 @@ const AboutPage = () => {
 	}
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
+		<View style={styles.container}>
 			<View style={styles.content}>
 				<Image
 					source={logo} // 替换为你的 logo 路径
@@ -59,7 +59,7 @@ const AboutPage = () => {
 					<Text style={styles.optionText}>{t('about.privacy')}</Text>
 				</TouchableOpacity>
 			</View>
-		</ScrollView>
+		</View>
 	)
 }
 

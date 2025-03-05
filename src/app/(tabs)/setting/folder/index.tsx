@@ -90,7 +90,7 @@ const GridView = () => {
 				<ContextMenu
 					actions={[{ title: t('common.delete'), systemIcon: 'trash' }]}
 					onPress={(e) => {
-						if (e.nativeEvent.name === '删除') {
+						if (e.nativeEvent.name === t('common.delete')) {
 							remove(item.filename)
 						}
 					}}
