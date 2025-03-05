@@ -4,7 +4,6 @@ import { MovingText } from '@/components/MovingText'
 import { PlayerControls } from '@/components/PlayerControls'
 import { PlayerProgressBar } from '@/components/PlayerProgressbar'
 import { PlayerRepeatToggle } from '@/components/PlayerRepeatToggle'
-import { PlayerVolumeBar } from '@/components/PlayerVolumeBar'
 import { PlaylistsList } from '@/components/PlaylistsList'
 import PlaylistToggle from '@/components/PlaylistToggle'
 import { unknownTrackImageUri } from '@/constants/images'
@@ -137,7 +136,7 @@ const SongInfoRoute = ({ activeTrack, togglePlaylist, setIndex }: any) => {
 					<PlayerControls style={{ marginTop: 40 }} />
 				</View>
 
-				<PlayerVolumeBar style={{ marginTop: 'auto', marginBottom: 30 }} />
+				{/* <PlayerVolumeBar style={{ marginTop: 'auto', marginBottom: 30 }} /> */}
 
 				<View style={utilsStyles.centeredRow}>
 					<PlayerRepeatToggle size={30} style={{ marginBottom: 6, flex: 1 }} />

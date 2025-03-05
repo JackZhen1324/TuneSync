@@ -1,4 +1,3 @@
-import LibraryDropdownOptions from '@/components/LibraryDropdownOptions'
 import { StackScreenWithSearchBar } from '@/constants/layout'
 import { colors } from '@/constants/tokens'
 import { useTracks } from '@/store/library'
@@ -105,9 +104,9 @@ const PlaylistsScreenLayout = () => {
 						headerStyle: {
 							backgroundColor: colors.background,
 						},
-						headerRight: () => {
-							return <LibraryDropdownOptions></LibraryDropdownOptions>
-						},
+						// headerRight: () => {
+						// 	return <LibraryDropdownOptions></LibraryDropdownOptions>
+						// },
 						headerTintColor: colors.primary,
 					}}
 				/>

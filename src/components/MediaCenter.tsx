@@ -3,8 +3,9 @@ import { Playlist } from '@/helpers/types'
 import { useIndexStore } from '@/store/library'
 import { utilsStyles } from '@/styles'
 import { useIsFocused } from '@react-navigation/native'
+import { FlashList } from '@shopify/flash-list'
 import { memo, useEffect, useState } from 'react'
-import { FlatList, FlatListProps, Text, View } from 'react-native'
+import { FlatListProps, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { DirectoryItem } from './DirectoryItem'
 
@@ -30,13 +31,13 @@ export const MediaCenter = memo(
 			return () => {}
 		}, [indexingList, isFocused])
 		return (
-			<FlatList
+			<FlashList
 				style={{
 					padding: 8,
 					paddingHorizontal: 12,
 				}}
 				// keyExtractor={({ item }) => item.filename}
-				contentContainerStyle={{ paddingTop: 10, paddingBottom: 128 }}
+				contentContainerStyle={{ padding: 10, paddingBottom: 128 }}
 				ItemSeparatorComponent={ItemDivider}
 				ListFooterComponent={ItemDivider}
 				ListEmptyComponent={
@@ -61,7 +62,7 @@ export const MediaCenter = memo(
 						/>
 					)
 				}}
-				{...flatListProps}
+				// {...flatListProps}
 			/>
 		)
 	},

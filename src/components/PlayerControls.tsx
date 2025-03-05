@@ -1,14 +1,13 @@
 import { colors } from '@/constants/tokens'
 import { reCached } from '@/helpers/cache'
-import useCacheRefresh from '@/hooks/useCacheRefresh'
-import { useIsPlaying } from '@/hooks/useIsPlaying'
+
 import { FontAwesome6 } from '@expo/vector-icons'
 import { useDebounceFn } from 'ahooks'
-import { memo, useMemo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 import RNFS from 'react-native-fs'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { useIsPlaying } from 'react-native-track-player'
 type PlayerControlsProps = {
 	style?: ViewStyle
 }
@@ -33,36 +32,8 @@ export const PlayerControls = memo(({ style }: PlayerControlsProps) => {
 })
 
 export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps) => {
-	const { playing: playing, setIsPlaying: setIsPlay } = useIsPlaying()
-	const { cacheRefresh } = useCacheRefresh()
-	const scaleAnim = useSharedValue(1)
-	// const { skip } = useTrackPlayerQueue()
+	const { playing } = useIsPlaying()
 
-	const isPlay = useMemo(() => {
-		return playing
-	}, [JSON.stringify(playing)])
-	// 使用 useAnimatedStyle 来创建样式
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [{ scale: scaleAnim.value }],
-		}
-	})
-	const handlePressIn = () => {
-		scaleAnim.value = withSpring(0.8) // 按下时缩小
-	}
-
-	const handlePressOut = () => {
-		setIsPlay(!isPlay)
-		scaleAnim.value = withSpring(1) // 松开时恢复原样
-	}
-	const handlePlay = () => {
-		if (isPlay) {
-			TrackPlayer.pause()
-		} else {
-			TrackPlayer.play()
-			cacheRefresh()
-		}
-	}
 	return (
 		<View
 			style={[
@@ -70,14 +41,12 @@ export const PlayPauseButton = memo(({ style, iconSize = 48 }: PlayerButtonProps
 				style,
 			]}
 		>
-			<Animated.View style={animatedStyle}>
+			<Animated.View>
 				<TouchableOpacity
 					activeOpacity={0.85}
-					onPressIn={handlePressIn}
-					onPressOut={handlePressOut}
-					onPress={handlePlay}
+					onPress={playing ? TrackPlayer.pause : TrackPlayer.play}
 				>
-					<FontAwesome6 name={isPlay ? 'pause' : 'play'} size={iconSize} color={colors.text} />
+					<FontAwesome6 name={playing ? 'pause' : 'play'} size={iconSize} color={colors.text} />
 				</TouchableOpacity>
 			</Animated.View>
 		</View>

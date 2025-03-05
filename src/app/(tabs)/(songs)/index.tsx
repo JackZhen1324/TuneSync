@@ -8,7 +8,6 @@
  */
 import { TracksList } from '@/components/TracksList'
 import { trackTitleFilter } from '@/helpers/filter'
-import { generateTracksListId } from '@/helpers/miscellaneous'
 import { useNavigationSearch } from '@/hooks/useNavigationSearch'
 import { useLibraryStore } from '@/store/library'
 import { defaultStyles } from '@/styles'
@@ -34,12 +33,7 @@ const SongsScreen = () => {
 
 	return (
 		<View style={defaultStyles.container}>
-			<TracksList
-				id={generateTracksListId('songs', search)}
-				tracks={filteredTracks}
-				scrollEnabled={true}
-				search={search}
-			/>
+			<TracksList tracks={filteredTracks} scrollEnabled={true} search={search} />
 		</View>
 	)
 }
