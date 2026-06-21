@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Hero from "../../components/marketing/Hero";
+import DownloadSection from "../../components/marketing/DownloadSection";
 import FeatureGrid from "../../components/marketing/FeatureGrid";
 import ShowcaseSection from "../../components/marketing/ShowcaseSection";
 import CTASection from "../../components/marketing/CTASection";
@@ -16,6 +17,7 @@ export default async function HomePage({
   return (
     <>
       <Hero />
+      <DownloadSection />
       <FeatureGrid />
 
       <ShowcaseSection

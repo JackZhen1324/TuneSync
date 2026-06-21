@@ -27,6 +27,32 @@
     "subhead": "TuneSync 把服务器、文件夹与播放入口串联成一条更自然的路径：连接 WebDAV / SMB / NFS / FTP，整理本地曲库，逐行同步歌词，让 AI 智能推荐下一首，再用人声分离进入沉浸 K 歌。",
     "ctaPrimary": "开始使用",
     "ctaSecondary": "查看功能",
+    "downloadEyebrow": "下载",
+    "downloadTitle": "下载 TuneSync",
+    "downloadSubtitle": "先从 iPhone 开始，把自己的音乐服务器、本地曲库和播放器统一起来。其他平台正在准备中，敬请期待。",
+    "downloadAvailable": "当前可用",
+    "downloadComingSoon": "敬请期待",
+    "downloadIOSAction": "立即开始",
+    "downloadIOSAria": "前往 iOS 快速开始文档",
+    "downloadUnavailable": "暂未开放",
+    "downloadPlatforms": {
+      "ios": {
+        "label": "iOS",
+        "desc": "面向 iPhone 的原生体验，连接服务器、整理曲库并沉浸播放。"
+      },
+      "android": {
+        "label": "Android",
+        "desc": "Android 版本正在规划中，未来会带来同样完整的音乐管理体验。"
+      },
+      "macos": {
+        "label": "macOS",
+        "desc": "桌面端体验敬请期待，让更大的屏幕也能管理你的音乐世界。"
+      },
+      "windows": {
+        "label": "Windows",
+        "desc": "Windows 版本尚未开放，后续将覆盖更多听歌与整理场景。"
+      }
+    },
     "statProviders": "AI 服务商",
     "statProtocols": "网络协议",
     "statLangs": "界面语言",

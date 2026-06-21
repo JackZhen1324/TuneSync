@@ -27,6 +27,32 @@
     "subhead": "TuneSync connects servers, folders, and playback entry points into a more natural path: link WebDAV / SMB / NFS / FTP, organize your library, follow synced lyrics, let AI pick the next song, then dive into on-device karaoke.",
     "ctaPrimary": "Get started",
     "ctaSecondary": "See features",
+    "downloadEyebrow": "Download",
+    "downloadTitle": "Download TuneSync",
+    "downloadSubtitle": "Start on iPhone today and bring your music servers, local library, and player into one place. More platforms are in the works.",
+    "downloadAvailable": "Available now",
+    "downloadComingSoon": "Coming soon",
+    "downloadIOSAction": "Get started",
+    "downloadIOSAria": "Open the iOS getting started guide",
+    "downloadUnavailable": "Not available yet",
+    "downloadPlatforms": {
+      "ios": {
+        "label": "iOS",
+        "desc": "A native iPhone experience for connecting servers, organizing your library, and immersive playback."
+      },
+      "android": {
+        "label": "Android",
+        "desc": "Android is on the roadmap, with the same complete music management experience planned."
+      },
+      "macos": {
+        "label": "macOS",
+        "desc": "A desktop experience is coming later, bringing your music world to a larger screen."
+      },
+      "windows": {
+        "label": "Windows",
+        "desc": "Windows is not available yet, but more listening and organizing workflows are planned."
+      }
+    },
     "statProviders": "AI providers",
     "statProtocols": "Network protocols",
     "statLangs": "UI languages",
