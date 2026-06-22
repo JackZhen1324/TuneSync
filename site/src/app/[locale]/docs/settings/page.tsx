@@ -16,7 +16,12 @@ export default async function SettingsPage({
     <DocsArticle path="/docs/settings">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotSettings")} hint={t("shotHint")} tint="#64748b" />
+      <ScreenshotPlaceholder
+        label={t("shotSettings")}
+        hint={t("shotHint")}
+        screenshot="settings.png"
+        tint="#64748b"
+      />
 
       <h2>{t("appearance.title")}</h2>
       <KeyValueTable

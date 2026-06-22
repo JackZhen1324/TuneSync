@@ -16,7 +16,12 @@ export default async function DiscoveryPage({
     <DocsArticle path="/docs/discovery">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotDiscovery")} hint={t("shotHint")} tint="#ec4899" />
+      <ScreenshotPlaceholder
+        label={t("shotDiscovery")}
+        hint={t("shotHint")}
+        screenshot="discovery.png"
+        tint="#ec4899"
+      />
 
       <h2>{t("home.title")}</h2>
       <p>{t("home.body")}</p>

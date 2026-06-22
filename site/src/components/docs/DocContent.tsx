@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Info, Lightbulb, TriangleAlert, CheckCircle2 } from "lucide-react";
+import { asset } from "../../lib/assets";
 
 type CalloutVariant = "info" | "tip" | "warning" | "success";
 
@@ -71,12 +72,35 @@ export function Step({
 export function ScreenshotPlaceholder({
   label,
   hint,
+  screenshot,
   tint = "#3366ff",
 }: {
   label: string;
   hint?: string;
+  screenshot?: string;
   tint?: string;
 }) {
+  if (screenshot) {
+    return (
+      <figure className="my-6">
+        <div
+          className="mx-auto w-full max-w-[22rem] overflow-hidden rounded-[2rem] border bg-black shadow-card"
+          style={{ borderColor: "var(--border)" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={asset(`/screenshots/${screenshot}`)}
+            alt={label}
+            className="block h-auto w-full"
+          />
+        </div>
+        <figcaption className="mt-2 text-center text-xs text-[var(--fg-muted)]">
+          {label}
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
     <figure className="my-6">
       <div

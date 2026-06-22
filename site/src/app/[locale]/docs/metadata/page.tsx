@@ -16,7 +16,12 @@ export default async function MetadataPage({
     <DocsArticle path="/docs/metadata">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotMetadata")} hint={t("shotHint")} tint="#10b981" />
+      <ScreenshotPlaceholder
+        label={t("shotMetadata")}
+        hint={t("shotHint")}
+        screenshot="metadata.png"
+        tint="#10b981"
+      />
 
       <h2>{t("sources.title")}</h2>
       <p>{t("sources.body")}</p>

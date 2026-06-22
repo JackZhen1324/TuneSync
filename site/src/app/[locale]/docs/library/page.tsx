@@ -16,7 +16,12 @@ export default async function LibraryPage({
     <DocsArticle path="/docs/library">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotLibrary")} hint={t("shotHint")} tint="#0ea5e9" />
+      <ScreenshotPlaceholder
+        label={t("shotLibrary")}
+        hint={t("shotHint")}
+        screenshot="library.png"
+        tint="#0ea5e9"
+      />
 
       <h2>{t("protocols.title")}</h2>
       <p>{t("protocols.body")}</p>

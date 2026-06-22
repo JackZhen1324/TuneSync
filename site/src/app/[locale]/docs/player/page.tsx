@@ -16,7 +16,12 @@ export default async function PlayerPage({
     <DocsArticle path="/docs/player">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotPlayer")} hint={t("shotHint")} tint="#a855f7" />
+      <ScreenshotPlaceholder
+        label={t("shotPlayer")}
+        hint={t("shotHint")}
+        screenshot="player-lyrics.png"
+        tint="#a855f7"
+      />
 
       <h2>{t("modes.title")}</h2>
       <p>{t("modes.body")}</p>

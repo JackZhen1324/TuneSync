@@ -16,7 +16,12 @@ export default async function LyricsPage({
     <DocsArticle path="/docs/lyrics">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotLyrics")} hint={t("shotHint")} tint="#8b5cf6" />
+      <ScreenshotPlaceholder
+        label={t("shotLyrics")}
+        hint={t("shotHint")}
+        screenshot="lyrics.png"
+        tint="#8b5cf6"
+      />
 
       <h2>{t("modes.title")}</h2>
       <p>{t("modes.body")}</p>

@@ -32,6 +32,7 @@ export default async function FeaturesPage({
           t("library.featureB3"),
           t("library.featureB4"),
         ]}
+        screenshot="library.png"
         screenshotLabel={t("library.screenshot")}
         tint="#3366ff"
       />
@@ -46,6 +47,7 @@ export default async function FeaturesPage({
           t("player.featureB3"),
           t("player.featureB4"),
         ]}
+        screenshot="player-lyrics.png"
         screenshotLabel={t("player.screenshot")}
         tint="#a855f7"
         reverse
@@ -61,6 +63,7 @@ export default async function FeaturesPage({
           t("karaoke.featureB3"),
           t("karaoke.featureB4"),
         ]}
+        screenshot="karaoke.png"
         screenshotLabel={t("karaoke.screenshot")}
         tint="#f97316"
       />
@@ -75,6 +78,7 @@ export default async function FeaturesPage({
           t("ai.featureB3"),
           t("ai.featureB4"),
         ]}
+        screenshot="ai-dj.png"
         screenshotLabel={t("ai.screenshot")}
         tint="#06b6d4"
         reverse
@@ -89,6 +93,7 @@ export default async function FeaturesPage({
           t("metadata.featureB2"),
           t("metadata.featureB3"),
         ]}
+        screenshot="metadata.png"
         screenshotLabel={t("metadata.screenshot")}
         tint="#10b981"
       />
@@ -102,6 +107,7 @@ export default async function FeaturesPage({
           t("discovery.featureB2"),
           t("discovery.featureB3"),
         ]}
+        screenshot="discovery.png"
         screenshotLabel={t("discovery.screenshot")}
         tint="#ec4899"
         reverse

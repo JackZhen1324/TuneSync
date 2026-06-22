@@ -78,7 +78,11 @@ export default function Hero() {
         </div>
 
         <div className="relative mx-auto w-full max-w-xs md:max-w-sm">
-          <PhoneMockup label={t("phoneLabel")}>
+          <PhoneMockup
+            screenshot="home.png"
+            alt={t("phoneLabel")}
+            label={t("phoneLabel")}
+          >
             <div className="flex flex-col items-center gap-4">
               <div className="flex flex-col gap-2.5">
                 {[

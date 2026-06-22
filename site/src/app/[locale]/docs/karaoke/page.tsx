@@ -16,7 +16,12 @@ export default async function KaraokePage({
     <DocsArticle path="/docs/karaoke">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotKaraoke")} hint={t("shotHint")} tint="#f97316" />
+      <ScreenshotPlaceholder
+        label={t("shotKaraoke")}
+        hint={t("shotHint")}
+        screenshot="karaoke.png"
+        tint="#f97316"
+      />
 
       <h2>{t("how.title")}</h2>
       <p>{t("how.body")}</p>

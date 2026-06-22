@@ -16,7 +16,12 @@ export default async function GettingStartedPage({
     <DocsArticle path="/docs/getting-started">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotWelcome")} hint={t("shotHint")} tint="#3366ff" />
+      <ScreenshotPlaceholder
+        label={t("shotWelcome")}
+        hint={t("shotHint")}
+        screenshot="getting-started.png"
+        tint="#3366ff"
+      />
 
       <h2>{t("overview.title")}</h2>
       <p>{t("overview.body")}</p>

@@ -16,7 +16,12 @@ export default async function AiPage({
     <DocsArticle path="/docs/ai">
       <h1>{t("title")}</h1>
       <p className="text-lg text-[var(--fg-muted)]">{t("lead")}</p>
-      <ScreenshotPlaceholder label={t("shotAi")} hint={t("shotHint")} tint="#06b6d4" />
+      <ScreenshotPlaceholder
+        label={t("shotAi")}
+        hint={t("shotHint")}
+        screenshot="ai-dj.png"
+        tint="#06b6d4"
+      />
 
       <h2>{t("setup.title")}</h2>
       <Steps>

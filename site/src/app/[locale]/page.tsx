@@ -30,6 +30,7 @@ export default async function HomePage({
           t("showcasePlayerB3"),
           t("showcasePlayerB4"),
         ]}
+        screenshot="player-lyrics.png"
         screenshotLabel={t("phoneLabel")}
         tint="#a855f7"
       />
@@ -43,6 +44,7 @@ export default async function HomePage({
           t("showcaseKaraokeB2"),
           t("showcaseKaraokeB3"),
         ]}
+        screenshot="karaoke.png"
         screenshotLabel={t("phoneLabel")}
         tint="#f97316"
         reverse
@@ -58,6 +60,7 @@ export default async function HomePage({
           t("showcaseAIB3"),
           t("showcaseAIB4"),
         ]}
+        screenshot="ai-dj.png"
         screenshotLabel={t("phoneLabel")}
         tint="#06b6d4"
       />
