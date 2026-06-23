@@ -6,6 +6,7 @@ import DownloadSection from "../../components/marketing/DownloadSection";
 import ShowcaseSection from "../../components/marketing/ShowcaseSection";
 import AISection from "../../components/marketing/AISection";
 import BuiltDifferentSection from "../../components/marketing/BuiltDifferentSection";
+import TestimonialsSection from "../../components/marketing/TestimonialsSection";
 import CTASection from "../../components/marketing/CTASection";
 
 export default async function HomePage({
@@ -61,6 +62,7 @@ export default async function HomePage({
 
       <BuiltDifferentSection />
       <DownloadSection />
+      <TestimonialsSection />
       <CTASection />
     </>
   );

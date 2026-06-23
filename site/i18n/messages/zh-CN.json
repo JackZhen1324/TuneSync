@@ -140,6 +140,40 @@
         "desc": "你连的、你加的、你整理的，都是你的。没有账号墙，也不替你托管文件。"
       }
     },
+    "testimonialsEyebrow": "用户怎么说",
+    "testimonialsTitle": "为真正的音乐发烧友而打造",
+    "testimonials": {
+      "quote1": {
+        "text": "把整台 NAS 的音乐装进手机后，我终于不用在五个 App 之间来回切换了。封面、歌词、同步播放，一条龙搞定。",
+        "author": "林一帆",
+        "role": "NAS 用户 · 自建 WebDAV"
+      },
+      "quote2": {
+        "text": "AI DJ 的自动续接真的懂我，队列快播完时它总能接上一首对的歌，再也不用停下来手动选。",
+        "author": "M. Chen",
+        "role": "BYOK 接入 DeepSeek"
+      },
+      "quote3": {
+        "text": "设备端人声分离 K 歌是个惊喜，调低原唱、跟着伴奏唱，录完还能回放对比，在家就能练。",
+        "author": "阿凯",
+        "role": "Core ML 分离"
+      },
+      "quote4": {
+        "text": "乱糟糟的曲库被多源元数据整理得服服帖帖，封面、年份、曲目编号一次性补全，强迫症狂喜。",
+        "author": "张芮",
+        "role": "批量整理整库"
+      },
+      "quote5": {
+        "text": "自带 API Key 这点太对了，请求直接发往我选的服务商，不经过中间人，隐私和成本都在我自己手里。",
+        "author": "D. Wang",
+        "role": "自托管 Ollama"
+      },
+      "quote6": {
+        "text": "Bonjour 一下就发现了局域网里的媒体服务器，从发现到连接一气呵成，配置体验超出预期。",
+        "author": "Eric",
+        "role": "SMB / NFS 连接"
+      }
+    },
     "ctaTitle": "准备好开始了吗？",
     "ctaBody": "跟着快速上手指南，几分钟内连上你的音乐服务器，开启属于你的音乐世界。"
   },

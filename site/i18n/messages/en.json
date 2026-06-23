@@ -140,6 +140,40 @@
         "desc": "What you connect, add, and organize is yours. No account wall, no hosting your files for you."
       }
     },
+    "testimonialsEyebrow": "What users say",
+    "testimonialsTitle": "Built for real music lovers",
+    "testimonials": {
+      "quote1": {
+        "text": "After loading my entire NAS library onto my phone, I finally stopped juggling five apps. Covers, lyrics, synced playback — all in one place.",
+        "author": "Lin Yifan",
+        "role": "NAS user · self-hosted WebDAV"
+      },
+      "quote2": {
+        "text": "The AI DJ’s auto-continue really gets me. When the queue runs low it always picks the right next song — no more stopping to choose.",
+        "author": "M. Chen",
+        "role": "BYOK with DeepSeek"
+      },
+      "quote3": {
+        "text": "On-device vocal-separation karaoke was a surprise. Lower the vocal, sing along, then replay to compare — practice at home.",
+        "author": "Kai",
+        "role": "Core ML separation"
+      },
+      "quote4": {
+        "text": "My messy library got tidied up by multi-source metadata — covers, years, track numbers all filled in at once. Highly satisfying.",
+        "author": "Zhang Rui",
+        "role": "Full-library batch refresh"
+      },
+      "quote5": {
+        "text": "Bringing my own API key is exactly right. Requests go straight to my provider — no middleman. Privacy and cost stay in my hands.",
+        "author": "D. Wang",
+        "role": "Self-hosted Ollama"
+      },
+      "quote6": {
+        "text": "Bonjour discovered my LAN media server instantly, and discovery-to-connection was seamless. The setup experience exceeded expectations.",
+        "author": "Eric",
+        "role": "SMB / NFS connection"
+      }
+    },
     "ctaTitle": "Ready to begin?",
     "ctaBody": "Follow the quick-start guide to connect your music server in minutes and open up your music world."
   },
