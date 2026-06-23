@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/routing";
-import { Music4 } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
   const t = useTranslations("nav");
@@ -8,33 +8,23 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer
-      className="mt-20 border-t"
-      style={{ borderColor: "var(--border)" }}
-    >
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-5 py-12 sm:grid-cols-2 md:grid-cols-4">
+    <footer className="border-t bg-black text-white" style={{ borderColor: "rgb(255 255 255 / 0.18)" }}>
+      <div className="container-page grid gap-8 py-12 sm:grid-cols-2 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 text-white">
-              <Music4 className="size-4" />
-            </span>
-            <span className="text-base font-semibold tracking-tight">
-              TuneSync
-            </span>
-          </div>
-          <p className="mt-3 max-w-sm text-sm text-[var(--fg-muted)]">
+          <Logo size={32} />
+          <p className="mt-3 max-w-sm text-sm text-white/58">
             {c("tagline")}
           </p>
         </div>
 
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
             {t("product")}
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
               <Link
-                className="text-[var(--fg-muted)] hover:text-[var(--fg)]"
+                className="text-white/58 hover:text-white"
                 href="/features"
               >
                 {t("features")}
@@ -42,7 +32,7 @@ export default function Footer() {
             </li>
             <li>
               <Link
-                className="text-[var(--fg-muted)] hover:text-[var(--fg)]"
+                className="text-white/58 hover:text-white"
                 href="/pricing"
               >
                 {t("pricing")}
@@ -52,13 +42,13 @@ export default function Footer() {
         </div>
 
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/45">
             {t("resources")}
           </p>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
               <Link
-                className="text-[var(--fg-muted)] hover:text-[var(--fg)]"
+                className="text-white/58 hover:text-white"
                 href="/docs"
               >
                 {t("docs")}
@@ -66,7 +56,7 @@ export default function Footer() {
             </li>
             <li>
               <Link
-                className="text-[var(--fg-muted)] hover:text-[var(--fg)]"
+                className="text-white/58 hover:text-white"
                 href="/docs/getting-started"
               >
                 {t("gettingStarted")}
@@ -77,9 +67,9 @@ export default function Footer() {
       </div>
       <div
         className="border-t"
-        style={{ borderColor: "var(--border)" }}
+        style={{ borderColor: "rgb(255 255 255 / 0.18)" }}
       >
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-5 py-6 text-xs text-[var(--fg-muted)] sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-white/45 sm:flex-row">
           <p>
             © {year} TuneSync. {c("rights")}
           </p>

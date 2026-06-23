@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/routing";
 import { ArrowRight } from "lucide-react";
@@ -5,27 +7,31 @@ import { ArrowRight } from "lucide-react";
 export default function CTASection() {
   const t = useTranslations("home");
   return (
-    <section className="mx-auto w-full max-w-6xl px-5 py-16">
-      <div
-        className="relative overflow-hidden rounded-card border px-8 py-14 text-center md:px-16"
-        style={{
-          borderColor: "var(--border)",
-          background: "var(--hero-grad), var(--bg-elevated)",
-        }}
-      >
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {t("ctaTitle")}
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--fg-muted)]">
-          {t("ctaBody")}
-        </p>
-        <Link
-          href="/docs/getting-started"
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition-transform hover:scale-[1.02]"
-        >
-          {t("ctaPrimary")}
-          <ArrowRight className="size-4" />
-        </Link>
+    <section className="bg-black text-white">
+      <div className="container-page grid gap-10 py-16 md:grid-cols-[1fr_auto] md:items-center md:py-20">
+        <div className="max-w-2xl">
+          <h2 className="display-sm text-4xl font-semibold sm:text-5xl md:text-6xl">
+            {t("ctaTitle")}
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-8 text-white/62 md:text-lg">
+            {t("ctaBody")}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3 md:justify-end">
+          <Link
+            href="/docs/getting-started"
+            className="inline-flex items-center gap-2 rounded-md border border-white bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-transparent hover:text-white"
+          >
+            {t("ctaPrimary")}
+            <ArrowRight className="size-4" />
+          </Link>
+          <Link
+            href="/features"
+            className="inline-flex items-center rounded-md border border-white/35 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
+          >
+            {t("ctaSecondary")}
+          </Link>
+        </div>
       </div>
     </section>
   );

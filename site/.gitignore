@@ -24,3 +24,6 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local working files (design references, QA notes, scratch)
+/tmp/

@@ -27,8 +27,8 @@ export default function PhoneMockup({
   return (
     <div className={`relative ${className}`}>
       <div
-        className="relative aspect-[9/19.5] w-full overflow-hidden rounded-[2.75rem] border-[10px] border-black bg-black shadow-2xl dark:border-[#1c1c1e] dark:shadow-black/60"
-        style={{ boxShadow: "0 30px 80px -20px rgba(0,0,0,0.5)" }}
+        className="relative aspect-[9/19.5] w-full overflow-hidden rounded-[2.75rem] border-[10px] border-black bg-black dark:border-[#1c1c1e]"
+        style={{ boxShadow: "var(--shadow-float)" }}
       >
         {/* Dynamic Island */}
         <div className="absolute left-1/2 top-2 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-black" />

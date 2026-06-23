@@ -53,10 +53,10 @@
         "desc": "Windows is not available yet, but more listening and organizing workflows are planned."
       }
     },
-    "statProviders": "AI providers",
+    "statProviders": "Provider presets",
     "statProtocols": "Network protocols",
     "statLangs": "UI languages",
-    "phoneLabel": "Screenshot placeholder",
+    "phoneLabel": "TuneSync app screenshot",
     "chipServers": "Connect servers",
     "chipLibrary": "Organize library",
     "chipKaraoke": "Vocal-separation karaoke",
@@ -75,12 +75,71 @@
     "showcaseKaraokeB2": "Live vocal-level control with a 3-2-1 countdown",
     "showcaseKaraokeB3": "Saves to “My Recordings” for playback and sharing",
     "showcaseAIEyebrow": "AI assistant",
-    "showcaseAITitle": "Bring your own key — 40+ model providers",
-    "showcaseAIDesc": "BYOK your provider and model, with separate instant / reasoning roles. The AI DJ auto-continues your queue, and tool calling lets the model search the web, fetch album art and lyrics, even control playback and playlists.",
-    "showcaseAIB1": "OpenAI, Anthropic, Gemini, Zhipu, DeepSeek, Ollama and 40+ more",
+    "showcaseAITitle": "Bring your own key — plug in your own AI",
+    "showcaseAIDesc": "Plug in your own API key and model (any OpenAI-compatible third-party AI), with separate instant / reasoning roles. The AI DJ auto-continues your queue, and tool calling lets the model search the web, fetch album art and lyrics, even control playback and playlists.",
+    "showcaseAIB1": "Any OpenAI-compatible third-party AI — 40+ provider presets built in, or a custom endpoint",
     "showcaseAIB2": "Instant models for recommendations, reasoning models for album intros",
     "showcaseAIB3": "AI DJ with three autonomy levels: preview / one-tap / auto-continue",
     "showcaseAIB4": "7+ built-in tools + custom tools, with tool chaining",
+    "aiSpot": {
+      "cards": {
+        "dual": {
+          "title": "Instant + reasoning models",
+          "desc": "Instant models are fast and frugal — they handle recommendations and filename cleanup. Reasoning models go deeper, writing album intros and other complex tasks. Picked automatically per task, with adjustable reasoning effort."
+        },
+        "dj": {
+          "title": "AI DJ continues your queue",
+          "desc": "Builds a playback queue from your listening profile with three autonomy levels: preview suggestions, one-tap confirm, and auto-continue when the queue runs low — the more you listen, the better it knows you."
+        },
+        "tools": {
+          "title": "Tool calling — the model takes action",
+          "desc": "The model can search the web, fetch and upscale album art, and look up lyrics. Once authorized, it can even control playback and manage playlists. Supports custom tools and chaining."
+        }
+      }
+    },
+    "trustLabel": "Everything TuneSync connects",
+    "pillarsEyebrow": "Built for power users",
+    "pillarsTitle": "Every step of listening, done right",
+    "pillarsSubtitle": "From connecting your library to immersive playback, from smart organizing to on-device karaoke — TuneSync makes each step feel natural.",
+    "pillars": {
+      "connect": {
+        "title": "Many sources, one library",
+        "desc": "Connect WebDAV / SMB / NFS / FTP servers or import local folders, auto-discover LAN devices via Bonjour, and index only the folders you actually want."
+      },
+      "playback": {
+        "title": "An immersive player",
+        "desc": "The full-screen player is backdropped by a gradient from your artwork, with synced lyrics, queue, sleep timer, and AirPlay built in."
+      },
+      "karaoke": {
+        "title": "On-device karaoke",
+        "desc": "Core ML splits vocal and accompaniment stems locally — lower the original vocal, sing along, and record with latency-compensated mixing."
+      },
+      "ai": {
+        "title": "Plug in your own AI",
+        "desc": "Use your own API key with any OpenAI-compatible third-party AI (40+ presets built in), with instant / reasoning roles picked per task. AI DJ continues your queue, and tool calls let it search, fetch art, and control playback."
+      }
+    },
+    "differentEyebrow": "Built different",
+    "differentTitle": "Your key, your device, your servers",
+    "differentSubtitle": "TuneSync never locks in your music or calls AI on your behalf — control stays with you.",
+    "different": {
+      "byok": {
+        "title": "Bring your own key",
+        "desc": "AI requests go straight to the provider you choose, on your own key and quota — no middleman."
+      },
+      "ondevice": {
+        "title": "On-device processing",
+        "desc": "Vocal separation and lyric alignment run on local Core ML, with results cached for reuse. Your audio never leaves the device."
+      },
+      "protocols": {
+        "title": "Open protocols",
+        "desc": "WebDAV / SMB / NFS / FTP / DAAP plus Bonjour auto-discovery — connect the NAS and self-hosted servers you already have."
+      },
+      "open": {
+        "title": "No lock-in",
+        "desc": "What you connect, add, and organize is yours. No account wall, no hosting your files for you."
+      }
+    },
     "ctaTitle": "Ready to begin?",
     "ctaBody": "Follow the quick-start guide to connect your music server in minutes and open up your music world."
   },
@@ -123,9 +182,9 @@
     },
     "ai": {
       "title": "AI assistant",
-      "desc": "BYOK across 40+ providers, instant / reasoning model roles, tool calling and AI DJ.",
+      "desc": "BYOK into any OpenAI-compatible third-party AI, with instant / reasoning model roles, tool calling and AI DJ.",
       "featureTitle": "Your API key, your AI DJ",
-      "featureDesc": "BYOK into OpenAI, Anthropic, Gemini, Zhipu, DeepSeek, Kimi, Qwen and 40+ providers — or local Ollama. Separate instant and reasoning model roles: instant models handle recommendations and cleanup, reasoning models write album intros.",
+      "featureDesc": "BYOK into any OpenAI-compatible third-party AI — with 40+ presets built in (OpenAI, Anthropic, Gemini, Zhipu, DeepSeek, Kimi, Qwen), plus custom endpoints or local Ollama. Separate instant and reasoning model roles: instant models handle recommendations and cleanup, reasoning models write album intros.",
       "featureB1": "40+ provider presets + custom OpenAI-compatible endpoints",
       "featureB2": "Instant / reasoning model roles, auto-selected per task",
       "featureB3": "AI DJ with three autonomy levels: preview / one-tap / auto-continue",

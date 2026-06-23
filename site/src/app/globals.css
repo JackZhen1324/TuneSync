@@ -9,67 +9,64 @@
   --color-brand-200: #bcd3ff;
   --color-brand-300: #8eb6ff;
   --color-brand-400: #598dff;
-  --color-brand-500: #3366ff;
-  --color-brand-600: #1f47f5;
-  --color-brand-700: #1735e1;
-  --color-brand-800: #192db6;
-  --color-brand-900: #1a2c8f;
+  --color-brand-500: #111111;
+  --color-brand-600: #000000;
+  --color-brand-700: #000000;
+  --color-brand-800: #000000;
+  --color-brand-900: #000000;
 
   --color-accent-400: #c084fc;
-  --color-accent-500: #a855f7;
-  --color-accent-600: #9333ea;
+  --color-accent-500: #111111;
+  --color-accent-600: #000000;
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "SF Pro Text",
-    "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
+    "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial,
+    sans-serif;
 
-  --radius-card: 1.25rem;
+  --radius-card: 0.5rem;
 
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.18);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 18px 40px -22px rgb(0 0 0 / 0.18);
+  --shadow-float: 0 32px 90px -32px rgb(0 0 0 / 0.62);
 }
 
 :root {
-  --bg: #f5f5f7;
+  --bg: #f7f7f7;
   --bg-elevated: #ffffff;
-  --fg: #1d1d1f;
-  --fg-muted: #6e6e73;
-  --border: rgb(0 0 0 / 0.08);
-  --border-strong: rgb(0 0 0 / 0.12);
-  --glass: rgb(255 255 255 / 0.72);
-  --hero-grad: radial-gradient(
-      1200px 600px at 15% -10%,
-      rgba(51, 102, 255, 0.18),
-      transparent 60%
-    ),
-    radial-gradient(
-      1000px 500px at 90% 0%,
-      rgba(168, 85, 247, 0.16),
-      transparent 55%
-    );
+  --bg-subtle: #ededed;
+  --bg-deep: #000000;
+  --fg: #111111;
+  --fg-muted: #5f5f5f;
+  --fg-subtle: #8a8a8a;
+  --border: rgb(0 0 0 / 0.12);
+  --border-strong: rgb(0 0 0 / 0.22);
+  --glass: rgb(247 247 247 / 0.82);
+  --ring: rgb(0 0 0 / 0.28);
+  --glow-a: rgb(0 0 0 / 0.08);
+  --glow-b: rgb(0 0 0 / 0.04);
+  --hero-grad: linear-gradient(180deg, #000000, #050505);
 }
 
 .dark {
   --bg: #000000;
-  --bg-elevated: #0c0c0e;
+  --bg-elevated: #0a0a0c;
+  --bg-subtle: #111111;
+  --bg-deep: #000000;
   --fg: #f5f5f7;
-  --fg-muted: #a1a1a6;
-  --border: rgb(255 255 255 / 0.1);
-  --border-strong: rgb(255 255 255 / 0.16);
-  --glass: rgb(20 20 22 / 0.72);
-  --hero-grad: radial-gradient(
-      1200px 600px at 15% -10%,
-      rgba(51, 102, 255, 0.28),
-      transparent 60%
-    ),
-    radial-gradient(
-      1000px 500px at 90% 0%,
-      rgba(168, 85, 247, 0.22),
-      transparent 55%
-    );
+  --fg-muted: #a6a6a6;
+  --fg-subtle: #777777;
+  --border: rgb(255 255 255 / 0.14);
+  --border-strong: rgb(255 255 255 / 0.26);
+  --glass: rgb(0 0 0 / 0.72);
+  --ring: rgb(255 255 255 / 0.35);
+  --glow-a: rgb(255 255 255 / 0.08);
+  --glow-b: rgb(255 255 255 / 0.04);
+  --hero-grad: linear-gradient(180deg, #000000, #050505);
 }
 
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
   }
@@ -78,10 +75,21 @@
     background-color: var(--bg);
     color: var(--fg);
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 
   ::selection {
-    background-color: rgba(51, 102, 255, 0.25);
+    background-color: rgba(51, 102, 255, 0.26);
+  }
+
+  /* Tight, display-grade headings used in the marketing hero & sections. */
+  .display {
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+  .display-sm {
+    letter-spacing: -0.025em;
+    line-height: 1.04;
   }
 
   /* Reading rhythm for docs prose */
@@ -133,5 +141,218 @@
     border: 1px solid var(--border);
     padding: 0.1rem 0.35rem;
     border-radius: 0.375rem;
+  }
+}
+
+@layer components {
+  /* Codex-style page container: wide, quiet, and strongly aligned. */
+  .container-page {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 86rem;
+    padding-inline: 1.5rem;
+  }
+
+  /* Small uppercase eyebrow label that leads each Codex-style section. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  /* Accent text stays monochrome in the Codex-style redesign. */
+  .text-grad {
+    color: currentColor;
+  }
+
+  /* Primary button: stark, rectangular, and editorial. */
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.375rem;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--fg);
+    border: 1px solid var(--fg);
+    box-shadow: none;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    filter: none;
+    box-shadow: none;
+    background: transparent;
+    color: var(--fg);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 0.375rem;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    backdrop-filter: none;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+  }
+  .btn-ghost:hover {
+    background: rgb(0 0 0 / 0.05);
+    transform: translateY(-1px);
+  }
+  .dark .btn-ghost:hover {
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  /* Card surface used sparingly in the monochrome editorial system. */
+  .surface-card {
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-card);
+    transition: border-color 0.22s ease, background-color 0.22s ease;
+  }
+  .surface-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  /* Soft divider line between narrative sections. */
+  .hr-soft {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--border-strong),
+      transparent
+    );
+  }
+
+  /* Scroll-reveal: children start hidden and animate in. Graceful no-JS fallback. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer utilities {
+  /* A subtle film-grain / noise layer for the cinematic dark hero. */
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  }
+  .dark .grain::after {
+    opacity: 0.35;
+  }
+
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float-slow,
+  .animate-pulse-glow,
+  .animate-marquee {
+    animation: none;
   }
 }

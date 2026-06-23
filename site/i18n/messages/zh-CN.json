@@ -53,10 +53,10 @@
         "desc": "Windows 版本尚未开放，后续将覆盖更多听歌与整理场景。"
       }
     },
-    "statProviders": "AI 服务商",
+    "statProviders": "服务商预设",
     "statProtocols": "网络协议",
     "statLangs": "界面语言",
-    "phoneLabel": "截图占位",
+    "phoneLabel": "TuneSync App 截图",
     "chipServers": "连接服务器",
     "chipLibrary": "曲库整理",
     "chipKaraoke": "人声分离 K 歌",
@@ -75,12 +75,71 @@
     "showcaseKaraokeB2": "实时调节原声音轨，3-2-1 倒计时开录",
     "showcaseKaraokeB3": "录音保存为「我的录音」，可回放与分享",
     "showcaseAIEyebrow": "AI 助手",
-    "showcaseAITitle": "自带 API Key，接入 40+ 大模型服务商",
-    "showcaseAIDesc": "BYOK 自选服务商与模型，区分即时 / 推理双模型角色。AI DJ 自动续接歌单，工具调用让模型能联网搜索、查封面、查歌词，甚至控制播放与歌单。",
-    "showcaseAIB1": "OpenAI、Anthropic、Gemini、智谱、DeepSeek、Ollama 等 40+ 提供商",
+    "showcaseAITitle": "自带 API Key，接入你自己的 AI",
+    "showcaseAIDesc": "把你的 API Key 与模型接进来（兼容任意 OpenAI 协议的第三方 AI），区分即时 / 推理双模型角色。AI DJ 自动续接歌单，工具调用让模型能联网搜索、查封面、查歌词，甚至控制播放与歌单。",
+    "showcaseAIB1": "兼容任意 OpenAI 协议的第三方 AI，内置 40+ 服务商预设，亦可自定义端点",
     "showcaseAIB2": "即时模型负责推荐与清理，推理模型写专辑简介",
     "showcaseAIB3": "AI DJ 三档自动化：预览 / 一键播放 / 自动续接",
     "showcaseAIB4": "7+ 内置工具 + 自定义工具，支持工具链式调用",
+    "aiSpot": {
+      "cards": {
+        "dual": {
+          "title": "即时 + 推理双模型",
+          "desc": "即时模型又快又省，负责推荐与文件名清理；推理模型更深入，负责写专辑简介等复杂任务。按场景自动选用，推理强度可调。"
+        },
+        "dj": {
+          "title": "AI DJ 续接你的歌单",
+          "desc": "基于你的收听画像构建播放队列，三档自动化：先预览推荐、一键确认播放，队列快播完时自动续接，越听越懂你。"
+        },
+        "tools": {
+          "title": "工具调用，让模型动手",
+          "desc": "模型可联网搜索、抓取并放大封面、查找歌词，授权后甚至能控制播放与管理歌单；支持自定义工具与链式调用。"
+        }
+      }
+    },
+    "trustLabel": "TuneSync 串联的一切",
+    "pillarsEyebrow": "为发烧友而打造",
+    "pillarsTitle": "把听歌的每一个环节，做到位",
+    "pillarsSubtitle": "从连接曲库到沉浸播放，从智能整理到设备端 K 歌——TuneSync 让每一步都更自然。",
+    "pillars": {
+      "connect": {
+        "title": "汇于一处的多源曲库",
+        "desc": "连接 WebDAV / SMB / NFS / FTP 服务器或导入本地文件夹，Bonjour 自动发现局域网设备，文件夹级索引只收录你真正想听的内容。"
+      },
+      "playback": {
+        "title": "沉浸式播放体验",
+        "desc": "全屏播放器以封面渐变为背景，逐行同步歌词、播放队列、睡眠定时与 AirPlay 一应俱全。"
+      },
+      "karaoke": {
+        "title": "设备端人声分离 K 歌",
+        "desc": "Core ML 在本机拆分人声与伴奏，调低原唱、麦克风录音，延时补偿保持对齐，在家就能开演唱会。"
+      },
+      "ai": {
+        "title": "接入你自己的 AI 助手",
+        "desc": "用你自己的 API Key 接入任意 OpenAI 协议的第三方 AI（内置 40+ 预设），即时 / 推理双模型按场景选用，AI DJ 自动续接歌单，工具调用让模型联网、查封面、控制播放。"
+      }
+    },
+    "differentEyebrow": "与众不同",
+    "differentTitle": "你的密钥，你的设备，你的服务器",
+    "differentSubtitle": "TuneSync 不锁定你的音乐，也不替你调用 AI——掌控权始终在你手里。",
+    "different": {
+      "byok": {
+        "title": "自带 API Key",
+        "desc": "AI 请求直接发往你选择的服务商，使用你自己的密钥与额度，不经过中间人。"
+      },
+      "ondevice": {
+        "title": "设备端处理",
+        "desc": "人声分离与歌词对齐在本地 Core ML 完成，结果可缓存复用，你的音频不必上云。"
+      },
+      "protocols": {
+        "title": "开放协议",
+        "desc": "WebDAV / SMB / NFS / FTP / DAAP + Bonjour 自动发现，连接你已有的 NAS 与自建服务器。"
+      },
+      "open": {
+        "title": "不锁定曲库",
+        "desc": "你连的、你加的、你整理的，都是你的。没有账号墙，也不替你托管文件。"
+      }
+    },
     "ctaTitle": "准备好开始了吗？",
     "ctaBody": "跟着快速上手指南，几分钟内连上你的音乐服务器，开启属于你的音乐世界。"
   },
@@ -123,9 +182,9 @@
     },
     "ai": {
       "title": "AI 智能助手",
-      "desc": "自带 API Key 接入 40+ 服务商，即时 / 推理双模型，工具调用与 AI DJ。",
+      "desc": "自带 API Key 接入任意 OpenAI 协议的第三方 AI，即时 / 推理双模型，工具调用与 AI DJ。",
       "featureTitle": "你的 API Key，你的 AI DJ",
-      "featureDesc": "BYOK（自带密钥）接入 OpenAI、Anthropic、Gemini、智谱、DeepSeek、Kimi、通义千问等 40+ 提供商，或本地 Ollama。区分即时与推理双模型角色：即时模型负责推荐与清理，推理模型写专辑简介。",
+      "featureDesc": "BYOK（自带密钥）接入任意 OpenAI 协议的第三方 AI——内置 OpenAI、Anthropic、Gemini、智谱、DeepSeek、Kimi、通义千问等 40+ 预设，亦可填入自定义端点或本地 Ollama。区分即时与推理双模型角色：即时模型负责推荐与清理，推理模型写专辑简介。",
       "featureB1": "40+ 服务商预设 + 自定义 OpenAI 兼容端点",
       "featureB2": "即时 / 推理双模型，按场景自动选用",
       "featureB3": "AI DJ 三档自动化：预览 / 一键播放 / 自动续接",

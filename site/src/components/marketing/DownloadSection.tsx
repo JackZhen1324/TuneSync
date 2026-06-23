@@ -1,3 +1,5 @@
+"use client";
+
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight, Clock3, Laptop, Monitor, Smartphone } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -18,23 +20,19 @@ export default function DownloadSection() {
   const t = useTranslations("home");
 
   return (
-    <section
-      aria-labelledby="download-heading"
-      className="mx-auto w-full max-w-6xl px-5 py-12 md:py-16"
-    >
+    <section className="border-t bg-[var(--bg-elevated)]" style={{ borderColor: "var(--border)" }}>
+      <div className="container-page py-16 md:py-24">
       <div className="max-w-2xl">
-        <span className="text-xs font-semibold uppercase text-accent-500">
-          {t("downloadEyebrow")}
-        </span>
-        <h2 id="download-heading" className="mt-2 text-3xl font-bold sm:text-4xl">
+        <span className="eyebrow">{t("downloadEyebrow")}</span>
+        <h2 className="display-sm mt-4 text-4xl font-semibold sm:text-5xl md:text-6xl">
           {t("downloadTitle")}
         </h2>
-        <p className="mt-4 text-lg text-[var(--fg-muted)]">
+        <p className="mt-6 max-w-xl text-base leading-8 text-[var(--fg-muted)] md:text-lg">
           {t("downloadSubtitle")}
         </p>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-14 grid border-l border-t md:grid-cols-4" style={{ borderColor: "var(--border)" }}>
         {PLATFORMS.map(({ key, icon: Icon, available }) => {
           const label = t(`downloadPlatforms.${key}.label`);
           const description = t(`downloadPlatforms.${key}.desc`);
@@ -45,21 +43,21 @@ export default function DownloadSection() {
                 key={key}
                 href="/docs/getting-started"
                 aria-label={t("downloadIOSAria")}
-                className="group relative overflow-hidden rounded-card bg-gradient-to-br from-brand-500 to-accent-500 p-5 text-white shadow-lg shadow-brand-500/20 transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+                className="group relative border-b border-r bg-black p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-72"
+                style={{ borderColor: "var(--border)" }}
               >
-                <div className="absolute inset-0 bg-white/0 transition-colors group-hover:bg-white/10" />
-                <div className="relative flex h-full min-h-44 flex-col justify-between gap-6">
+                <div className="relative flex h-full flex-col justify-between gap-10">
                   <div className="flex items-start justify-between gap-3">
-                    <span className="grid size-11 place-items-center rounded-2xl bg-white/20 shadow-sm">
+                    <span className="grid size-11 place-items-center border border-white/24">
                       <Icon className="size-5" aria-hidden />
                     </span>
-                    <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold">
+                    <span className="font-mono text-xs uppercase tracking-[0.14em] text-white/62">
                       {t("downloadAvailable")}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold">{label}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/85">
+                    <h3 className="text-2xl font-semibold">{label}</h3>
+                    <p className="mt-3 text-sm leading-7 text-white/70">
                       {description}
                     </p>
                     <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold">
@@ -76,28 +74,22 @@ export default function DownloadSection() {
             <div
               key={key}
               aria-disabled="true"
-              className="rounded-card border p-5 opacity-80"
-              style={{
-                borderColor: "var(--border)",
-                background: "var(--bg-elevated)",
-              }}
+              className="border-b border-r p-6 md:min-h-72"
+              style={{ borderColor: "var(--border)" }}
             >
-              <div className="flex h-full min-h-44 flex-col justify-between gap-6">
+              <div className="flex h-full flex-col justify-between gap-10">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="grid size-11 place-items-center rounded-2xl bg-black/5 text-[var(--fg-muted)] dark:bg-white/10">
+                  <span className="grid size-11 place-items-center border border-[var(--border-strong)] text-[var(--fg-muted)]">
                     <Icon className="size-5" aria-hidden />
                   </span>
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold text-[var(--fg-muted)]"
-                    style={{ borderColor: "var(--border)" }}
-                  >
+                  <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] text-[var(--fg-muted)]">
                     <Clock3 className="size-3.5" aria-hidden />
                     {t("downloadComingSoon")}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">{label}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--fg-muted)]">
+                  <h3 className="text-2xl font-semibold">{label}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--fg-muted)]">
                     {description}
                   </p>
                   <p className="mt-5 text-sm font-medium text-[var(--fg-muted)]">
@@ -108,6 +100,7 @@ export default function DownloadSection() {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

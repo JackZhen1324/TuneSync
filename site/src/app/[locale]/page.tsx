@@ -1,8 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Hero from "../../components/marketing/Hero";
+import TrustBar from "../../components/marketing/TrustBar";
+import PillarsSection from "../../components/marketing/PillarsSection";
 import DownloadSection from "../../components/marketing/DownloadSection";
-import FeatureGrid from "../../components/marketing/FeatureGrid";
 import ShowcaseSection from "../../components/marketing/ShowcaseSection";
+import AISection from "../../components/marketing/AISection";
+import BuiltDifferentSection from "../../components/marketing/BuiltDifferentSection";
 import CTASection from "../../components/marketing/CTASection";
 
 export default async function HomePage({
@@ -17,8 +20,8 @@ export default async function HomePage({
   return (
     <>
       <Hero />
-      <DownloadSection />
-      <FeatureGrid />
+      <TrustBar />
+      <PillarsSection />
 
       <ShowcaseSection
         eyebrow={t("showcasePlayerEyebrow")}
@@ -35,6 +38,8 @@ export default async function HomePage({
         tint="#a855f7"
       />
 
+      <div className="hr-soft mx-auto max-w-7xl" />
+
       <ShowcaseSection
         eyebrow={t("showcaseKaraokeEyebrow")}
         title={t("showcaseKaraokeTitle")}
@@ -50,21 +55,12 @@ export default async function HomePage({
         reverse
       />
 
-      <ShowcaseSection
-        eyebrow={t("showcaseAIEyebrow")}
-        title={t("showcaseAITitle")}
-        description={t("showcaseAIDesc")}
-        bullets={[
-          t("showcaseAIB1"),
-          t("showcaseAIB2"),
-          t("showcaseAIB3"),
-          t("showcaseAIB4"),
-        ]}
-        screenshot="ai-dj.png"
-        screenshotLabel={t("phoneLabel")}
-        tint="#06b6d4"
-      />
+      <div className="hr-soft mx-auto max-w-7xl" />
 
+      <AISection />
+
+      <BuiltDifferentSection />
+      <DownloadSection />
       <CTASection />
     </>
   );

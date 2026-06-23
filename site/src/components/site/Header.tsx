@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "../../../i18n/routing";
-import { Menu, X, Music4 } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import LangSwitcher from "./LangSwitcher";
 import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 
 export default function Header() {
-  const t = useTranslations("nav");
+  const tNav = useTranslations("nav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = tNav;
 
   const links: { href: "/features" | "/pricing" | "/docs"; label: string }[] = [
     { href: "/features", label: t("features") },
@@ -31,28 +33,23 @@ export default function Header() {
         background: "var(--glass)",
       }}
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
+      <div className="container-page flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
-          className="flex items-center gap-2 text-[var(--fg)]"
+          className="flex items-center text-[var(--fg)]"
           onClick={() => setOpen(false)}
         >
-          <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 text-white shadow-sm">
-            <Music4 className="size-4" />
-          </span>
-          <span className="text-base font-semibold tracking-tight">
-            TuneSync
-          </span>
+          <Logo size={32} />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-7 md:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`rounded-full px-3.5 py-1.5 text-sm transition-colors ${
+              className={`text-sm transition-colors ${
                 isActive(l.href)
-                  ? "bg-black/5 text-[var(--fg)] dark:bg-white/10"
+                  ? "text-[var(--fg)]"
                   : "text-[var(--fg-muted)] hover:text-[var(--fg)]"
               }`}
             >
@@ -64,9 +61,12 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <LangSwitcher className="hidden sm:inline-flex" />
           <ThemeToggle />
+          <Link href="/docs/getting-started" className="btn-ghost hidden md:inline-flex !px-3.5 !py-2 !text-xs">
+            iOS
+          </Link>
           <button
             type="button"
-            className="inline-flex size-9 items-center justify-center rounded-full border text-[var(--fg)] md:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-md border text-[var(--fg)] md:hidden"
             style={{ borderColor: "var(--border)" }}
             aria-label={t("menu")}
             aria-expanded={open}
@@ -100,6 +100,9 @@ export default function Header() {
             <div className="mt-2">
               <LangSwitcher />
             </div>
+            <Link href="/docs/getting-started" onClick={() => setOpen(false)} className="btn-primary mt-3 justify-center">
+              iOS
+            </Link>
           </div>
         </nav>
       )}
