@@ -140,6 +140,64 @@
         "desc": "你连的、你加的、你整理的，都是你的。没有账号墙，也不替你托管文件。"
       }
     },
+    "workflowEyebrow": "从发现到播放，一条龙",
+    "workflowTitle": "看着曲库自己就绪",
+    "workflowDesc": "从 Bonjour 发现服务器，到索引、抓取元数据、对齐歌词——整条流水线在后台自动推进，每一步的进度都看得见。",
+    "workflowTerminalTitle": "tunesync — library",
+    "workflowProgress": "曲库就绪进度",
+    "workflowDemo": {
+      "steps": {
+        "discover": {
+          "label": "正在发现…",
+          "detail": "发现 2 台服务器"
+        },
+        "connect": {
+          "label": "正在连接…",
+          "detail": "已连接 WebDAV@nas"
+        },
+        "index": {
+          "label": "正在索引…",
+          "detail": "已索引 1,284 首"
+        },
+        "metadata": {
+          "label": "正在补全…",
+          "detail": "iTunes + AI 命中 1,201 首"
+        },
+        "lyrics": {
+          "label": "正在对齐…",
+          "detail": "同步歌词 986 首"
+        },
+        "ready": {
+          "label": "准备播放…",
+          "detail": "曲库已就绪"
+        }
+      }
+    },
+    "editorEyebrow": "元数据与歌词，逐行落定",
+    "editorTitle": "让乱糟糟的标签重新整洁",
+    "editorDesc": "多源比对的结果逐字段写入，同步歌词逐行高亮——像在编辑器里看着代码被改好一样直观。",
+    "editorTabMeta": "元数据",
+    "editorTabLyrics": "歌词",
+    "editorApply": "应用",
+    "editorPanelMeta": "字段",
+    "editorPanelLyrics": "逐行同步",
+    "editorDemo": {
+      "meta": {
+        "title": { "value": "夜曲" },
+        "artist": { "value": "周杰伦" },
+        "album": { "value": "十一月的萧邦" },
+        "year": { "value": "2005" },
+        "cover": { "value": "封面 1200×1200 已获取" }
+      },
+      "lyrics": {
+        "l1": "为你弹奏萧邦的夜曲",
+        "l2": "纪念我死去的爱情",
+        "l3": "而我为你隐姓埋名",
+        "l4": "在月光下弹琴",
+        "l5": "对你心跳的感应",
+        "l6": "还是如此温热亲近"
+      }
+    },
     "testimonialsEyebrow": "用户怎么说",
     "testimonialsTitle": "为真正的音乐发烧友而打造",
     "testimonials": {

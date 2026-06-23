@@ -140,6 +140,64 @@
         "desc": "What you connect, add, and organize is yours. No account wall, no hosting your files for you."
       }
     },
+    "workflowEyebrow": "Discovery to playback, end to end",
+    "workflowTitle": "Watch your library come ready",
+    "workflowDesc": "From Bonjour discovery to indexing, metadata enrichment, and lyric alignment — the whole pipeline runs in the background, and every step’s progress is visible.",
+    "workflowTerminalTitle": "tunesync — library",
+    "workflowProgress": "Library readiness",
+    "workflowDemo": {
+      "steps": {
+        "discover": {
+          "label": "Discovering…",
+          "detail": "Found 2 servers"
+        },
+        "connect": {
+          "label": "Connecting…",
+          "detail": "Connected to WebDAV@nas"
+        },
+        "index": {
+          "label": "Indexing…",
+          "detail": "Indexed 1,284 tracks"
+        },
+        "metadata": {
+          "label": "Enriching…",
+          "detail": "iTunes + AI matched 1,201"
+        },
+        "lyrics": {
+          "label": "Aligning…",
+          "detail": "Synced lyrics for 986"
+        },
+        "ready": {
+          "label": "Preparing…",
+          "detail": "Library ready"
+        }
+      }
+    },
+    "editorEyebrow": "Metadata and lyrics, line by line",
+    "editorTitle": "Tame messy tags back into shape",
+    "editorDesc": "Multi-source matches write in field by field, and synced lyrics highlight line by line — as clear as watching code being fixed in an editor.",
+    "editorTabMeta": "Metadata",
+    "editorTabLyrics": "Lyrics",
+    "editorApply": "Apply",
+    "editorPanelMeta": "Fields",
+    "editorPanelLyrics": "Synced lines",
+    "editorDemo": {
+      "meta": {
+        "title": { "value": "Nocturne" },
+        "artist": { "value": "Jay Chou" },
+        "album": { "value": "November’s Chopin" },
+        "year": { "value": "2005" },
+        "cover": { "value": "Artwork 1200×1200 fetched" }
+      },
+      "lyrics": {
+        "l1": "Playing Chopin’s nocturne for you",
+        "l2": "In memory of my dead love",
+        "l3": "And I hide my name for you",
+        "l4": "Playing piano in the moonlight",
+        "l5": "The sensing of your heartbeat",
+        "l6": "Still so warm and close"
+      }
+    },
     "testimonialsEyebrow": "What users say",
     "testimonialsTitle": "Built for real music lovers",
     "testimonials": {
