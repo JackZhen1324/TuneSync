@@ -4,63 +4,65 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand-50: #eef4ff;
-  --color-brand-100: #d9e6ff;
-  --color-brand-200: #bcd3ff;
-  --color-brand-300: #8eb6ff;
-  --color-brand-400: #598dff;
-  --color-brand-500: #111111;
-  --color-brand-600: #000000;
-  --color-brand-700: #000000;
-  --color-brand-800: #000000;
+  --color-brand-50: #f4f4f6;
+  --color-brand-100: #e9e9ee;
+  --color-brand-200: #d6d6df;
+  --color-brand-300: #acacbe;
+  --color-brand-400: #8e8ea0;
+  --color-brand-500: #343541;
+  --color-brand-600: #202123;
+  --color-brand-700: #161618;
+  --color-brand-800: #0d0d0e;
   --color-brand-900: #000000;
 
   --color-accent-400: #c084fc;
-  --color-accent-500: #111111;
-  --color-accent-600: #000000;
+  --color-accent-500: #10a37f;
+  --color-accent-600: #0e8c6c;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
+  --font-sans: "Söhne", "Inter", ui-sans-serif, system-ui, -apple-system,
     "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial,
     sans-serif;
 
-  --radius-card: 0.5rem;
+  --radius-card: 0.75rem;
 
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 18px 40px -22px rgb(0 0 0 / 0.18);
   --shadow-float: 0 32px 90px -32px rgb(0 0 0 / 0.62);
 }
 
 :root {
-  --bg: #f7f7f7;
+  /* Codex light default: light page body with the dark charcoal hero. */
+  --bg: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-subtle: #ededed;
-  --bg-deep: #000000;
-  --fg: #111111;
-  --fg-muted: #5f5f5f;
-  --fg-subtle: #8a8a8a;
-  --border: rgb(0 0 0 / 0.12);
-  --border-strong: rgb(0 0 0 / 0.22);
-  --glass: rgb(247 247 247 / 0.82);
-  --ring: rgb(0 0 0 / 0.28);
-  --glow-a: rgb(0 0 0 / 0.08);
-  --glow-b: rgb(0 0 0 / 0.04);
-  --hero-grad: linear-gradient(180deg, #000000, #050505);
+  --bg-subtle: #f7f7f8;
+  --bg-deep: #343541;
+  --fg: #0d0d0d;
+  --fg-muted: #6e6e80;
+  --fg-subtle: #8e8ea0;
+  --border: rgb(0 0 0 / 0.1);
+  --border-strong: rgb(0 0 0 / 0.18);
+  --glass: rgb(255 255 255 / 0.82);
+  --ring: rgb(52 53 65 / 0.4);
+  --glow-a: rgb(52 53 65 / 0.08);
+  --glow-b: rgb(52 53 65 / 0.04);
+  /* Hero uses OpenAI's signature charcoal #343541, not pure black. */
+  --hero-grad: linear-gradient(180deg, #343541, #202123);
 }
 
 .dark {
-  --bg: #000000;
-  --bg-elevated: #0a0a0c;
-  --bg-subtle: #111111;
-  --bg-deep: #000000;
-  --fg: #f5f5f7;
-  --fg-muted: #a6a6a6;
-  --fg-subtle: #777777;
-  --border: rgb(255 255 255 / 0.14);
-  --border-strong: rgb(255 255 255 / 0.26);
-  --glass: rgb(0 0 0 / 0.72);
-  --ring: rgb(255 255 255 / 0.35);
-  --glow-a: rgb(255 255 255 / 0.08);
-  --glow-b: rgb(255 255 255 / 0.04);
-  --hero-grad: linear-gradient(180deg, #000000, #050505);
+  --bg: #343541;
+  --bg-elevated: #3b3c48;
+  --bg-subtle: #202123;
+  --bg-deep: #202123;
+  --fg: #ececf1;
+  --fg-muted: #acacbe;
+  --fg-subtle: #8e8ea0;
+  --border: rgb(255 255 255 / 0.12);
+  --border-strong: rgb(255 255 255 / 0.22);
+  --glass: rgb(32 33 35 / 0.78);
+  --ring: rgb(255 255 255 / 0.32);
+  --glow-a: rgb(255 255 255 / 0.06);
+  --glow-b: rgb(255 255 255 / 0.03);
+  --hero-grad: linear-gradient(180deg, #343541, #202123);
 }
 
 @layer base {
