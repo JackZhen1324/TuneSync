@@ -15,7 +15,6 @@
   },
   "nav": {
     "features": "Features",
-    "pricing": "Free vs VIP",
     "docs": "Docs",
     "gettingStarted": "Getting started",
     "product": "Product",
@@ -164,35 +163,6 @@
       "featureB3": "ShazamKit recognition with browsable history",
       "screenshot": "Discovery screenshot"
     }
-  },
-  "pricing": {
-    "badge": "Membership",
-    "title": "Listening is free, advanced features are VIP",
-    "subtitle": "Playback, library, and lyrics stay free. Karaoke, batch organizing and the like are VIP. This is a pre-launch preview — those features still work for now.",
-    "free": {
-      "title": "Free",
-      "subtitle": "A complete local and remote listening experience",
-      "benefits": [
-        "Import local folders, connect WebDAV or FTP servers, and build indexes",
-        "Browse your library by songs, albums, artists, favorites, and playlists",
-        "Play queue, shuffle, repeat, volume, and progress controls",
-        "View lyrics, import LRC files, edit covers and song information",
-        "Manage cache space, appearance, language, and basic playback preferences"
-      ]
-    },
-    "vip": {
-      "title": "TuneSync VIP",
-      "subtitle": "Unlock high-cost processing, automated organizing, and discovery tools",
-      "benefits": [
-        "Vocal separation and karaoke: generate accompaniment and vocal stems, enter karaoke playback, tune vocal retention",
-        "Batch metadata organizing: batch-scrape covers, lyrics, and song info, with full-library refresh",
-        "Song recognition: use ShazamKit to identify nearby music and keep recent recognition history",
-        "Multi-source trend discovery: aggregate Apple Music, Bilibili, YouTube, and Last.fm charts on Home",
-        "Advanced lyrics tuning: adjust lyric font size, motion, focus position, and line animations",
-        "Background task center: view separation, scraping, queue, and cache tasks, plus early access to future tools"
-      ]
-    },
-    "note": "This page only previews membership benefits before launch. It does not block vocal separation, song recognition, or batch organizing."
   },
   "docsNavGroups": {
     "gettingStarted": "Start",

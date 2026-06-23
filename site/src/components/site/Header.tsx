@@ -15,9 +15,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const iosUrl = downloadUrl("ios");
 
-  const links: { href: "/features" | "/pricing" | "/docs"; label: string }[] = [
+  const links: { href: "/features" | "/docs"; label: string }[] = [
     { href: "/features", label: t("features") },
-    { href: "/pricing", label: t("pricing") },
     { href: "/docs", label: t("docs") },
   ];
 
