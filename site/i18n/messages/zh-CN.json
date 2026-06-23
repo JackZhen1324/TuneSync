@@ -10,8 +10,8 @@
     "backHome": "返回首页"
   },
   "meta": {
-    "title": "TuneSync — 找回属于你的音乐世界",
-    "description": "连接 WebDAV / SMB / NFS / FTP 服务器与本地曲库，自动补全元数据与封面、逐行同步歌词、AI 智能推荐与设备端人声分离 K 歌，打造属于你自己的音乐世界。"
+    "title": "TuneSync — 把你的音乐放回一个地方",
+    "description": "连接你的 NAS 或本地文件夹，TuneSync 把散落的歌整理成一个曲库，自动补封面和歌词，还能去掉原唱跟着唱。"
   },
   "nav": {
     "features": "功能特性",
@@ -25,10 +25,10 @@
   },
   "home": {
     "badge": "为发烧友打造的原生 iOS 音乐 App",
-    "headline": "找回<accent>属于你的</accent>音乐世界",
-    "subhead": "TuneSync 把服务器、文件夹与播放入口串联成一条更自然的路径：连接 WebDAV / SMB / NFS / FTP，整理本地曲库，逐行同步歌词，让 AI 智能推荐下一首，再用人声分离进入沉浸 K 歌。",
-    "introTitle": "把散落各处的音乐世界，重新汇于一处。",
-    "introBody": "连接你的服务器、整理曲库、沉浸播放——每一个环节都为你而设计。",
+    "headline": "把你的音乐，<accent>放回一个地方</accent>",
+    "subhead": "连上家里的 NAS 或本地文件夹，TuneSync 帮你把散落的歌整理成一个曲库——自动补封面和歌词，跟着唱还能去掉原唱。",
+    "introTitle": "音乐不该散在五六个 App 里。",
+    "introBody": "TuneSync 把你的服务器、文件夹和播放器接到一起，连上就能用。",
     "ctaPrimary": "开始使用",
     "ctaSecondary": "查看功能",
     "ctaDownload": "下载 iOS 版",
@@ -43,7 +43,7 @@
     "downloadPlatforms": {
       "ios": {
         "label": "iOS",
-        "desc": "面向 iPhone 的原生体验，连接服务器、整理曲库并沉浸播放。"
+        "desc": "为 iPhone 做的，连服务器、整理曲库、听歌，都在这。"
       },
       "android": {
         "label": "Android",
@@ -58,197 +58,53 @@
         "desc": "Windows 版本尚未开放，后续将覆盖更多听歌与整理场景。"
       }
     },
-    "statProviders": "服务商预设",
-    "statProtocols": "网络协议",
-    "statLangs": "界面语言",
     "phoneLabel": "TuneSync App 截图",
-    "chipServers": "连接服务器",
-    "chipLibrary": "曲库整理",
-    "chipKaraoke": "人声分离 K 歌",
-    "chipDiscover": "智能发现",
-    "showcasePlayerEyebrow": "沉浸播放",
-    "showcasePlayerTitle": "逐行同步的歌词，跟着节拍滚动",
-    "showcasePlayerDesc": "全屏播放器用提取自主封面的渐变铺满背景，歌词支持卡拉 OK 式逐行高亮、点击跳转、拖拽浏览，还能一键切换阅读模式。",
-    "showcasePlayerB1": "全屏 / 迷你播放器无缝切换",
-    "showcasePlayerB2": "播放队列、睡眠定时、AirPlay、循环与倍速",
-    "showcasePlayerB3": "同步歌词：自动滚动、点击跳转、拖拽浏览",
-    "showcasePlayerB4": "锁定屏幕与后台播放",
-    "showcaseKaraokeEyebrow": "设备端 K 歌",
-    "showcaseKaraokeTitle": "人声分离 + 麦克风录音，在家就能 K 歌",
-    "showcaseKaraokeDesc": "用设备端 AI 模型把歌曲拆成人声与伴奏，调低原唱歌声、跟着伴奏唱，麦克风实时录制你的声音与伴奏的混音，带延时补偿保持对齐。",
-    "showcaseKaraokeB1": "Core ML 设备端人声分离，结果可缓存复用",
-    "showcaseKaraokeB2": "实时调节原声音轨，3-2-1 倒计时开录",
-    "showcaseKaraokeB3": "录音保存为「我的录音」，可回放与分享",
-    "showcaseAIEyebrow": "AI 助手",
-    "showcaseAITitle": "自带 API Key，接入你自己的 AI",
-    "showcaseAIDesc": "把你的 API Key 与模型接进来（兼容任意 OpenAI 协议的第三方 AI），区分即时 / 推理双模型角色。AI DJ 自动续接歌单，工具调用让模型能联网搜索、查封面、查歌词，甚至控制播放与歌单。",
-    "showcaseAIB1": "兼容任意 OpenAI 协议的第三方 AI，内置 40+ 服务商预设，亦可自定义端点",
-    "showcaseAIB2": "即时模型负责推荐与清理，推理模型写专辑简介",
-    "showcaseAIB3": "AI DJ 三档自动化：预览 / 一键播放 / 自动续接",
-    "showcaseAIB4": "7+ 内置工具 + 自定义工具，支持工具链式调用",
-    "aiSpot": {
-      "cards": {
-        "dual": {
-          "title": "即时 + 推理双模型",
-          "desc": "即时模型又快又省，负责推荐与文件名清理；推理模型更深入，负责写专辑简介等复杂任务。按场景自动选用，推理强度可调。"
-        },
-        "dj": {
-          "title": "AI DJ 续接你的歌单",
-          "desc": "基于你的收听画像构建播放队列，三档自动化：先预览推荐、一键确认播放，队列快播完时自动续接，越听越懂你。"
-        },
-        "tools": {
-          "title": "工具调用，让模型动手",
-          "desc": "模型可联网搜索、抓取并放大封面、查找歌词，授权后甚至能控制播放与管理歌单；支持自定义工具与链式调用。"
-        }
-      }
-    },
-    "trustLabel": "TuneSync 串联的一切",
-    "pillarsEyebrow": "为发烧友而打造",
-    "pillarsTitle": "把听歌的每一个环节，做到位",
-    "pillarsSubtitle": "从连接曲库到沉浸播放，从智能整理到设备端 K 歌——TuneSync 让每一步都更自然。",
-    "pillars": {
-      "connect": {
-        "title": "汇于一处的多源曲库",
-        "desc": "连接 WebDAV / SMB / NFS / FTP 服务器或导入本地文件夹，Bonjour 自动发现局域网设备，文件夹级索引只收录你真正想听的内容。"
-      },
-      "playback": {
-        "title": "沉浸式播放体验",
-        "desc": "全屏播放器以封面渐变为背景，逐行同步歌词、播放队列、睡眠定时与 AirPlay 一应俱全。"
-      },
-      "karaoke": {
-        "title": "设备端人声分离 K 歌",
-        "desc": "Core ML 在本机拆分人声与伴奏，调低原唱、麦克风录音，延时补偿保持对齐，在家就能开演唱会。"
-      },
-      "ai": {
-        "title": "接入你自己的 AI 助手",
-        "desc": "用你自己的 API Key 接入任意 OpenAI 协议的第三方 AI（内置 40+ 预设），即时 / 推理双模型按场景选用，AI DJ 自动续接歌单，工具调用让模型联网、查封面、控制播放。"
-      }
-    },
-    "differentEyebrow": "与众不同",
-    "differentTitle": "你的密钥，你的设备，你的服务器",
-    "differentSubtitle": "TuneSync 不锁定你的音乐，也不替你调用 AI——掌控权始终在你手里。",
-    "different": {
-      "byok": {
-        "title": "自带 API Key",
-        "desc": "AI 请求直接发往你选择的服务商，使用你自己的密钥与额度，不经过中间人。"
-      },
-      "ondevice": {
-        "title": "设备端处理",
-        "desc": "人声分离与歌词对齐在本地 Core ML 完成，结果可缓存复用，你的音频不必上云。"
-      },
-      "protocols": {
-        "title": "开放协议",
-        "desc": "WebDAV / SMB / NFS / FTP / DAAP + Bonjour 自动发现，连接你已有的 NAS 与自建服务器。"
-      },
-      "open": {
-        "title": "不锁定曲库",
-        "desc": "你连的、你加的、你整理的，都是你的。没有账号墙，也不替你托管文件。"
-      }
-    },
-    "workflowEyebrow": "从发现到播放，一条龙",
-    "workflowTitle": "看着曲库自己就绪",
-    "workflowDesc": "从 Bonjour 发现服务器，到索引、抓取元数据、对齐歌词——整条流水线在后台自动推进，每一步的进度都看得见。",
-    "workflowTerminalTitle": "tunesync — library",
-    "workflowProgress": "曲库就绪进度",
-    "workflowDemo": {
-      "steps": {
-        "discover": {
-          "label": "正在发现…",
-          "detail": "发现 2 台服务器"
-        },
-        "connect": {
-          "label": "正在连接…",
-          "detail": "已连接 WebDAV@nas"
-        },
-        "index": {
-          "label": "正在索引…",
-          "detail": "已索引 1,284 首"
-        },
-        "metadata": {
-          "label": "正在补全…",
-          "detail": "iTunes + AI 命中 1,201 首"
-        },
-        "lyrics": {
-          "label": "正在对齐…",
-          "detail": "同步歌词 986 首"
-        },
-        "ready": {
-          "label": "准备播放…",
-          "detail": "曲库已就绪"
-        }
-      }
-    },
-    "editorEyebrow": "元数据与歌词，逐行落定",
-    "editorTitle": "让乱糟糟的标签重新整洁",
-    "editorDesc": "多源比对的结果逐字段写入，同步歌词逐行高亮——像在编辑器里看着代码被改好一样直观。",
-    "editorTabMeta": "元数据",
-    "editorTabLyrics": "歌词",
-    "editorApply": "应用",
-    "editorPanelMeta": "字段",
-    "editorPanelLyrics": "逐行同步",
-    "editorDemo": {
-      "meta": {
-        "title": { "value": "夜曲" },
-        "artist": { "value": "周杰伦" },
-        "album": { "value": "十一月的萧邦" },
-        "year": { "value": "2005" },
-        "cover": { "value": "封面 1200×1200 已获取" }
-      },
-      "lyrics": {
-        "l1": "为你弹奏萧邦的夜曲",
-        "l2": "纪念我死去的爱情",
-        "l3": "而我为你隐姓埋名",
-        "l4": "在月光下弹琴",
-        "l5": "对你心跳的感应",
-        "l6": "还是如此温热亲近"
-      }
-    },
-    "testimonialsEyebrow": "用户怎么说",
-    "testimonialsTitle": "为真正的音乐发烧友而打造",
+    "testimonialsEyebrow": "用过的人说",
+    "testimonialsTitle": "一些反馈",
     "testimonials": {
       "quote1": {
-        "text": "把整台 NAS 的音乐装进手机后，我终于不用在五个 App 之间来回切换了。封面、歌词、同步播放，一条龙搞定。",
+        "text": "以前听自己的歌要在五六个 App 之间切来切去，现在连上 NAS 就都在一个地方了。",
         "author": "林一帆",
         "role": "NAS 用户 · 自建 WebDAV"
       },
       "quote2": {
-        "text": "AI DJ 的自动续接真的懂我，队列快播完时它总能接上一首对的歌，再也不用停下来手动选。",
+        "text": "AI DJ 接着放歌这点很实用，队列快空了它自己就续上了，不用老停下来选。",
         "author": "M. Chen",
         "role": "BYOK 接入 DeepSeek"
       },
       "quote3": {
-        "text": "设备端人声分离 K 歌是个惊喜，调低原唱、跟着伴奏唱，录完还能回放对比，在家就能练。",
+        "text": "没想到能在手机上去原唱自己唱，调低人声跟着伴奏录，唱完还能回放。",
         "author": "阿凯",
         "role": "Core ML 分离"
       },
       "quote4": {
-        "text": "乱糟糟的曲库被多源元数据整理得服服帖帖，封面、年份、曲目编号一次性补全，强迫症狂喜。",
+        "text": "曲库信息以前乱七八糟，跑了一次批量整理，封面和年份基本都补上了。",
         "author": "张芮",
         "role": "批量整理整库"
       },
       "quote5": {
-        "text": "自带 API Key 这点太对了，请求直接发往我选的服务商，不经过中间人，隐私和成本都在我自己手里。",
+        "text": "用自己的 API Key 这点我喜欢，请求直接发到我选的模型，不经过别人。",
         "author": "D. Wang",
         "role": "自托管 Ollama"
       },
       "quote6": {
-        "text": "Bonjour 一下就发现了局域网里的媒体服务器，从发现到连接一气呵成，配置体验超出预期。",
+        "text": "局域网里自动就发现了我的服务器，配一下就连上了，比想象中省事。",
         "author": "Eric",
         "role": "SMB / NFS 连接"
       }
     },
-    "ctaTitle": "准备好开始了吗？",
-    "ctaBody": "跟着快速上手指南，几分钟内连上你的音乐服务器，开启属于你的音乐世界。"
+    "ctaTitle": "连上你的音乐，开始听。",
+    "ctaBody": "按快速上手指南连一台服务器，几分钟就好。"
   },
   "features": {
-    "title": "一个 App，覆盖听歌的全流程",
-    "subtitle": "从连接曲库到沉浸播放，从智能整理到设备端 K 歌，TuneSync 把每一个环节都做到位。",
+    "title": "能做的事",
+    "subtitle": "从连曲库、听歌、整理，到跟着唱——都在这一个 App 里。",
     "pageTitle": "功能特性",
     "library": {
-      "title": "多源曲库",
-      "desc": "连接 WebDAV / SMB / NFS / FTP 服务器，或导入本地文件夹，自动索引构建统一曲库。",
-      "featureTitle": "把整台 NAS 的音乐装进手机",
-      "featureDesc": "支持 Bonjour 自动发现局域网内的媒体服务器，一次配置即可连接，文件夹级索引只收录你真正想听的内容，索引完成后立即就能播放。",
+      "title": "曲库",
+      "desc": "连 WebDAV / SMB / NFS / FTP 服务器，或导入本地文件夹，自动整理成一个曲库。",
+      "featureTitle": "家里的 NAS，手机上直接听",
+      "featureDesc": "同一局域网下，TuneSync 会自动发现你的媒体服务器，配一次就能连。你选哪些文件夹，它就只索引这些，索引完就能播。",
       "featureB1": "WebDAV / SMB / NFS / FTP / DAAP 多协议",
       "featureB2": "Bonjour 自动发现局域网服务器",
       "featureB3": "文件夹级索引，只收录你选的目录",
@@ -256,21 +112,21 @@
       "screenshot": "曲库与服务器截图"
     },
     "player": {
-      "title": "沉浸播放",
-      "desc": "全屏播放器配合逐行同步歌词、播放队列、睡眠定时与 AirPlay。",
-      "featureTitle": "听歌，也可以是一种沉浸",
-      "featureDesc": "全屏播放器用提取自主封面的渐变铺满背景，三种内容模式可切换：标准、歌词、队列。歌词支持卡拉 OK 式逐行高亮、点击跳转、拖拽浏览，并在 AI 对齐时显示置信度提示。",
-      "featureB1": "全屏 / 迷你播放器无缝切换",
+      "title": "听歌",
+      "desc": "全屏播放器，逐行同步歌词，播放队列、睡眠定时、AirPlay 都有。",
+      "featureTitle": "歌词跟着唱到哪一行，亮到哪一行",
+      "featureDesc": "播放界面会跟着歌曲滚动歌词，当前行高亮，点一下就能跳到那一句。背景颜色是从封面里取的，没歌词时也能切到纯文本阅读模式。",
+      "featureB1": "全屏 / 迷你播放器，随手切",
       "featureB2": "同步歌词自动滚动、点击跳转、拖拽浏览",
       "featureB3": "播放队列、循环、随机、倍速、AirPlay",
       "featureB4": "睡眠定时与后台播放",
       "screenshot": "播放器截图"
     },
     "karaoke": {
-      "title": "人声分离 K 歌",
-      "desc": "设备端 AI 分离人声与伴奏，调低原唱、麦克风录音，延时补偿保持对齐。",
-      "featureTitle": "在家也能开一场专属演唱会",
-      "featureDesc": "进入 K 歌模式，App 用设备端 Core ML 模型把歌曲拆成人声与伴奏。调低原唱歌声、跟着伴奏唱，麦克风实时录制混音。第一次分离会花些时间，结果会被缓存复用。",
+      "title": "K 歌",
+      "desc": "在本机把人声和伴奏分开，调低原唱，用麦克风录自己唱的。",
+      "featureTitle": "去掉原唱，自己唱",
+      "featureDesc": "TuneSync 在你的手机上把一首歌拆成人声和伴奏两条音轨。把原唱拉低，跟着伴奏唱，麦克风会把你唱的录下来。第一次拆分要等一会儿，之后会缓存，下次直接用。",
       "featureB1": "Core ML 设备端人声分离（MDX / DTTNet）",
       "featureB2": "实时调节原声音轨，3-2-1 倒计时开录",
       "featureB3": "麦克风录音带输入/输出延时补偿",
@@ -278,10 +134,10 @@
       "screenshot": "K 歌截图"
     },
     "ai": {
-      "title": "AI 智能助手",
-      "desc": "自带 API Key 接入任意 OpenAI 协议的第三方 AI，即时 / 推理双模型，工具调用与 AI DJ。",
-      "featureTitle": "你的 API Key，你的 AI DJ",
-      "featureDesc": "BYOK（自带密钥）接入任意 OpenAI 协议的第三方 AI——内置 OpenAI、Anthropic、Gemini、智谱、DeepSeek、Kimi、通义千问等 40+ 预设，亦可填入自定义端点或本地 Ollama。区分即时与推理双模型角色：即时模型负责推荐与清理，推理模型写专辑简介。",
+      "title": "AI 助手",
+      "desc": "填你自己的 API Key，让 AI 帮你挑下一首、整理歌名。",
+      "featureTitle": "用你自己的 Key，接你常用的模型",
+      "featureDesc": "填进你自己的 API Key 就能用——OpenAI、Anthropic、Gemini、智谱、DeepSeek 这些都有预设，也可以填自定义地址或本地 Ollama。AI DJ 会按你平时听的歌接着放，还能帮你把乱七八糟的文件名整理干净。",
       "featureB1": "40+ 服务商预设 + 自定义 OpenAI 兼容端点",
       "featureB2": "即时 / 推理双模型，按场景自动选用",
       "featureB3": "AI DJ 三档自动化：预览 / 一键播放 / 自动续接",
@@ -289,30 +145,30 @@
       "screenshot": "AI 设置截图"
     },
     "metadata": {
-      "title": "自动元数据",
-      "desc": "iTunes / MusicBrainz / Deezer / AI 多源补全封面、歌词与歌曲信息。",
-      "featureTitle": "让乱糟糟的曲库重新整洁起来",
-      "featureDesc": "多源比对自动补全封面、歌词、发行信息、曲目编号，甚至 BPM、心情与能量。支持单曲、专辑、艺术家三个粒度，可批量刷新整库，并用来源权重决定该信谁。",
+      "title": "整理信息",
+      "desc": "自动补全封面、歌词、发行年份和曲目编号。",
+      "featureTitle": "封面、年份、歌词，一次补齐",
+      "featureDesc": "TuneSync 从 iTunes、MusicBrainz 等几个来源比对，把缺的封面、发行年份、曲目编号补上。可以一首一首来，也能整库批量跑。多个来源冲突时，按你设的权重决定听谁的。",
       "featureB1": "iTunes / MusicBrainz / Deezer / AI 多源比对",
       "featureB2": "单曲 / 专辑 / 艺术家三级刷新 + 批量整理",
       "featureB3": "来源权重与字段级「是否覆盖」策略",
       "screenshot": "元数据截图"
     },
     "discovery": {
-      "title": "榜单发现",
-      "desc": "聚合 Apple Music / Bilibili / YouTube / Last.fm 榜单，ShazamKit 识曲。",
-      "featureTitle": "不知道听什么？让榜单和 AI 给你灵感",
-      "featureDesc": "首页聚合多个平台的榜单排名，按你的收听习惯生成「For You」智能推荐。听到好歌用 ShazamKit 一键识别，历史识别自动留存。",
+      "title": "发现",
+      "desc": "看 Apple Music / Bilibili / YouTube 的榜单，听到好歌用 ShazamKit 识别。",
+      "featureTitle": "不知道听什么的时候",
+      "featureDesc": "首页能看几个平台的榜单。不知道听什么时，TuneSync 会按你平时听的给些推荐。外面听到一首好歌，打开识曲就能知道是什么。",
       "featureB1": "Apple Music / Bilibili / YouTube / Last.fm 多源榜单",
-      "featureB2": "「For You」基于收听画像的智能推荐",
+      "featureB2": "按你平时听的，给你推些歌",
       "featureB3": "ShazamKit 识曲，历史识别可回看",
       "screenshot": "发现页截图"
     }
   },
   "pricing": {
-    "badge": "会员预览",
-    "title": "核心收听免费，进阶能力交给 VIP",
-    "subtitle": "听歌、曲库与歌词始终免费；人声分离、批量整理与发现工具作为 VIP 能力呈现。当前为上线前的能力预览，并不阻断这些功能的使用。",
+    "badge": "会员",
+    "title": "听歌免费，进阶功能看 VIP",
+    "subtitle": "听歌、曲库、歌词一直免费；K 歌、批量整理这些是 VIP 功能。现在是上线前的预览，这些功能都还能正常用。",
     "free": {
       "title": "免费版",
       "subtitle": "完整的本地与远端收听体验",
@@ -360,7 +216,7 @@
     "intro": {
       "title": "TuneSync 使用文档",
       "lead": "从这里开始，了解 TuneSync 的每一个功能与用法。",
-      "body": "这份文档按使用流程组织：从连接第一个服务器、整理曲库，到沉浸播放、同步歌词、设备端 K 歌，再到 AI 助手与元数据整理。每一篇都附带步骤与提示，遇到问题可随时回到这里查阅。"
+      "body": "这份文档按用法组织：从连第一台服务器、整理曲库，到听歌、同步歌词、跟着唱，再到 AI 助手和元数据整理。每篇都有步骤，遇到问题随时回来查。"
     },
     "gettingStarted": {
       "title": "快速开始",
@@ -380,7 +236,7 @@
       },
       "step2": {
         "title": "连接服务器",
-        "body": "支持 WebDAV、SMB、NFS、FTP。先连接一台服务器，再展开曲库；可在同一处管理服务器状态、测试连接，从发现到连接一气呵成。"
+        "body": "支持 WebDAV、SMB、NFS、FTP。先连一台服务器，再往里加文件夹；可以在一处管理服务器状态、测试连接，配好就能用。"
       },
       "step3": {
         "title": "添加曲库",
@@ -516,8 +372,14 @@
         "lrclib": "开源同步歌词库，先精确匹配再模糊搜索",
         "genius": "搜索并通过页面解析抓取",
         "musixmatch": "需要 API Key",
-        "sidecar": { "k": "本地同名文件", "v": "音频旁的 .lrc / .txt 文件" },
-        "webdav": { "k": "远端同名文件", "v": "通过 WebDAV 下载音频旁的 .lrc / .txt" }
+        "sidecar": {
+          "k": "本地同名文件",
+          "v": "音频旁的 .lrc / .txt 文件"
+        },
+        "webdav": {
+          "k": "远端同名文件",
+          "v": "通过 WebDAV 下载音频旁的 .lrc / .txt"
+        }
       },
       "import": {
         "title": "导入 LRC",
@@ -541,7 +403,7 @@
     },
     "karaoke": {
       "title": "K 歌（Karaoke）",
-      "lead": "设备端人声分离 + 麦克风录音，在家开一场专属演唱会。",
+      "lead": "在本机把人声和伴奏分开，调低原唱，用麦克风录自己唱的。",
       "shotKaraoke": "K 歌截图",
       "shotHint": "替换为真实截图：public/screenshots/karaoke.png",
       "how": {
@@ -619,8 +481,14 @@
       "roles": {
         "title": "双模型角色",
         "body": "TuneSync 区分两种模型角色，按场景自动选用：",
-        "instant": { "k": "即时模型", "v": "快速、低成本，用于 AI DJ 推荐、文件名清理等" },
-        "reasoning": { "k": "推理模型", "v": "深度、高质量，用于专辑简介等复杂任务，可设置推理强度" }
+        "instant": {
+          "k": "即时模型",
+          "v": "快速、低成本，用于 AI DJ 推荐、文件名清理等"
+        },
+        "reasoning": {
+          "k": "推理模型",
+          "v": "深度、高质量，用于专辑简介等复杂任务，可设置推理强度"
+        }
       },
       "dj": {
         "title": "AI DJ",
@@ -662,7 +530,10 @@
         "musicbrainz": "开放的元数据与曲目 ID",
         "deezer": "补充封面与音频特征",
         "ai": "AI 清理文件名、推断缺失字段",
-        "embedded": { "k": "内嵌元数据", "v": "音频文件自带的标签" }
+        "embedded": {
+          "k": "内嵌元数据",
+          "v": "音频文件自带的标签"
+        }
       },
       "single": {
         "title": "单曲刷新",
@@ -735,8 +606,14 @@
       "shotHint": "替换为真实截图：public/screenshots/settings.png",
       "appearance": {
         "title": "外观",
-        "theme": { "k": "显示模式", "v": "浅色 / 深色 / 跟随系统" },
-        "language": { "k": "语言", "v": "简体中文 / English / 跟随系统" }
+        "theme": {
+          "k": "显示模式",
+          "v": "浅色 / 深色 / 跟随系统"
+        },
+        "language": {
+          "k": "语言",
+          "v": "简体中文 / English / 跟随系统"
+        }
       },
       "animation": {
         "title": "播放器动画",
