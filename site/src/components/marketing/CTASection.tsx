@@ -1,38 +1,24 @@
-"use client";
-
 import { useTranslations } from "next-intl";
-import { Link } from "../../../i18n/routing";
-import { ArrowRight } from "lucide-react";
+import AppStoreBadge from "../site/AppStoreBadge";
+import Reveal from "./Reveal";
 
 export default function CTASection() {
   const t = useTranslations("home");
   return (
-    <section className="bg-black text-white">
-      <div className="container-page grid gap-10 py-16 md:grid-cols-[1fr_auto] md:items-center md:py-20">
-        <div className="max-w-2xl">
-          <h2 className="display-sm text-4xl font-semibold sm:text-5xl md:text-6xl">
-            {t("ctaTitle")}
-          </h2>
-          <p className="mt-5 max-w-xl text-base leading-8 text-white/62 md:text-lg">
-            {t("ctaBody")}
-          </p>
+    <section className="container-page py-16 md:py-24">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[var(--radius)] px-8 py-16 text-center md:px-16"
+             style={{ background: "var(--bg-subtle)" }}>
+          <div className="pointer-events-none absolute inset-0 -z-0 opacity-60"
+               style={{ background: "radial-gradient(500px 250px at 50% 0%, var(--brand-soft-2), transparent 70%)" }}
+               aria-hidden />
+          <div className="relative">
+            <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">{t("ctaTitle")}</h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--fg-muted)]">{t("ctaBody")}</p>
+            <div className="mt-8 flex justify-center"><AppStoreBadge height={52} /></div>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-3 md:justify-end">
-          <Link
-            href="/docs/getting-started"
-            className="inline-flex items-center gap-2 rounded-md border border-white bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-transparent hover:text-white"
-          >
-            {t("ctaPrimary")}
-            <ArrowRight className="size-4" />
-          </Link>
-          <Link
-            href="/features"
-            className="inline-flex items-center rounded-md border border-white/35 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
-          >
-            {t("ctaSecondary")}
-          </Link>
-        </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

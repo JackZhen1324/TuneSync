@@ -31,11 +31,14 @@ export const DOC_NAV: DocNavGroup[] = [
   },
 ];
 
+export const DOC_NAV_FLAT: DocNavItem[] = DOC_NAV.flatMap((g) => g.items);
+
 export function findDocMeta(href: string) {
-  const flat = DOC_NAV.flatMap((g) => g.items);
+  const flat = DOC_NAV_FLAT;
   const idx = flat.findIndex((i) => i.href === href);
   return {
     prev: idx > 0 ? flat[idx - 1] : undefined,
     next: idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : undefined,
+    current: idx >= 0 ? flat[idx] : undefined,
   };
 }

@@ -4,6 +4,7 @@
     "tagline": "把散落在各处的音乐世界，重新汇于一处。",
     "rights": "保留所有权利。",
     "disclaimer": "本网站为非官方介绍与使用文档，与 Apple Inc. 无任何关联。",
+    "appleDisclaimer": "Apple、Apple 标志、iPhone、iPad 是 Apple Inc. 的商标。App Store 是 Apple Inc. 的服务标志。",
     "switchLanguage": "切换语言",
     "notFound": "抱歉，找不到这个页面。",
     "backHome": "返回首页"
@@ -26,6 +27,8 @@
     "badge": "为发烧友打造的原生 iOS 音乐 App",
     "headline": "找回<accent>属于你的</accent>音乐世界",
     "subhead": "TuneSync 把服务器、文件夹与播放入口串联成一条更自然的路径：连接 WebDAV / SMB / NFS / FTP，整理本地曲库，逐行同步歌词，让 AI 智能推荐下一首，再用人声分离进入沉浸 K 歌。",
+    "introTitle": "把散落各处的音乐世界，重新汇于一处。",
+    "introBody": "连接你的服务器、整理曲库、沉浸播放——每一个环节都为你而设计。",
     "ctaPrimary": "开始使用",
     "ctaSecondary": "查看功能",
     "ctaDownload": "下载 iOS 版",

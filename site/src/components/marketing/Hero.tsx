@@ -2,73 +2,46 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/routing";
-import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import PhoneMockup from "./PhoneMockup";
-import { downloadUrl } from "../../lib/links";
+import AppStoreBadge from "../site/AppStoreBadge";
+import Reveal from "./Reveal";
 
 export default function Hero() {
   const t = useTranslations("home");
-  const iosUrl = downloadUrl("ios");
 
   return (
-    <section
-      className="relative overflow-hidden text-white"
-      style={{ background: "var(--hero-grad)" }}
-    >
-      <div className="container-page grid min-h-[calc(100svh-4rem)] items-center gap-14 py-16 md:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] md:py-20">
-        <div className="max-w-3xl">
-          <h1 className="display text-[4.7rem] font-semibold sm:text-[6.4rem] md:text-[8.5rem]">
-            TuneSync
-          </h1>
-          <p className="display-sm mt-8 max-w-2xl text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
+    <section className="relative overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[600px] opacity-70"
+        style={{ background: "radial-gradient(600px 300px at 50% 0%, var(--brand-soft-2), transparent 70%)" }}
+        aria-hidden
+      />
+      <div className="container-page flex flex-col items-center py-20 text-center md:py-28">
+        <Reveal>
+          <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
             {t.rich("headline", {
-              accent: (children) => <span>{children}</span>,
+              accent: (chunks) => (
+                <span style={{ color: "var(--brand)" }}>{chunks}</span>
+              ),
             })}
-          </p>
-          <p className="mt-8 max-w-xl text-base leading-8 text-white/70 md:text-lg">
+          </h1>
+        </Reveal>
+        <Reveal delay={80}>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-[var(--fg-muted)] md:text-xl">
             {t("subhead")}
           </p>
-
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            {iosUrl && (
-              <a
-                href={iosUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-md border border-white bg-white px-5 py-3 text-sm font-semibold text-[var(--bg-deep)] transition hover:bg-transparent hover:text-white"
-              >
-                {t("ctaDownload")}
-                <ArrowRight className="size-4" />
-              </a>
-            )}
-            <Link
-              href="/docs/getting-started"
-              className="inline-flex items-center gap-2 rounded-md border border-white/35 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
-            >
-              {t("ctaPrimary")}
-              <ArrowUpRight className="size-4" />
-            </Link>
-            <Link
-              href="/features"
-              className="inline-flex items-center gap-2 rounded-md border border-white/35 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
-            >
-              <Play className="size-4" />
-              {t("ctaSecondary")}
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative mx-auto w-full max-w-[23rem] md:max-w-[25rem]">
-          <div
-            className="pointer-events-none absolute -inset-8 rounded-[3rem] border border-white/10"
-            aria-hidden
-          />
-          <PhoneMockup
-            screenshot="home.png"
-            alt={t("phoneLabel")}
-            label={t("phoneLabel")}
-          />
-        </div>
+        </Reveal>
+        <Reveal delay={160} className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <AppStoreBadge height={52} />
+          <Link href="/features" className="btn-ghost">
+            {t("ctaSecondary")}
+            <ChevronRight className="size-4" />
+          </Link>
+        </Reveal>
+        <Reveal delay={240} className="mt-16 w-full max-w-xs">
+          <PhoneMockup screenshot="home.png" alt={t("phoneLabel")} label={t("phoneLabel")} />
+        </Reveal>
       </div>
     </section>
   );

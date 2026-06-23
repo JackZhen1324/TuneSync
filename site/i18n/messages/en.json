@@ -4,6 +4,7 @@
     "tagline": "Bring your scattered music world back together.",
     "rights": "All rights reserved.",
     "disclaimer": "An unofficial introduction and user guide. Not affiliated with Apple Inc.",
+    "appleDisclaimer": "Apple, the Apple logo, iPhone, and iPad are trademarks of Apple Inc. App Store is a service mark of Apple Inc.",
     "switchLanguage": "Switch language",
     "notFound": "Sorry, we couldn't find that page.",
     "backHome": "Back to home"
@@ -26,6 +27,8 @@
     "badge": "A native iOS music app built for power users",
     "headline": "Bring <accent>your own</accent> music world back",
     "subhead": "TuneSync connects servers, folders, and playback entry points into a more natural path: link WebDAV / SMB / NFS / FTP, organize your library, follow synced lyrics, let AI pick the next song, then dive into on-device karaoke.",
+    "introTitle": "Bring your scattered music world back together.",
+    "introBody": "Connect your servers, organize your library, and play immersively — every step designed for you.",
     "ctaPrimary": "Get started",
     "ctaSecondary": "See features",
     "ctaDownload": "Download for iOS",

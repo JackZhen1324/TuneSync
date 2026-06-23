@@ -10,10 +10,9 @@ import Logo from "./Logo";
 import { downloadUrl } from "../../lib/links";
 
 export default function Header() {
-  const tNav = useTranslations("nav");
+  const t = useTranslations("nav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const t = tNav;
   const iosUrl = downloadUrl("ios");
 
   const links: { href: "/features" | "/pricing" | "/docs"; label: string }[] = [
@@ -30,28 +29,21 @@ export default function Header() {
   return (
     <header
       className="sticky top-0 z-50 w-full border-b backdrop-blur-xl"
-      style={{
-        borderColor: "var(--border)",
-        background: "var(--glass)",
-      }}
+      style={{ borderColor: "var(--border)", background: "var(--glass)" }}
     >
       <div className="container-page flex h-16 items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="flex items-center text-[var(--fg)]"
-          onClick={() => setOpen(false)}
-        >
-          <Logo size={32} />
+        <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <Logo size={30} />
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`text-sm transition-colors ${
+              className={`rounded-full px-3.5 py-1.5 text-sm transition-colors ${
                 isActive(l.href)
-                  ? "text-[var(--fg)]"
+                  ? "font-medium text-[var(--fg)]"
                   : "text-[var(--fg-muted)] hover:text-[var(--fg)]"
               }`}
             >
@@ -68,14 +60,14 @@ export default function Header() {
               href={iosUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary hidden md:inline-flex !px-3.5 !py-2 !text-xs"
+              className="btn-primary hidden md:inline-flex !px-4 !py-2 !text-xs"
             >
-              {tNav("download")}
+              {t("download")}
             </a>
           )}
           <button
             type="button"
-            className="inline-flex size-9 items-center justify-center rounded-md border text-[var(--fg)] md:hidden"
+            className="inline-flex size-9 items-center justify-center rounded-full border text-[var(--fg)] md:hidden"
             style={{ borderColor: "var(--border)" }}
             aria-label={t("menu")}
             aria-expanded={open}
@@ -91,35 +83,33 @@ export default function Header() {
           className="border-t px-5 py-3 md:hidden"
           style={{ borderColor: "var(--border)", background: "var(--bg-elevated)" }}
         >
-          <div className="mx-auto flex max-w-6xl flex-col gap-1">
+          <div className="container-page flex flex-col gap-1 !px-0">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-3 py-2 text-sm ${
-                  isActive(l.href)
-                    ? "bg-black/5 dark:bg-white/10"
-                    : "hover:bg-black/5 dark:hover:bg-white/5"
+                  isActive(l.href) ? "bg-[var(--bg-subtle)] font-medium" : "hover:bg-[var(--bg-subtle)]"
                 }`}
               >
                 {l.label}
               </Link>
             ))}
-            <div className="mt-2">
+            <div className="mt-2 flex items-center gap-2">
               <LangSwitcher />
+              {iosUrl && (
+                <a
+                  href={iosUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className="btn-primary !px-4 !py-2 !text-xs"
+                >
+                  {t("download")}
+                </a>
+              )}
             </div>
-            {iosUrl && (
-              <a
-                href={iosUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-                className="btn-primary mt-3 justify-center"
-              >
-                {tNav("download")}
-              </a>
-            )}
           </div>
         </nav>
       )}

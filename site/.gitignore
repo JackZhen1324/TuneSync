@@ -27,3 +27,6 @@ next-env.d.ts
 
 # local working files (design references, QA notes, scratch)
 /tmp/
+
+# next backup dirs
+/.next.bak-*/

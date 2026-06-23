@@ -1,68 +1,72 @@
 @import "tailwindcss";
 
-/* Dark mode driven by a `class` on <html>. */
+/* Theme driven by `.dark` on <html>. Light (default) is the iOS-launch look. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand-50: #f4f4f6;
-  --color-brand-100: #e9e9ee;
-  --color-brand-200: #d6d6df;
-  --color-brand-300: #acacbe;
-  --color-brand-400: #8e8ea0;
-  --color-brand-500: #343541;
-  --color-brand-600: #202123;
-  --color-brand-700: #161618;
-  --color-brand-800: #0d0d0e;
-  --color-brand-900: #000000;
-
-  --color-accent-400: #c084fc;
-  --color-accent-500: #10a37f;
-  --color-accent-600: #0e8c6c;
-
-  --font-sans: "Söhne", "Inter", ui-sans-serif, system-ui, -apple-system,
-    "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial,
-    sans-serif;
-
-  --radius-card: 0.75rem;
-
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 18px 40px -22px rgb(0 0 0 / 0.18);
-  --shadow-float: 0 32px 90px -32px rgb(0 0 0 / 0.62);
+  --font-sans: "SF Pro Display", "SF Pro Text", "Inter", ui-sans-serif,
+    system-ui, -apple-system, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* Brand palette extracted from the real TuneSync app icon:
+   dominant coral #F75E3C (~63%), soft peach #FFE0D8, deep coral #D53B20. */
 :root {
-  /* Codex light default: light page body with the dark charcoal hero. */
-  --bg: #ffffff;
+  --brand: #f75e3c;
+  --brand-hover: #e24a28;
+  --brand-deep: #d53b20;
+  --brand-soft: #ffe6df;
+  --brand-soft-2: #fff3ef;
+
+  --bg: #fbfbfd;
   --bg-elevated: #ffffff;
-  --bg-subtle: #f7f7f8;
-  --bg-deep: #343541;
-  --fg: #0d0d0d;
-  --fg-muted: #6e6e80;
-  --fg-subtle: #8e8ea0;
-  --border: rgb(0 0 0 / 0.1);
-  --border-strong: rgb(0 0 0 / 0.18);
-  --glass: rgb(255 255 255 / 0.82);
-  --ring: rgb(52 53 65 / 0.4);
-  --glow-a: rgb(52 53 65 / 0.08);
-  --glow-b: rgb(52 53 65 / 0.04);
-  /* Hero uses OpenAI's signature charcoal #343541, not pure black. */
-  --hero-grad: linear-gradient(180deg, #343541, #202123);
+  --bg-subtle: #f5f5f7;
+  --bg-inverse: #1d1d1f;
+
+  --fg: #1d1d1f;
+  --fg-muted: #6e6e73;
+  --fg-subtle: #86868b;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+
+  --glass: rgba(251, 251, 253, 0.72);
+  --ring: rgba(247, 94, 60, 0.45);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -8px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 24px 60px -20px rgba(0, 0, 0, 0.22);
+  --shadow-phone: 0 40px 80px -24px rgba(247, 94, 60, 0.28),
+    0 12px 32px -12px rgba(0, 0, 0, 0.25);
 }
 
 .dark {
-  --bg: #343541;
-  --bg-elevated: #3b3c48;
-  --bg-subtle: #202123;
-  --bg-deep: #202123;
-  --fg: #ececf1;
-  --fg-muted: #acacbe;
-  --fg-subtle: #8e8ea0;
-  --border: rgb(255 255 255 / 0.12);
-  --border-strong: rgb(255 255 255 / 0.22);
-  --glass: rgb(32 33 35 / 0.78);
-  --ring: rgb(255 255 255 / 0.32);
-  --glow-a: rgb(255 255 255 / 0.06);
-  --glow-b: rgb(255 255 255 / 0.03);
-  --hero-grad: linear-gradient(180deg, #343541, #202123);
+  --brand: #ff7a5c;
+  --brand-hover: #ff8d72;
+  --brand-deep: #ff7a5c;
+  --brand-soft: rgba(247, 94, 60, 0.16);
+  --brand-soft-2: rgba(247, 94, 60, 0.08);
+
+  --bg: #000000;
+  --bg-elevated: #0c0c0e;
+  --bg-subtle: #161618;
+  --bg-inverse: #f5f5f7;
+
+  --fg: #f5f5f7;
+  --fg-muted: #a1a1a6;
+  --fg-subtle: #6e6e73;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  --glass: rgba(0, 0, 0, 0.6);
+  --ring: rgba(255, 122, 92, 0.5);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
+  --shadow-phone: 0 40px 80px -24px rgba(247, 94, 60, 0.4),
+    0 12px 32px -12px rgba(0, 0, 0, 0.6);
 }
 
 @layer base {
@@ -71,179 +75,108 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
+    background: var(--bg);
   }
 
   body {
     background-color: var(--bg);
     color: var(--fg);
     font-family: var(--font-sans);
-    overflow-x: hidden;
+    letter-spacing: -0.011em;
   }
 
   ::selection {
-    background-color: rgba(51, 102, 255, 0.26);
+    background: var(--brand-soft);
+    color: var(--brand-deep);
   }
 
-  /* Tight, display-grade headings used in the marketing hero & sections. */
-  .display {
-    letter-spacing: -0.03em;
-    line-height: 0.98;
-  }
-  .display-sm {
-    letter-spacing: -0.025em;
-    line-height: 1.04;
-  }
-
-  /* Reading rhythm for docs prose */
-  .prose-doc {
-    line-height: 1.75;
-  }
-  .prose-doc h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-top: 2.5rem;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.01em;
-    scroll-margin-top: 6rem;
-  }
-  .prose-doc h3 {
-    font-size: 1.2rem;
+  h1, h2, h3 {
+    letter-spacing: -0.022em;
     font-weight: 600;
-    margin-top: 1.75rem;
-    margin-bottom: 0.5rem;
-    scroll-margin-top: 6rem;
-  }
-  .prose-doc p {
-    margin-bottom: 1rem;
-    color: var(--fg);
-  }
-  .prose-doc ul {
-    margin: 0.5rem 0 1.25rem 1.25rem;
-    list-style: disc;
-  }
-  .prose-doc ol {
-    margin: 0.5rem 0 1.25rem 1.25rem;
-    list-style: decimal;
-  }
-  .prose-doc li {
-    margin-bottom: 0.4rem;
-  }
-  .prose-doc strong {
-    font-weight: 600;
-  }
-  .prose-doc a {
-    color: var(--color-brand-500);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .prose-doc code {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    font-size: 0.875em;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    padding: 0.1rem 0.35rem;
-    border-radius: 0.375rem;
   }
 }
 
 @layer components {
-  /* Codex-style page container: wide, quiet, and strongly aligned. */
   .container-page {
     margin-inline: auto;
     width: 100%;
-    max-width: 86rem;
+    max-width: 72rem;
+    padding-inline: 1.5rem;
+  }
+  .container-narrow {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 48rem;
     padding-inline: 1.5rem;
   }
 
-  /* Small uppercase eyebrow label that leads each Codex-style section. */
   .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--fg-muted);
+    color: var(--brand);
   }
 
-  /* Accent text stays monochrome in the Codex-style redesign. */
-  .text-grad {
-    color: currentColor;
-  }
-
-  /* Primary button: stark, rectangular, and editorial. */
   .btn-primary {
-    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: 0.375rem;
-    padding: 0.85rem 1.2rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--bg);
-    background: var(--fg);
-    border: 1px solid var(--fg);
-    box-shadow: none;
-    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    border-radius: 980px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--brand);
+    border: 1px solid var(--brand);
+    transition: background-color 0.18s ease, transform 0.18s ease;
   }
   .btn-primary:hover {
+    background: var(--brand-hover);
     transform: translateY(-1px);
-    filter: none;
-    box-shadow: none;
-    background: transparent;
-    color: var(--fg);
   }
 
   .btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: 0.375rem;
-    padding: 0.85rem 1.2rem;
-    font-size: 0.88rem;
-    font-weight: 600;
+    border-radius: 980px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: var(--fg);
     border: 1px solid var(--border-strong);
     background: transparent;
-    backdrop-filter: none;
     transition: background-color 0.18s ease, transform 0.18s ease;
   }
   .btn-ghost:hover {
-    background: rgb(0 0 0 / 0.05);
+    background: var(--bg-subtle);
     transform: translateY(-1px);
   }
-  .dark .btn-ghost:hover {
-    background: rgb(255 255 255 / 0.08);
-  }
 
-  /* Card surface used sparingly in the monochrome editorial system. */
   .surface-card {
     border: 1px solid var(--border);
     background: var(--bg-elevated);
-    border-radius: var(--radius-card);
-    transition: border-color 0.22s ease, background-color 0.22s ease;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.22s ease, box-shadow 0.22s ease;
   }
   .surface-card:hover {
     border-color: var(--border-strong);
+    box-shadow: var(--shadow-float);
   }
 
-  /* Soft divider line between narrative sections. */
   .hr-soft {
     height: 1px;
-    background: linear-gradient(
-      to right,
-      transparent,
-      var(--border-strong),
-      transparent
-    );
+    background: var(--border);
   }
 
-  /* Scroll-reveal: children start hidden and animate in. Graceful no-JS fallback. */
   .reveal {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(20px);
     transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
@@ -255,106 +188,50 @@
   }
 }
 
-@layer utilities {
-  /* A subtle film-grain / noise layer for the cinematic dark hero. */
-  .grain {
-    position: relative;
-  }
-  .grain::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.5;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-  }
-  .dark .grain::after {
-    opacity: 0.35;
-  }
-
-  .mask-fade-y {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent,
-      black 12%,
-      black 88%,
-      transparent
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent,
-      black 12%,
-      black 88%,
-      transparent
-    );
-  }
-  .mask-fade-x {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 8%,
-      black 92%,
-      transparent
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 8%,
-      black 92%,
-      transparent
-    );
-  }
+.prose-doc {
+  line-height: 1.7;
+  font-size: 1.0625rem;
 }
-
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.prose-doc h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+  scroll-margin-top: 6rem;
 }
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 0.9;
-  }
+.prose-doc h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 6rem;
 }
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+.prose-doc p {
+  margin-bottom: 1rem;
+  color: var(--fg);
 }
-.animate-float-slow {
-  animation: float-slow 7s ease-in-out infinite;
+.prose-doc ul, .prose-doc ol {
+  margin: 0.5rem 0 1.25rem 1.25rem;
 }
-.animate-pulse-glow {
-  animation: pulse-glow 6s ease-in-out infinite;
+.prose-doc ul { list-style: disc; }
+.prose-doc ol { list-style: decimal; }
+.prose-doc li { margin-bottom: 0.4rem; }
+.prose-doc a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.animate-marquee {
-  animation: marquee 32s linear infinite;
+.prose-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .animate-float-slow,
-  .animate-pulse-glow,
-  .animate-marquee {
-    animation: none;
-  }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
