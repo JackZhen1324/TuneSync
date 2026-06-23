@@ -2,11 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/routing";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
 import PhoneMockup from "./PhoneMockup";
+import { downloadUrl } from "../../lib/links";
 
 export default function Hero() {
   const t = useTranslations("home");
+  const iosUrl = downloadUrl("ios");
 
   return (
     <section
@@ -28,12 +30,23 @@ export default function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
+            {iosUrl && (
+              <a
+                href={iosUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md border border-white bg-white px-5 py-3 text-sm font-semibold text-[var(--bg-deep)] transition hover:bg-transparent hover:text-white"
+              >
+                {t("ctaDownload")}
+                <ArrowRight className="size-4" />
+              </a>
+            )}
             <Link
               href="/docs/getting-started"
-              className="inline-flex items-center gap-2 rounded-md border border-white bg-white px-5 py-3 text-sm font-semibold text-[var(--bg-deep)] transition hover:bg-transparent hover:text-white"
+              className="inline-flex items-center gap-2 rounded-md border border-white/35 px-5 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10"
             >
               {t("ctaPrimary")}
-              <ArrowRight className="size-4" />
+              <ArrowUpRight className="size-4" />
             </Link>
             <Link
               href="/features"

@@ -19,7 +19,8 @@
     "gettingStarted": "快速开始",
     "product": "产品",
     "resources": "资源",
-    "menu": "菜单"
+    "menu": "菜单",
+    "download": "下载"
   },
   "home": {
     "badge": "为发烧友打造的原生 iOS 音乐 App",
@@ -27,6 +28,7 @@
     "subhead": "TuneSync 把服务器、文件夹与播放入口串联成一条更自然的路径：连接 WebDAV / SMB / NFS / FTP，整理本地曲库，逐行同步歌词，让 AI 智能推荐下一首，再用人声分离进入沉浸 K 歌。",
     "ctaPrimary": "开始使用",
     "ctaSecondary": "查看功能",
+    "ctaDownload": "下载 iOS 版",
     "downloadEyebrow": "下载",
     "downloadTitle": "下载 TuneSync",
     "downloadSubtitle": "先从 iPhone 开始，把自己的音乐服务器、本地曲库和播放器统一起来。其他平台正在准备中，敬请期待。",

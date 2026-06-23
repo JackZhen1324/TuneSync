@@ -4,16 +4,16 @@ import type { LucideIcon } from "lucide-react";
 import { ArrowRight, Clock3, Laptop, Monitor, Smartphone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/routing";
+import { downloadUrl, type Platform } from "../../lib/links";
 
 const PLATFORMS: {
-  key: "ios" | "android" | "macos" | "windows";
+  key: Platform;
   icon: LucideIcon;
-  available: boolean;
 }[] = [
-  { key: "ios", icon: Smartphone, available: true },
-  { key: "android", icon: Smartphone, available: false },
-  { key: "macos", icon: Laptop, available: false },
-  { key: "windows", icon: Monitor, available: false },
+  { key: "ios", icon: Smartphone },
+  { key: "android", icon: Smartphone },
+  { key: "macos", icon: Laptop },
+  { key: "windows", icon: Monitor },
 ];
 
 export default function DownloadSection() {
@@ -33,17 +33,21 @@ export default function DownloadSection() {
       </div>
 
       <div className="mt-14 grid border-l border-t md:grid-cols-4" style={{ borderColor: "var(--border)" }}>
-        {PLATFORMS.map(({ key, icon: Icon, available }) => {
+        {PLATFORMS.map(({ key, icon: Icon }) => {
           const label = t(`downloadPlatforms.${key}.label`);
           const description = t(`downloadPlatforms.${key}.desc`);
+          const url = downloadUrl(key);
+          const available = Boolean(url);
 
-          if (available) {
+          if (available && url) {
             return (
-              <Link
+              <a
                 key={key}
-                href="/docs/getting-started"
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={t("downloadIOSAria")}
-                className="group relative border-b border-r bg-black p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-72"
+                className="group relative border-b border-r bg-[var(--bg-deep)] p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-72"
                 style={{ borderColor: "var(--border)" }}
               >
                 <div className="relative flex h-full flex-col justify-between gap-10">
@@ -66,7 +70,7 @@ export default function DownloadSection() {
                     </span>
                   </div>
                 </div>
-              </Link>
+              </a>
             );
           }
 

@@ -7,12 +7,14 @@ import { Menu, X } from "lucide-react";
 import LangSwitcher from "./LangSwitcher";
 import ThemeToggle from "./ThemeToggle";
 import Logo from "./Logo";
+import { downloadUrl } from "../../lib/links";
 
 export default function Header() {
   const tNav = useTranslations("nav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const t = tNav;
+  const iosUrl = downloadUrl("ios");
 
   const links: { href: "/features" | "/pricing" | "/docs"; label: string }[] = [
     { href: "/features", label: t("features") },
@@ -61,9 +63,16 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <LangSwitcher className="hidden sm:inline-flex" />
           <ThemeToggle />
-          <Link href="/docs/getting-started" className="btn-ghost hidden md:inline-flex !px-3.5 !py-2 !text-xs">
-            iOS
-          </Link>
+          {iosUrl && (
+            <a
+              href={iosUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary hidden md:inline-flex !px-3.5 !py-2 !text-xs"
+            >
+              {tNav("download")}
+            </a>
+          )}
           <button
             type="button"
             className="inline-flex size-9 items-center justify-center rounded-md border text-[var(--fg)] md:hidden"
@@ -100,9 +109,17 @@ export default function Header() {
             <div className="mt-2">
               <LangSwitcher />
             </div>
-            <Link href="/docs/getting-started" onClick={() => setOpen(false)} className="btn-primary mt-3 justify-center">
-              iOS
-            </Link>
+            {iosUrl && (
+              <a
+                href={iosUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="btn-primary mt-3 justify-center"
+              >
+                {tNav("download")}
+              </a>
+            )}
           </div>
         </nav>
       )}

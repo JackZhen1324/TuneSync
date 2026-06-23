@@ -19,7 +19,8 @@
     "gettingStarted": "Getting started",
     "product": "Product",
     "resources": "Resources",
-    "menu": "Menu"
+    "menu": "Menu",
+    "download": "Download"
   },
   "home": {
     "badge": "A native iOS music app built for power users",
@@ -27,6 +28,7 @@
     "subhead": "TuneSync connects servers, folders, and playback entry points into a more natural path: link WebDAV / SMB / NFS / FTP, organize your library, follow synced lyrics, let AI pick the next song, then dive into on-device karaoke.",
     "ctaPrimary": "Get started",
     "ctaSecondary": "See features",
+    "ctaDownload": "Download for iOS",
     "downloadEyebrow": "Download",
     "downloadTitle": "Download TuneSync",
     "downloadSubtitle": "Start on iPhone today and bring your music servers, local library, and player into one place. More platforms are in the works.",
