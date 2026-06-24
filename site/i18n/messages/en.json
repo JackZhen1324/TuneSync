@@ -185,8 +185,8 @@
   "docs": {
     "intro": {
       "title": "TuneSync docs",
-      "lead": "How to use it, page by page.",
-      "body": "Ordered by what you actually do: connect a server, organize your library, then play, read lyrics, sing along, and finally the AI and metadata stuff. Each page has steps — come back whenever you forget."
+      "lead": "How to use it, page by page — from connecting a server to singing along.",
+      "body": "Ordered by what you actually do: bring in your server or folders, build a library, then play, read lyrics, sing along, and finally the AI and metadata stuff. Each page has steps and tips — follow along as you go, and come back when you forget a step. If it's your first time, start with Getting started — you'll have your first song playing in a few minutes."
     },
     "gettingStarted": {
       "title": "Getting started",
@@ -195,7 +195,7 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/getting-started.png",
       "overview": {
         "title": "The overall flow",
-        "body": "First launch walks you through four pages — welcome, connect a server, add your library, polish (artwork, lyrics, karaoke) — then drops you into a setup wizard that tracks the rest as a checklist."
+        "body": "First launch walks you through four pages — welcome, connect a server, add your library, polish (artwork, lyrics, karaoke) — each explaining one step. Then it drops you into a setup wizard that tracks the rest (how many servers, folders, tracks, pending items) as a checklist."
       },
       "guide": {
         "title": "The four steps"
@@ -206,7 +206,7 @@
       },
       "step2": {
         "title": "Connect servers",
-        "body": "Supports WebDAV, SMB, NFS, FTP. Connect a server first, then add folders. Manage server status and test connections in one place — once it's set up, you're good."
+        "body": "Supports WebDAV, SMB, NFS, FTP. Connect a server first, then add folders to it. Manage every server's status and test connectivity in one place — once configured it works, no jumping between discovery and connection."
       },
       "step3": {
         "title": "Add your library",
@@ -224,7 +224,7 @@
         "title": "Permissions you'll be asked for",
         "body": "Only when you use the thing that needs it:",
         "localNetwork": "Local network — to find LAN WebDAV / FTP / SMB / NFS servers",
-        "microphone": "Microphone — song recognition and karaoke recording",
+        "microphone": "Microphone — for song recognition (listening to what's playing around you) and karaoke recording",
         "speech": "Speech recognition — transcribes the vocal on-device to add timing to plain lyrics",
         "applemusic": "Apple Music — so playback can continue in the background"
       },
@@ -241,11 +241,11 @@
       "protocols": {
         "title": "Supported protocols",
         "body": "Connects over these protocols — self-hosted servers or a NAS:",
-        "webdav": "The most common for self-hosting; also supports encrypted WebDAVs",
-        "smb": "Windows sharing and most NAS devices, enabled by default",
-        "nfs": "Common network filesystem on Linux / NAS",
-        "ftp": "Traditional file transfer; supports encrypted FTPS",
-        "daap": "iTunes music sharing protocol"
+        "webdav": "WebDAV — the most common for self-hosting; also supports encrypted WebDAVs",
+        "smb": "SMB — Windows sharing and most NAS defaults; common for Synology, QNAP, etc.",
+        "nfs": "NFS — common network filesystem on Linux and NAS, fast",
+        "ftp": "FTP / FTPS — classic file transfer; FTPS is the encrypted variant",
+        "daap": "DAAP — iTunes music sharing protocol"
       },
       "connect": {
         "title": "Connect a server",
@@ -274,8 +274,8 @@
       "connectStep": {},
       "indexing": {
         "title": "Indexing",
-        "body": "Once folders are added, TuneSync scans the audio, reads embedded info, and builds the library. Plays when it's done. It runs in the background; see progress on Home and under “Settings → Background Tasks & Logs”.",
-        "note": "Only the folders you pick get indexed — it won't pull in the whole disk."
+        "body": "Once folders are added, TuneSync scans the audio files inside (mp3, flac, m4a, wav, etc.), reads each file's embedded info (title, artist, album, artwork), and builds the library structure. You can play as soon as it's done — no need to wait for everything to be read. It runs in the background; see progress on Home and under Settings → Background Tasks & Logs — e.g. how many tracks scanned, how many left.",
+        "note": "Only the folders you pick get indexed — it won't pull in the whole disk. When you add new songs to a folder later, the next launch does an incremental scan — no full rebuild."
       },
       "playlists": {
         "title": "Playlists and favorites",
@@ -292,37 +292,37 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/player-lyrics.png",
       "modes": {
         "title": "Three modes",
-        "body": "Switch between three at the bottom:",
-        "normal": "Standard: big artwork, track info, scrubber, controls",
-        "lyrics": "Lyrics: scroll line by line",
-        "queue": "Queue: see what's up next"
+        "body": "The full-screen player switches between three views at the bottom — tap to change:",
+        "normal": "Standard — big artwork, track title and artist, scrubber, playback controls. The background gradient is pulled from the artwork, so it's different for every track.",
+        "lyrics": "Lyrics — scroll line by line in time with the song, current line highlighted. Tracks without timing fall back to reading mode (plain text).",
+        "queue": "Queue — see and reorder what's coming up next."
       },
       "controls": {
         "title": "Playback controls",
-        "body": "The control area offers:",
+        "body": "The control area has:",
         "play": "Play / pause / previous / next",
-        "scrub": "Drag the scrubber to anywhere",
-        "shuffle": "Shuffle and repeat modes",
-        "speed": "Playback speed",
-        "airplay": "AirPlay to another device"
+        "scrub": "Drag the scrubber to any second — let go to seek",
+        "shuffle": "Shuffle and repeat (off / list / single track)",
+        "speed": "Playback speed (0.75x / 1x / 1.25x / 1.5x / 2x) — handy for practicing a song or skimming",
+        "airplay": "AirPlay to a HomePod, Apple TV, or other AirPlay device"
       },
       "menu": {
         "title": "Top menu",
         "body": "The full-screen player's top menu has:",
-        "importLrc": "Import an LRC lyrics file",
-        "searchLyrics": "Search lyrics",
-        "generateLyrics": "Generate synced lyrics (AI-aligns the timing)",
-        "searchMetadata": "Search metadata",
-        "aiDj": "AI DJ",
-        "sleep": "Sleep timer"
+        "importLrc": "Import LRC — pick a lyrics file, reads the timing and applies instantly",
+        "searchLyrics": "Search lyrics — from LRCLIB / Genius / Musixmatch",
+        "generateLyrics": "Generate synced lyrics — when you only have plain text, let AI figure out the timing on-device",
+        "searchMetadata": "Search metadata — find artwork and release info for the current track",
+        "aiDj": "AI DJ — let AI queue songs based on your taste",
+        "sleep": "Sleep timer — auto-stops after 15 min to 1 hour"
       },
       "queue": {
         "title": "Play queue",
-        "body": "The queue is what's coming up — tap to play, swipe to remove, or clear all (it asks again first). When it's empty it nudges you to add from the library."
+        "body": "The queue is what's coming up. Tap a track to play it now, swipe to remove, or clear all (it asks again to prevent mistakes). When it's empty it nudges you to add from the library. Adding a track can mean play next or add to end of queue."
       },
       "bg": {
         "title": "Background and lock screen",
-        "body": "Keeps playing on the lock screen and in the background. Control Center and the lock screen both control it."
+        "body": "TuneSync declares a background audio entitlement, so playback continues on the lock screen and in the background. The lock screen, Control Center, and Dynamic Island all control playback and show lyrics — no need to switch back to the app."
       }
     },
     "lyrics": {
@@ -332,43 +332,43 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/lyrics.png",
       "modes": {
         "title": "Two modes",
-        "body": "Switches automatically based on whether there's timing:",
-        "synced": "Synced: aligned to playback, current line highlighted, auto-scroll, tap a line to jump, drag to browse — it resumes following when you let go",
-        "reading": "Reading: just plain-text lyrics, no timing"
+        "body": "The lyrics view switches automatically based on whether timing exists:",
+        "synced": "Synced: aligned to playback, current line highlighted, auto-scroll. Tap a line to jump there; drag up or down to browse (it resumes following the current position after a moment). Gradient masks fade the top and bottom edges.",
+        "reading": "Reading: just plain-text lyrics, no timing. Good when you want to read without the scroll."
       },
       "sources": {
         "title": "Where lyrics come from",
-        "body": "Tried in this order:",
-        "lrclib": "Open lyrics DB — exact match first, then a fuzzy search",
-        "genius": "Found by search, then parsed from the page",
-        "musixmatch": "Needs your own API key",
+        "body": "TuneSync tries lyrics sources in this order and stops at the first hit:",
+        "lrclib": "LRCLIB — open synced-lyrics database. Exact match first (artist + title + duration), then a fuzzy search. The most common source; free, no key.",
+        "genius": "Genius — found by search, then parsed from the page HTML. Usually plain text, may need timing generated.",
+        "musixmatch": "Musixmatch — comprehensive, but needs your own API key (set under Settings → Metadata & Lyrics).",
         "sidecar": {
           "k": "Local sidecar",
-          "v": "a .lrc / .txt next to the audio"
+          "v": "a .lrc or .txt beside the audio file — lyrics that came with your import"
         },
         "webdav": {
           "k": "Remote sidecar",
-          "v": "a .lrc / .txt next to the audio, pulled over WebDAV"
+          "v": "a .lrc / .txt beside the audio on the server, pulled over WebDAV"
         }
       },
       "import": {
         "title": "Import LRC",
-        "body": "From the player's top menu, pick “Import LRC” and choose a file. It reads the timing and applies right away."
+        "body": "From the player's top menu, pick Import LRC and choose a .lrc file. It reads the timing tags and applies immediately — that track uses this lyrics file from now on. You can also import plain-text .txt, but that only enters reading mode."
       },
       "generate": {
         "title": "Generate synced lyrics",
-        "body": "Only have plain text? Pick “Generate Synced Lyrics” from the top menu. TuneSync listens for when the vocal happens on-device, then lines it up with the text — and tells you how confident it is along the way."
+        "body": "Only have plain text and want line sync? Pick Generate Synced Lyrics from the top menu. TuneSync listens on-device for when the vocal happens in the song, then aligns it with the text. It tells you its confidence along the way, and the result is stored on the track so it's not recomputed."
       },
       "confidence": {
         "title": "About “confidence”",
-        "body": "AI-aligned lyrics come with a confidence score. If it's low it warns you and you can retry. The result is stored on the track so it's not recomputed."
+        "body": "AI-aligned lyrics come with a confidence score (0–100%). If it's low (say, under 60%) it warns you and you can retry. Confidence depends on whether there's a clear vocal, and how well the text lines map onto the detected timing. If you don't like the result, edit the LRC and re-import to overwrite."
       },
       "tuning": {
         "title": "Lyrics display",
-        "body": "In settings you can tweak:",
-        "size": "Font size",
-        "spacing": "Line spacing",
-        "motion": "Motion (honors the system “Reduce Motion” setting)"
+        "body": "In Settings you can tweak how lyrics look:",
+        "size": "Font size — bigger to read easily, smaller to fit more lines on screen",
+        "spacing": "Line spacing — how much room between lines",
+        "motion": "Motion — honors the system Reduce Motion setting; on means less scrolling animation"
       }
     },
     "karaoke": {
@@ -378,7 +378,7 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/karaoke.png",
       "how": {
         "title": "How it works",
-        "body": "In karaoke mode, TuneSync splits the song into “vocal” and “accompaniment” tracks right on your phone, and the two volumes are independent: drop the vocal, keep the accompaniment, sing along."
+        "body": "In karaoke mode, TuneSync splits the song into vocal and accompaniment stems right on your phone, and the two volumes are independent: drop the original vocal, keep the accompaniment, and sing along. The whole thing runs on-device — your songs aren't uploaded and it doesn't hit the network."
       },
       "flow": {
         "title": "The karaoke flow",
@@ -401,32 +401,32 @@
       },
       "balance": {
         "title": "Vocal slider",
-        "body": "The karaoke console has a vertical slider: push up to raise the original vocal, push to the top to collapse it back into the mic button. After the split finishes it pops open with a little haptic."
+        "body": "The karaoke console has a vertical slider: push up to raise the original vocal, push to the top to collapse it back into the mic button. After the split finishes it pops open with a little haptic. Drag to the bottom to fully mute the vocal, or stop halfway to leave a little for guidance."
       },
       "record": {
         "title": "Recording",
-        "body": "Tap record to start:",
-        "countdown": "3-2-1 “Get ready”",
-        "meter": "Live input level (green → yellow → red) and a timer while recording",
-        "pause": "Pause and resume, in sync with playback",
-        "save": "On stop: “Save and Stop”, “Discard”, or “Keep going”"
+        "body": "Tap record to start; the full flow:",
+        "countdown": "3-2-1 Get ready countdown — time to put on headphones, find the key",
+        "meter": "Live input level (green → yellow → red) and a timer while recording, so you can see how loud you are and how long you've been singing",
+        "pause": "Pause and resume, in sync with playback — pause the song and recording stops too",
+        "save": "On stop: Save and Stop, Discard Recording, or Keep going — no accidental deletes"
       },
       "model": {
         "title": "First time needs a model",
-        "body": "Vocal separation uses an on-device model (MDX-light). First use means getting it ready under “Settings → Vocal Separation”; it works in chunks stitched together, caches the result for reuse — the first run is a bit slower."
+        "body": "Vocal separation uses an on-device model (MDX-light, running via Core ML). First use means getting it ready under Settings → Vocal Separation — just download it. Separation works in chunks stitched together (chunk + overlap-add), and the result is cached for reuse — so the first time a given song takes a bit (tens of seconds), after that it's instant."
       },
       "recordings": {
         "title": "My Recordings",
-        "body": "Saved recordings are in “Settings → My Recordings” — play, share, or clear to free space."
+        "body": "Saved recordings live in Settings → My Recordings, as .m4a files. Play them back, share them (AirDrop, WeChat, Files), or clear them to free space. A recording contains both your voice and the accompaniment, auto-mixed with latency compensation so the vocal and backing stay aligned."
       },
       "live": {
         "title": "Live Activity",
-        "body": "Separation supports Live Activity — progress shows in the Dynamic Island and on the lock screen."
+        "body": "Separation supports Live Activity — the Dynamic Island and lock screen show how far along the split is, so you don't have to stay in the app and wait."
       }
     },
     "ai": {
       "title": "AI assistant",
-      "lead": "Bring your own API key. Let AI pick songs, tidy file names, or write album intros.",
+      "lead": "Bring your own API key. Let AI pick the next song, tidy messy file names, or write album intros. It uses your own key — requests go straight to your chosen provider, not through any third party.",
       "shotAi": "AI settings screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/ai-dj.png",
       "setup": {
@@ -437,11 +437,11 @@
         },
         "step2": {
           "title": "Pick a provider",
-          "body": "Under “Connection” choose one — OpenAI, Anthropic, Gemini, Zhipu, DeepSeek and others are preset, or enter a custom endpoint — then the Base URL."
+          "body": "Under Connection choose one — OpenAI, Anthropic, Gemini, Zhipu, DeepSeek, Kimi, Qwen and others are preset, or enter a custom OpenAI-compatible endpoint or local Ollama. Then the Base URL (presets fill it in automatically)."
         },
         "step3": {
           "title": "Enter key and model",
-          "body": "Paste your API key, then pick a fast model and a reasoning model (type a name or choose from “Available Models”)."
+          "body": "Paste your API key (secure input), then pick a fast model (for recommendations, filename cleanup) and a reasoning model (for things like album intros that need thinking). You can type a model name, or tap Available Models to pick from the list pulled from your provider."
         },
         "step4": {
           "title": "Test it",
@@ -450,42 +450,42 @@
       },
       "roles": {
         "title": "Two models",
-        "body": "Two roles, picked automatically by task:",
+        "body": "TuneSync has two model roles, picked automatically by task — no manual switching:",
         "instant": {
           "k": "Fast model",
-          "v": "Quick and cheap — recommendations, filename cleanup, that kind of thing"
+          "v": "Quick and cheap — AI DJ recommendations, filename cleanup, quick Q&A; replies in seconds"
         },
         "reasoning": {
           "k": "Reasoning model",
-          "v": "Slower, higher quality — writes album intros; you can set how hard it thinks"
+          "v": "Slower, higher quality — for things like album intros that need some thought; you can set how hard it thinks (minimal/low/medium/high). Also supports reasoning-model-specific adaptive thinking."
         }
       },
       "dj": {
         "title": "AI DJ",
-        "body": "The DJ queues songs based on what you usually play, with three levels:",
-        "preview": "Show recommendations, you choose",
-        "oneTap": "Play right after you confirm",
-        "auto": "Tops up the queue itself when it's running low"
+        "body": "The AI DJ queues songs based on what you play, skip, and favorite. Three autonomy levels:",
+        "preview": "Preview before play — show recommendations, you choose what to play",
+        "oneTap": "One-tap play — confirm and it starts",
+        "auto": "Automatic continuation — tops up the queue itself when it's running low, hands-off"
       },
       "tools": {
         "title": "Tool calling",
-        "body": "When on, the model can use these tools (some need your OK):",
-        "web": "web_search: search with DuckDuckGo",
-        "fetch": "fetch_webpage: pull a page's content",
-        "art": "search_album_art: find artwork, upscale to 1200×1200",
-        "lyrics": "search_lyrics: find lyrics",
-        "library": "search_library: search inside your library",
-        "playback": "control_playback: control playback (needs permission)",
-        "playlist": "manage_playlist: manage playlists (needs permission)",
-        "custom": "Custom tools: ones you add"
+        "body": "When Tool calling is on, the model can use these tools (read-only ones are always allowed; read-write ones need your OK):",
+        "web": "web_search — search the web via DuckDuckGo (album background, artist info)",
+        "fetch": "fetch_webpage — pull a specific page's content for closer reading",
+        "art": "search_album_art — find artwork, upscale small images to 1200x1200",
+        "lyrics": "search_lyrics — find lyrics",
+        "library": "search_library — search songs within your library",
+        "playback": "control_playback — control playback (play/pause/skip; needs permission)",
+        "playlist": "manage_playlist — manage playlists (add/remove; needs permission)",
+        "custom": "Custom tools — tools you define, letting the model call your own endpoints"
       },
       "privacy": {
         "title": "On privacy",
-        "body": "It uses your own key and sends requests straight to your chosen provider. Turn on tool calling and “smart tool selection” as needed — keep the capability, control the cost."
+        "body": "AI calls use your own key and go straight to your chosen provider — TuneSync's servers don't handle them. Turn on tool calling and smart tool selection as needed: keep the capability while controlling cost. Any AI feature can be switched off in settings at any time."
       },
       "trial": {
         "title": "Trial chat",
-        "body": "There's a trial chat under “AI Assistance” to check the connection without opening a specific feature."
+        "body": "There's a trial chat under AI Assistance — send a message without opening a specific feature to verify the connection works and the model replies. After setting up your key, it's a good idea to test here first."
       }
     },
     "metadata": {
@@ -495,42 +495,42 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/metadata.png",
       "sources": {
         "title": "Sources",
-        "body": "TuneSync pulls from these and picks the best match:",
-        "itunes": "Artwork, release info, album tracklist; artwork up to 1200×1200",
-        "musicbrainz": "Open metadata and track IDs",
-        "deezer": "Extra artwork and audio features",
-        "ai": "AI tidies file names and guesses missing fields",
+        "body": "TuneSync pulls info from these sources, then compares and picks the best:",
+        "itunes": "iTunes — artwork, release year, copyright, album tracklist; artwork up to 1200x1200. Highest match quality.",
+        "musicbrainz": "MusicBrainz — open metadata with stable track IDs, useful for cross-referencing other databases.",
+        "deezer": "Deezer — extra artwork and audio features (BPM, energy, etc.).",
+        "ai": "AI — uses your configured model to clean filenames and guess missing fields (e.g. fixing a misspelled title).",
         "embedded": {
           "k": "Embedded",
-          "v": "tags already in the audio file"
+          "v": "tags already in the audio file (ID3 / FLAC tags) — read first during indexing"
         }
       },
       "single": {
         "title": "Refresh one track",
-        "body": "From track details or the player's top menu, pick “Search Metadata”. It lists candidates scored by match quality — pick one and it writes back."
+        "body": "From a track's detail page or the player's top menu, pick Search Metadata. The app lists candidates, each scored by match quality (does the title, artist, album, duration line up?). Pick one, choose which fields to write, and it writes back. Every field change records who provided it."
       },
       "album": {
         "title": "A whole album",
-        "body": "The album page can refresh the whole thing:",
-        "tracklist": "Match the full tracklist (multi-disc included)",
-        "missing": "Flag what's “Missing from library”",
-        "intro": "Have AI write an album intro (checks the web first, streams as it writes)"
+        "body": "The album detail page can refresh the whole album at once — no need to go track by track:",
+        "tracklist": "Match the full tracklist — multi-disc included, disc and track numbers line up",
+        "missing": "Flag what's Missing from library — tells you which tracks from the album you haven't collected",
+        "intro": "Have AI write an album intro — verifies the album's background on the web first, streams the text as it writes, with a confidence score"
       },
       "artist": {
         "title": "A single artist",
-        "body": "The artist page refreshes the artist — bio, image, MusicBrainz / Wikidata / Wikipedia IDs — and applies it to all that artist's tracks."
+        "body": "The artist detail page refreshes the artist — bio, image, MusicBrainz / Wikidata / Wikipedia IDs. Once refreshed it applies to all that artist's tracks automatically, so you don't edit them one by one."
       },
       "weights": {
         "title": "Source weights",
-        "body": "Under “Settings → Metadata & Lyrics” set weights and per-field “overwrite” rules — who wins when sources disagree, whether to touch what's already there."
+        "body": "Under Settings → Metadata & Lyrics set source weights and per-field overwrite rules. When sources disagree, your weights decide who wins; and whether to overwrite existing values. For example: prefer iTunes for artwork, but trust embedded tags for the title."
       },
       "batch": {
         "title": "Batch organize",
-        "body": "Whole-library batch refresh works too; the background task center tracks progress. Pick a strategy: “standard”, “metadata only”, “batch disk artwork”."
+        "body": "Whole-library batch refresh works too — fill in every track missing info in one go. The background task center tracks progress: how many done, how many failed. Apply strategies include standard, metadata only (skip artwork), and batch disk artwork (saves memory)."
       },
       "history": {
         "title": "History and rollback",
-        "body": "Every refresh records who gave each field and what it changed to — handy for looking back or reverting."
+        "body": "Every refresh records who provided each field, what the value was before, and what it became. You can review it in Metadata History and revert if you don't like it."
       }
     },
     "discovery": {
@@ -540,33 +540,33 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/discovery.png",
       "home": {
         "title": "Home",
-        "body": "Home lays out sections based on your library:",
-        "foryou": "For You: a recommendation playlist based on your taste",
-        "most": "Most Played",
-        "recent": "Continue Listening / Recently Added",
-        "favorites": "Favorites",
-        "playlists": "Playlists",
-        "genres": "Browse by Genre"
+        "body": "Home arranges sections based on what's in your library and what you listen to — empty sections hide themselves:",
+        "foryou": "For You — a recommendation playlist computed from your taste, refreshed each visit",
+        "most": "Most Played — the tracks you loop the most",
+        "recent": "Continue Listening / Recently Added — pick up where you left off, or see what just landed",
+        "favorites": "Favorites — tracks you've favorited",
+        "playlists": "Playlists — the ones you've built",
+        "genres": "Browse by Genre — rock, electronic, classical, etc."
       },
       "trends": {
         "title": "Multi-platform charts",
-        "body": "After enabling chart sources under “Settings → Home & Discovery”, Home shows them:",
-        "apple": "Apple Music RSS",
-        "bili": "Bilibili",
-        "youtube": "YouTube",
-        "lastfm": "Last.fm"
+        "body": "After enabling chart sources under Settings → Home & Discovery, Home shows these platforms' charts, ranked:",
+        "apple": "Apple Music RSS charts",
+        "bili": "Bilibili music charts",
+        "youtube": "YouTube trending",
+        "lastfm": "Last.fm play-count charts"
       },
       "foryou": {
         "title": "For You",
-        "body": "For You puts out a main pick (a collage of a few tracks' artwork) plus secondary picks, each with a reason and a “Preview Mix” — tap to preview."
+        "body": "For You puts out a main pick (a collage of a few tracks' artwork) plus secondary picks, each with a reason and a Preview Mix — tap to preview, and add to the queue if you like it."
       },
       "feedback": {
         "title": "Feedback tuning",
-        "body": "Not loving a pick? Give the AI DJ feedback (like / less of this) from the player menu and it adjusts."
+        "body": "Not loving a pick? From the full-screen player's menu, tell the AI DJ — like or less of this. The app remembers and steers future recommendations toward what you like."
       },
       "recognize": {
         "title": "Recognition",
-        "body": "Identify what's playing around you with ShazamKit. History is kept — browse it under “Settings → Song Recognition”."
+        "body": "Hear a good song at a café or shop? Open Recognition and TuneSync uses ShazamKit to listen for a few seconds and tell you what it is. Recognized songs are kept — browse them under Settings → Song Recognition, and add favorites straight to your library."
       }
     },
     "settings": {
@@ -583,34 +583,35 @@
         "language": {
           "k": "Language",
           "v": "Simplified Chinese / English / System"
-        }
+        },
+        "body": "Theme and language follow the system by default, or set them explicitly. Changes apply immediately — no restart."
       },
       "animation": {
         "title": "Player animation",
-        "body": "Tweak the player animations:",
-        "height": "Mini-player height",
-        "ramp": "Backdrop ramp strength",
-        "delay": "Controls reveal delay"
+        "body": "Tune the player animations if they feel like too much or too little:",
+        "height": "Mini-player height — how much room it takes at the bottom",
+        "ramp": "Backdrop ramp — how strongly the artwork color fills the background",
+        "delay": "Controls reveal — the timing of buttons appearing when you enter full-screen"
       },
       "cache": {
         "title": "Cache and storage",
-        "body": "Under “Settings → Cache & Storage”, see how much artwork, audio, and temp cache take up — and clear them."
+        "body": "Under Settings → Cache & Storage, see how much artwork, audio, and temp cache take up. If it's gotten large, clear it in one tap. Clearing doesn't touch your library — next time you browse it just regenerates thumbnails and caches."
       },
       "tasks": {
         "title": "Background tasks and logs",
-        "body": "“Settings → Background Tasks & Logs” puts progress, cancellable tasks, and failure reasons for four task types in one place:",
-        "indexing": "Library indexing",
-        "metadata": "Metadata scraping",
-        "separation": "Vocal separation",
-        "lyrics": "Synced lyrics alignment"
+        "body": "Settings → Background Tasks & Logs puts progress, cancellable tasks, and failure reasons for four task types in one place. While a task runs, the home screen shows a progress banner too:",
+        "indexing": "Library indexing — scanning folders, reading embedded info, building the library",
+        "metadata": "Metadata scraping — filling in info from iTunes / MusicBrainz / AI",
+        "separation": "Vocal separation — splitting a track into vocal + accompaniment (for karaoke)",
+        "lyrics": "Synced lyrics alignment — adding timing to plain lyrics"
       },
       "guide": {
         "title": "User guide",
-        "body": "“Settings → User Guide” reopens the first-launch tour; “Settings → Setup Guide” keeps a checklist of what's left."
+        "body": "Settings → User Guide reopens the first-launch tour; Settings → Setup Guide keeps a checklist of what's left — check things off as you finish them."
       },
       "about": {
         "title": "About",
-        "body": "“Settings → About TuneSync” — version, whether the separation model is ready, third-party credits."
+        "body": "Settings → About TuneSync — version number, whether the separation model is ready, and third-party library credits."
       }
     }
   }
