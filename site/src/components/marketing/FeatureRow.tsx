@@ -2,6 +2,8 @@ import type { LucideIcon } from "lucide-react";
 import { Check } from "lucide-react";
 import PhoneMockup from "./PhoneMockup";
 import Reveal from "./Reveal";
+import Tilt from "./Tilt";
+import Parallax from "./Parallax";
 
 type Props = {
   eyebrow: string;
@@ -14,7 +16,7 @@ type Props = {
   reverse?: boolean;
 };
 
-/** Bear-style alternating image/text feature row. */
+/** Bear-style alternating image/text feature row, with parallax + tilt. */
 export default function FeatureRow({
   eyebrow,
   title,
@@ -52,7 +54,12 @@ export default function FeatureRow({
         </Reveal>
 
         <Reveal delay={120} className="mx-auto w-full max-w-[18rem] md:max-w-[20rem]">
-          <PhoneMockup screenshot={screenshot} alt={title} label={screenshotLabel} />
+          <Parallax strength={30} className="relative">
+            <span className="glow-halo" aria-hidden />
+            <Tilt max={5}>
+              <PhoneMockup screenshot={screenshot} alt={title} label={screenshotLabel} />
+            </Tilt>
+          </Parallax>
         </Reveal>
       </div>
     </section>

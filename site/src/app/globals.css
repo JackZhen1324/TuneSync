@@ -231,7 +231,151 @@
   border-radius: 6px;
 }
 
+/* ── Advanced visual effects ─────────────────────────────────────────── */
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.06); }
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes aurora-shift {
+  0% { transform: translate3d(-8%, -4%, 0) rotate(0deg); }
+  50% { transform: translate3d(8%, 4%, 0) rotate(8deg); }
+  100% { transform: translate3d(-8%, -4%, 0) rotate(0deg); }
+}
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Animated brand aurora blobs for hero backgrounds. */
+.aurora {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 70vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.5;
+  will-change: transform;
+}
+.aurora::before {
+  width: 48vw;
+  height: 48vw;
+  top: -10%;
+  left: 8%;
+  background: radial-gradient(circle, var(--brand) 0%, transparent 70%);
+  animation: aurora-shift 18s ease-in-out infinite;
+}
+.aurora::after {
+  width: 42vw;
+  height: 42vw;
+  top: 4%;
+  right: 6%;
+  background: radial-gradient(circle, var(--brand-deep) 0%, transparent 70%);
+  animation: aurora-shift 22s ease-in-out infinite reverse;
+}
+
+/* Floating element (e.g. the hero phone). */
+.float-slow { animation: float-slow 6s ease-in-out infinite; }
+
+/* Soft pulsing glow halo behind the phone. */
+.glow-halo {
+  position: absolute;
+  inset: -12% -8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--brand-soft) 0%, transparent 65%);
+  animation: glow-pulse 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Animated gradient text (shimmering brand headline). */
+.text-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--fg) 30%,
+    var(--brand) 50%,
+    var(--fg) 70%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* Card hover lift + brand-tinted border glow. */
+.lift-on-hover {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.lift-on-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -20px rgba(247, 94, 60, 0.35),
+    var(--shadow-card);
+}
+
+/* Image zoom-on-hover inside a clipping frame. */
+.zoom-frame { overflow: hidden; }
+.zoom-frame > img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.zoom-frame:hover > img { transform: scale(1.06); }
+
+/* Tilt-on-hover wrapper (subtle 3D). */
+.tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+}
+
+/* Custom scroll-reveal variants for richer section entrances. */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-scale.is-visible { opacity: 1; transform: none; }
+
+.reveal-blur {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, filter 0.8s ease, transform 0.8s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-blur.is-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal, .reveal-scale, .reveal-blur {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .aurora::before, .aurora::after,
+  .float-slow, .glow-halo, .text-shimmer {
+    animation: none !important;
+  }
 }

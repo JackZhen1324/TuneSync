@@ -25,8 +25,8 @@ export default function FeatureGrid() {
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {ITEMS.map(({ key, icon: Icon }, i) => (
           <Reveal key={key} delay={i * 60}>
-            <article className="surface-card h-full p-6">
-              <span className="grid size-11 place-items-center rounded-2xl text-white"
+            <article className="surface-card lift-on-hover h-full p-6">
+              <span className="grid size-11 place-items-center rounded-2xl text-white shadow-[0_8px_20px_-6px_var(--brand)]"
                     style={{ background: "var(--brand)" }}>
                 <Icon className="size-5" strokeWidth={1.75} />
               </span>

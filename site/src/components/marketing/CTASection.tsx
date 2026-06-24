@@ -9,9 +9,13 @@ export default function CTASection() {
       <Reveal>
         <div className="relative overflow-hidden rounded-[var(--radius)] px-8 py-16 text-center md:px-16"
              style={{ background: "var(--bg-subtle)" }}>
-          <div className="pointer-events-none absolute inset-0 -z-0 opacity-60"
-               style={{ background: "radial-gradient(500px 250px at 50% 0%, var(--brand-soft-2), transparent 70%)" }}
-               aria-hidden />
+          {/* animated aurora blobs */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+            <span className="absolute -left-10 -top-10 size-64 rounded-full opacity-50 blur-3xl float-slow"
+                  style={{ background: "radial-gradient(circle, var(--brand-soft), transparent 70%)" }} />
+            <span className="absolute -right-10 top-1/3 size-72 rounded-full opacity-40 blur-3xl float-slow"
+                  style={{ background: "radial-gradient(circle, var(--brand-soft-2), transparent 70%)", animationDelay: "2s" }} />
+          </div>
           <div className="relative">
             <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">{t("ctaTitle")}</h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--fg-muted)]">{t("ctaBody")}</p>

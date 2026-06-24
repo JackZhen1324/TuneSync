@@ -12,17 +12,14 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[600px] opacity-70"
-        style={{ background: "radial-gradient(600px 300px at 50% 0%, var(--brand-soft-2), transparent 70%)" }}
-        aria-hidden
-      />
+      {/* Animated brand aurora */}
+      <div className="aurora" aria-hidden />
       <div className="container-page flex flex-col items-center py-20 text-center md:py-28">
         <Reveal>
-          <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
             {t.rich("headline", {
               accent: (chunks) => (
-                <span style={{ color: "var(--brand)" }}>{chunks}</span>
+                <span className="text-shimmer">{chunks}</span>
               ),
             })}
           </h1>
@@ -39,8 +36,13 @@ export default function Hero() {
             <ChevronRight className="size-4" />
           </Link>
         </Reveal>
-        <Reveal delay={240} className="mt-16 w-full max-w-xs">
-          <PhoneMockup screenshot="home.png" alt={t("phoneLabel")} label={t("phoneLabel")} />
+
+        {/* Floating phone with animated glow halo */}
+        <Reveal delay={240} className="relative mt-16 w-full max-w-xs">
+          <div className="relative float-slow">
+            <span className="glow-halo" aria-hidden />
+            <PhoneMockup screenshot="home.png" alt={t("phoneLabel")} label={t("phoneLabel")} />
+          </div>
         </Reveal>
       </div>
     </section>

@@ -17,7 +17,7 @@ export default function TestimonialsSection() {
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {KEYS.map((k, i) => (
           <Reveal key={k} delay={i * 60}>
-            <figure className="surface-card flex h-full flex-col p-6">
+            <figure className="surface-card lift-on-hover flex h-full flex-col p-6">
               <blockquote className="flex-1 text-[var(--fg)]">“{t(`testimonials.${k}.text`)}”</blockquote>
               <figcaption className="mt-5 flex items-center gap-3">
                 <span className="grid size-9 shrink-0 place-items-center rounded-full text-sm font-semibold text-white"
