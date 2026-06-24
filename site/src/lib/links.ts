@@ -8,8 +8,8 @@
  *   - (Android / macOS / Windows: not yet available)
  */
 export const DOWNLOAD_LINKS = {
-  /** Default placeholder — replace with the real App Store / TestFlight URL. */
-  ios: "https://testflight.apple.com/join/TuneSync",
+  /** iOS TestFlight link. */
+  ios: "https://testflight.apple.com/join/1QVnhpkZ",
   android: null,
   macos: null,
   windows: null,
