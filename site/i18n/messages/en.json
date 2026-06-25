@@ -11,7 +11,7 @@
   },
   "meta": {
     "title": "TuneSync — Your music, all in one place",
-    "description": "Connect your NAS or local folders — TuneSync pulls your scattered songs into one library, fills in artwork and lyrics, and can strip vocals so you can sing along."
+    "description": "Connect a NAS or local folders — TuneSync organizes your scattered music into a single library, automatically fills in artwork and lyrics, and can remove vocals for singing along."
   },
   "nav": {
     "features": "Features",
@@ -25,9 +25,9 @@
   "home": {
     "badge": "A native iOS music app built for power users",
     "headline": "Your music, <accent>all in one place</accent>",
-    "subhead": "Connect your NAS or local folders — TuneSync pulls your scattered songs into one library, fills in artwork and lyrics, and can even strip the vocals so you can sing along.",
-    "introTitle": "Your music shouldn't live across six apps.",
-    "introBody": "TuneSync connects your servers, folders, and player together. Plug in and go.",
+    "subhead": "Connect a NAS or local folders — TuneSync organizes your scattered music into a single library, automatically fills in artwork and lyrics, and can even remove vocals so you can sing along.",
+    "introTitle": "Music shouldn't be spread across half a dozen apps.",
+    "introBody": "TuneSync brings your servers, folders, and player together. Connect once and you're ready.",
     "ctaPrimary": "Get started",
     "ctaSecondary": "See features",
     "ctaDownload": "Download for iOS",
@@ -42,7 +42,7 @@
     "downloadPlatforms": {
       "ios": {
         "label": "iOS",
-        "desc": "Built for iPhone — connect a server, organize your library, and play, all here."
+        "desc": "A native experience built for iPhone — connect a server, organize your library, and play."
       },
       "android": {
         "label": "Android",
@@ -58,52 +58,52 @@
       }
     },
     "phoneLabel": "TuneSync app screenshot",
-    "testimonialsEyebrow": "What people say",
-    "testimonialsTitle": "Some feedback",
+    "testimonialsEyebrow": "User reviews",
+    "testimonialsTitle": "Feedback from users",
     "testimonials": {
       "quote1": {
-        "text": "I used to jump between five or six apps to play my own music. Now it's all in one place once I connected the NAS.",
+        "text": "I used to switch between several apps to play my own music. After connecting the NAS, everything is in one place.",
         "author": "Lin Yifan",
         "role": "NAS user · self-hosted WebDAV"
       },
       "quote2": {
-        "text": "The AI DJ continuing the queue is genuinely handy — it tops itself up when it runs low, so I don't have to keep picking.",
+        "text": "The AI DJ's auto-continue is genuinely useful — it tops up the queue when it runs low, so I don't have to keep selecting.",
         "author": "M. Chen",
         "role": "BYOK with DeepSeek"
       },
       "quote3": {
-        "text": "Didn't expect to strip vocals and sing on my phone. Drop the vocal, sing along to the backing, play it back after.",
+        "text": "I didn't expect to remove vocals and sing on my phone. Drop the vocal, sing with the accompaniment, and play it back afterward.",
         "author": "Kai",
         "role": "Core ML separation"
       },
       "quote4": {
-        "text": "My library info was a mess. Ran batch organize once and most of the artwork and years got filled in.",
+        "text": "My library info was fairly disorganized. After one batch organize, the artwork and release years are mostly filled in.",
         "author": "Zhang Rui",
         "role": "Full-library batch refresh"
       },
       "quote5": {
-        "text": "I like using my own API key — requests go straight to the model I chose, not through anyone else.",
+        "text": "I appreciate using my own API key — requests go straight to the model I chose, without any intermediary.",
         "author": "D. Wang",
         "role": "Self-hosted Ollama"
       },
       "quote6": {
-        "text": "It found my server on the LAN automatically. Set it up once and it connected. Easier than I expected.",
+        "text": "It found my server on the LAN automatically and connected after a quick setup — easier than I expected.",
         "author": "Eric",
         "role": "SMB / NFS connection"
       }
     },
     "ctaTitle": "Connect your music and start listening.",
-    "ctaBody": "Follow the quick-start guide to link a server — takes a few minutes."
+    "ctaBody": "Follow the quick-start guide to link a server — it only takes a few minutes."
   },
   "features": {
-    "title": "What it does",
-    "subtitle": "Library, playback, organizing, singing along — all in one app.",
+    "title": "Features",
+    "subtitle": "Library, playback, organizing, and singing along — together in one app.",
     "pageTitle": "Features",
     "library": {
       "title": "Library",
       "desc": "Connect WebDAV / SMB / NFS / FTP servers, or import local folders. TuneSync builds one library.",
-      "featureTitle": "Your NAS, on your phone",
-      "featureDesc": "On the same network, TuneSync finds your media server automatically — configure once and you're in. Pick which folders to index and that's all it includes. Play as soon as it's done.",
+      "featureTitle": "Access your NAS music on your phone",
+      "featureDesc": "On the same network, TuneSync automatically discovers your media server — configure once and you're connected. Choose which folders to index; playback begins as soon as indexing completes.",
       "featureB1": "WebDAV / SMB / NFS / FTP / DAAP protocols",
       "featureB2": "Bonjour auto-discovery of LAN servers",
       "featureB3": "Folder-level indexing — only what you choose",
@@ -113,8 +113,8 @@
     "player": {
       "title": "Playback",
       "desc": "Full-screen player with line-by-line synced lyrics, queue, sleep timer, AirPlay.",
-      "featureTitle": "Lyrics highlight as the song plays",
-      "featureDesc": "The player scrolls the lyrics with the song, highlighting the current line. Tap a line to jump there. The background color is pulled from the artwork, and you can switch to plain-text reading mode when there's no timing.",
+      "featureTitle": "Lyrics highlight line by line as the song plays",
+      "featureDesc": "The player scrolls lyrics in time with playback and highlights the current line — tap any line to jump there. The background color is sampled from the artwork, and you can switch to plain-text reading mode when no timing is available.",
       "featureB1": "Full-screen / mini-player, switch anytime",
       "featureB2": "Synced lyrics: auto-scroll, tap-to-seek, drag-to-browse",
       "featureB3": "Queue, loop, shuffle, speed, AirPlay",
@@ -122,10 +122,10 @@
       "screenshot": "Player screenshot"
     },
     "karaoke": {
-      "title": "Karaoke",
-      "desc": "Split vocals and accompaniment on-device, lower the original, record yourself with the mic.",
-      "featureTitle": "Drop the vocals, sing it yourself",
-      "featureDesc": "TuneSync splits a song into vocal and accompaniment tracks right on your phone. Lower the original vocal, sing along, and the mic records what you sing. The first split takes a moment; after that it's cached for next time.",
+      "title": "Sing along",
+      "desc": "Separate vocals and accompaniment on-device, lower the original vocal, and record yourself with the microphone.",
+      "featureTitle": "Remove the vocal, sing with the accompaniment",
+      "featureDesc": "TuneSync splits a track into vocal and accompaniment stems on your device, with independent volume for each. Lower the original vocal, keep the accompaniment, and sing along — the microphone records your performance in sync. The first separation takes a moment; results are cached for reuse.",
       "featureB1": "On-device Core ML separation (MDX / DTTNet)",
       "featureB2": "Live vocal-level control with a 3-2-1 countdown",
       "featureB3": "Mic recording with input/output latency compensation",
@@ -135,8 +135,8 @@
     "ai": {
       "title": "AI assistant",
       "desc": "Bring your own API key. Let AI pick the next song or tidy up file names.",
-      "featureTitle": "Your key, your model",
-      "featureDesc": "Drop in your own API key and it works — OpenAI, Anthropic, Gemini, Zhipu, DeepSeek all have presets, or fill in a custom endpoint or local Ollama. The AI DJ keeps playing based on what you listen to, and can clean up messy file names.",
+      "featureTitle": "Use your own key with your preferred model",
+      "featureDesc": "Enter your own API key to get started — OpenAI, Anthropic, Gemini, Zhipu, DeepSeek and others are preconfigured, or specify a custom endpoint or local Ollama. The AI DJ continues your queue based on your listening habits, and can tidy up irregular file names.",
       "featureB1": "40+ provider presets + custom OpenAI-compatible endpoints",
       "featureB2": "Instant / reasoning model roles, auto-selected per task",
       "featureB3": "AI DJ with three autonomy levels: preview / one-tap / auto-continue",
@@ -146,8 +146,8 @@
     "metadata": {
       "title": "Metadata",
       "desc": "Auto-fill artwork, lyrics, release year, and track numbers.",
-      "featureTitle": "Artwork, year, lyrics — filled in",
-      "featureDesc": "TuneSync compares across iTunes, MusicBrainz and other sources to fill in missing artwork, release years, and track numbers. Do it one track at a time or run the whole library. When sources disagree, your weights decide who wins.",
+      "featureTitle": "Fill in artwork, year, and lyrics in one pass",
+      "featureDesc": "TuneSync compares across iTunes, MusicBrainz, and other sources to fill in missing artwork, release years, and track numbers. Works per track, per album, or across the whole library. When sources conflict, your configured weights decide.",
       "featureB1": "iTunes / MusicBrainz / Deezer / AI multi-source matching",
       "featureB2": "Track / album / artist refresh + batch organizing",
       "featureB3": "Source weights and per-field “overwrite” policies",
@@ -156,8 +156,8 @@
     "discovery": {
       "title": "Discover",
       "desc": "See charts from Apple Music / Bilibili / YouTube, identify songs with ShazamKit.",
-      "featureTitle": "When you don't know what to play",
-      "featureDesc": "See charts from a few platforms on the home screen. When you're stuck, TuneSync suggests based on what you usually play. Hear a good song out there? Open recognition and it tells you what it is.",
+      "featureTitle": "When you're not sure what to play",
+      "featureDesc": "Home aggregates charts from several platforms. When you don't have a specific track in mind, TuneSync offers recommendations based on your listening history. Hear a song you like? Open recognition to identify it.",
       "featureB1": "Apple Music / Bilibili / YouTube / Last.fm multi-source charts",
       "featureB2": "Suggestions based on what you usually play",
       "featureB3": "ShazamKit recognition with browsable history",
@@ -185,12 +185,12 @@
   "docs": {
     "intro": {
       "title": "TuneSync docs",
-      "lead": "How to use it, page by page — from connecting a server to singing along.",
-      "body": "Ordered by what you actually do: bring in your server or folders, build a library, then play, read lyrics, sing along, and finally the AI and metadata stuff. Each page has steps and tips — follow along as you go, and come back when you forget a step. If it's your first time, start with Getting started — you'll have your first song playing in a few minutes."
+      "lead": "How to use each feature, page by page.",
+      "body": "Organized by workflow: connecting a server, building a library, then playback, lyrics, singing along, and finally the AI assistant and metadata. Each page includes step-by-step instructions for reference at any time. New users should start with Getting started — playback can begin within a few minutes."
     },
     "gettingStarted": {
       "title": "Getting started",
-      "lead": "First time? Follow the four steps and get your songs in.",
+      "lead": "On first use, follow the four-step guide to import your music.",
       "shotWelcome": "Welcome guide screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/getting-started.png",
       "overview": {
@@ -235,7 +235,7 @@
     },
     "library": {
       "title": "Library",
-      "lead": "Local folders and remote servers, combined into one library.",
+      "lead": "Combine local folders and remote servers into a single library.",
       "shotLibrary": "Library screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/library.png",
       "protocols": {
@@ -287,7 +287,7 @@
     },
     "player": {
       "title": "Player",
-      "lead": "Full-screen, mini, queue, and the usual playback controls.",
+      "lead": "Full-screen player, mini player, queue, and playback controls.",
       "shotPlayer": "Player screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/player-lyrics.png",
       "modes": {
@@ -327,7 +327,7 @@
     },
     "lyrics": {
       "title": "Lyrics",
-      "lead": "Line-by-line synced lyrics, plain reading mode, and several lyrics sources.",
+      "lead": "Line-by-line synced lyrics, reading mode, and multi-source lyric retrieval.",
       "shotLyrics": "Lyrics screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/lyrics.png",
       "modes": {
@@ -373,7 +373,7 @@
     },
     "karaoke": {
       "title": "Karaoke",
-      "lead": "Split vocals and accompaniment on-device, lower the original, record yourself with the mic.",
+      "lead": "Separate vocals and accompaniment on-device, lower the original vocal, and record yourself with the microphone.",
       "shotKaraoke": "Karaoke screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/karaoke.png",
       "how": {
@@ -426,7 +426,7 @@
     },
     "ai": {
       "title": "AI assistant",
-      "lead": "Bring your own API key. Let AI pick the next song, tidy messy file names, or write album intros. It uses your own key — requests go straight to your chosen provider, not through any third party.",
+      "lead": "Use your own API key to let AI recommend tracks, tidy file names, or write album intros. Requests go directly to your chosen provider, without an intermediary.",
       "shotAi": "AI settings screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/ai-dj.png",
       "setup": {
@@ -490,7 +490,7 @@
     },
     "metadata": {
       "title": "Metadata",
-      "lead": "Compared across sources, fills in artwork, lyrics, and track info so the library stops being a mess.",
+      "lead": "Compare across sources to fill in artwork, lyrics, and track information, keeping the library organized.",
       "shotMetadata": "Metadata screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/metadata.png",
       "sources": {
@@ -535,7 +535,7 @@
     },
     "discovery": {
       "title": "Discover",
-      "lead": "Home recommendations, multi-platform charts, and song recognition to find your next track.",
+      "lead": "Home recommendations, multi-platform charts, and song recognition to help you find what to play next.",
       "shotDiscovery": "Discovery screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/discovery.png",
       "home": {
@@ -571,7 +571,7 @@
     },
     "settings": {
       "title": "Settings",
-      "lead": "Appearance, language, player animation, cache, background tasks.",
+      "lead": "Appearance, language, player animation, cache, and background tasks.",
       "shotSettings": "Settings screenshot",
       "shotHint": "Replace with a real screenshot: public/screenshots/settings.png",
       "appearance": {

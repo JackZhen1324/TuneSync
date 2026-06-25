@@ -10,8 +10,8 @@
     "backHome": "返回首页"
   },
   "meta": {
-    "title": "TuneSync — 把你的音乐放回一个地方",
-    "description": "连接你的 NAS 或本地文件夹，TuneSync 把散落的歌整理成一个曲库，自动补封面和歌词，还能去掉原唱跟着唱。"
+    "title": "TuneSync — 将你的音乐集中到一处",
+    "description": "连接 NAS 或本地文件夹，TuneSync 将分散的音乐整理为一个曲库，自动补全封面与歌词，并支持去除原唱跟随伴奏演唱。"
   },
   "nav": {
     "features": "功能特性",
@@ -24,10 +24,10 @@
   },
   "home": {
     "badge": "为发烧友打造的原生 iOS 音乐 App",
-    "headline": "把你的音乐，<accent>放回一个地方</accent>",
-    "subhead": "连上家里的 NAS 或本地文件夹，TuneSync 帮你把散落的歌整理成一个曲库——自动补封面和歌词，跟着唱还能去掉原唱。",
-    "introTitle": "音乐不该散在五六个 App 里。",
-    "introBody": "TuneSync 把你的服务器、文件夹和播放器接到一起，连上就能用。",
+    "headline": "把你的音乐，<accent>集中到一处</accent>",
+    "subhead": "连接 NAS 或本地文件夹，TuneSync 将分散的音乐整理为一个曲库——自动补全封面与歌词，还支持去除原唱、跟随伴奏演唱。",
+    "introTitle": "让音乐不再分散在多个 App 之间。",
+    "introBody": "TuneSync 将服务器、文件夹与播放器整合在一起，连接后即可使用。",
     "ctaPrimary": "开始使用",
     "ctaSecondary": "查看功能",
     "ctaDownload": "下载 iOS 版",
@@ -42,7 +42,7 @@
     "downloadPlatforms": {
       "ios": {
         "label": "iOS",
-        "desc": "为 iPhone 做的，连服务器、整理曲库、听歌，都在这。"
+        "desc": "为 iPhone 打造的原生体验，可在其中连接服务器、整理曲库并播放。"
       },
       "android": {
         "label": "Android",
@@ -58,52 +58,52 @@
       }
     },
     "phoneLabel": "TuneSync App 截图",
-    "testimonialsEyebrow": "用过的人说",
-    "testimonialsTitle": "一些反馈",
+    "testimonialsEyebrow": "用户评价",
+    "testimonialsTitle": "来自使用者的反馈",
     "testimonials": {
       "quote1": {
-        "text": "以前听自己的歌要在五六个 App 之间切来切去，现在连上 NAS 就都在一个地方了。",
+        "text": "以前听自己的音乐需要在多个应用之间切换，连接 NAS 后，所有内容都集中在了一个地方。",
         "author": "林一帆",
         "role": "NAS 用户 · 自建 WebDAV"
       },
       "quote2": {
-        "text": "AI DJ 接着放歌这点很实用，队列快空了它自己就续上了，不用老停下来选。",
+        "text": "AI DJ 的自动续接很实用，队列即将结束时它会自动补充，无需手动选择。",
         "author": "M. Chen",
         "role": "BYOK 接入 DeepSeek"
       },
       "quote3": {
-        "text": "没想到能在手机上去原唱自己唱，调低人声跟着伴奏录，唱完还能回放。",
+        "text": "没想到可以在手机上去除原唱自行演唱，调低人声、跟随伴奏录制，完成后还能回放。",
         "author": "阿凯",
         "role": "Core ML 分离"
       },
       "quote4": {
-        "text": "曲库信息以前乱七八糟，跑了一次批量整理，封面和年份基本都补上了。",
+        "text": "曲库信息此前比较混乱，运行一次批量整理后，封面和年份基本都补全了。",
         "author": "张芮",
         "role": "批量整理整库"
       },
       "quote5": {
-        "text": "用自己的 API Key 这点我喜欢，请求直接发到我选的模型，不经过别人。",
+        "text": "使用自己的 API Key 这一点我很认同，请求直接发送至所选模型，不经过第三方。",
         "author": "D. Wang",
         "role": "自托管 Ollama"
       },
       "quote6": {
-        "text": "局域网里自动就发现了我的服务器，配一下就连上了，比想象中省事。",
+        "text": "它在局域网中自动发现了我的服务器，配置后即完成连接，比预期更便捷。",
         "author": "Eric",
         "role": "SMB / NFS 连接"
       }
     },
-    "ctaTitle": "连上你的音乐，开始听。",
-    "ctaBody": "按快速上手指南连一台服务器，几分钟就好。"
+    "ctaTitle": "连接你的音乐，开始播放。",
+    "ctaBody": "参考快速上手指南连接一台服务器，几分钟即可完成。"
   },
   "features": {
-    "title": "能做的事",
-    "subtitle": "从连曲库、听歌、整理，到跟着唱——都在这一个 App 里。",
+    "title": "功能概览",
+    "subtitle": "从曲库管理、播放、整理到伴唱——集中在一个应用中。",
     "pageTitle": "功能特性",
     "library": {
       "title": "曲库",
-      "desc": "连 WebDAV / SMB / NFS / FTP 服务器，或导入本地文件夹，自动整理成一个曲库。",
-      "featureTitle": "家里的 NAS，手机上直接听",
-      "featureDesc": "同一局域网下，TuneSync 会自动发现你的媒体服务器，配一次就能连。你选哪些文件夹，它就只索引这些，索引完就能播。",
+      "desc": "连接 WebDAV / SMB / NFS / FTP 服务器，或导入本地文件夹，自动整理为一个曲库。",
+      "featureTitle": "在手机上访问 NAS 中的音乐",
+      "featureDesc": "处于同一局域网时，TuneSync 会自动发现媒体服务器，配置一次即可连接。可自行选择索引的文件夹，索引完成后即可播放。",
       "featureB1": "WebDAV / SMB / NFS / FTP / DAAP 多协议",
       "featureB2": "Bonjour 自动发现局域网服务器",
       "featureB3": "文件夹级索引，只收录你选的目录",
@@ -111,10 +111,10 @@
       "screenshot": "曲库与服务器截图"
     },
     "player": {
-      "title": "听歌",
-      "desc": "全屏播放器，逐行同步歌词，播放队列、睡眠定时、AirPlay 都有。",
-      "featureTitle": "歌词跟着唱到哪一行，亮到哪一行",
-      "featureDesc": "播放界面会跟着歌曲滚动歌词，当前行高亮，点一下就能跳到那一句。背景颜色是从封面里取的，没歌词时也能切到纯文本阅读模式。",
+      "title": "播放",
+      "desc": "全屏播放器，支持逐行同步歌词、播放队列、睡眠定时与 AirPlay。",
+      "featureTitle": "歌词随播放逐行高亮",
+      "featureDesc": "播放界面会跟随进度滚动歌词并高亮当前行，点击任意行可跳转至该句。背景颜色取自封面，无时间轴时可切换为纯文本阅读模式。",
       "featureB1": "全屏 / 迷你播放器，随手切",
       "featureB2": "同步歌词自动滚动、点击跳转、拖拽浏览",
       "featureB3": "播放队列、循环、随机、倍速、AirPlay",
@@ -122,10 +122,10 @@
       "screenshot": "播放器截图"
     },
     "karaoke": {
-      "title": "K 歌",
-      "desc": "在本机把人声和伴奏分开，调低原唱，用麦克风录自己唱的。",
-      "featureTitle": "去掉原唱，自己唱",
-      "featureDesc": "TuneSync 在你的手机上把一首歌拆成人声和伴奏两条音轨。把原唱拉低，跟着伴奏唱，麦克风会把你唱的录下来。第一次拆分要等一会儿，之后会缓存，下次直接用。",
+      "title": "伴唱",
+      "desc": "在本机分离人声与伴奏，调低原唱，通过麦克风录制演唱。",
+      "featureTitle": "去除原唱，跟随伴奏演唱",
+      "featureDesc": "TuneSync 会在你的设备上将一首歌曲分离为人声与伴奏两轨，两轨音量可独立调节。调低原唱、保留伴奏即可演唱，麦克风会同步录制你的声音。首次分离需要等待，结果会被缓存以便复用。",
       "featureB1": "Core ML 设备端人声分离（MDX / DTTNet）",
       "featureB2": "实时调节原声音轨，3-2-1 倒计时开录",
       "featureB3": "麦克风录音带输入/输出延时补偿",
@@ -134,9 +134,9 @@
     },
     "ai": {
       "title": "AI 助手",
-      "desc": "填你自己的 API Key，让 AI 帮你挑下一首、整理歌名。",
-      "featureTitle": "用你自己的 Key，接你常用的模型",
-      "featureDesc": "填进你自己的 API Key 就能用——OpenAI、Anthropic、Gemini、智谱、DeepSeek 这些都有预设，也可以填自定义地址或本地 Ollama。AI DJ 会按你平时听的歌接着放，还能帮你把乱七八糟的文件名整理干净。",
+      "desc": "使用你自己的 API Key，让 AI 推荐下一首歌曲或整理文件名。",
+      "featureTitle": "使用你自己的密钥，接入常用模型",
+      "featureDesc": "填入你自己的 API Key 即可使用——已内置 OpenAI、Anthropic、Gemini、智谱、DeepSeek 等多家预设，也可填入自定义端点或本地 Ollama。AI DJ 会根据你的收听习惯续接歌单，并帮助整理不规范的文件名。",
       "featureB1": "40+ 服务商预设 + 自定义 OpenAI 兼容端点",
       "featureB2": "即时 / 推理双模型，按场景自动选用",
       "featureB3": "AI DJ 三档自动化：预览 / 一键播放 / 自动续接",
@@ -144,10 +144,10 @@
       "screenshot": "AI 设置截图"
     },
     "metadata": {
-      "title": "整理信息",
-      "desc": "自动补全封面、歌词、发行年份和曲目编号。",
-      "featureTitle": "封面、年份、歌词，一次补齐",
-      "featureDesc": "TuneSync 从 iTunes、MusicBrainz 等几个来源比对，把缺的封面、发行年份、曲目编号补上。可以一首一首来，也能整库批量跑。多个来源冲突时，按你设的权重决定听谁的。",
+      "title": "元数据",
+      "desc": "自动补全封面、歌词、发行年份与曲目编号。",
+      "featureTitle": "一次性补齐封面、年份与歌词",
+      "featureDesc": "TuneSync 从 iTunes、MusicBrainz 等多个来源比对，补全缺失的封面、发行年份与曲目编号。支持单曲、专辑与整库批量处理，多个来源冲突时按你设定的权重决定取值。",
       "featureB1": "iTunes / MusicBrainz / Deezer / AI 多源比对",
       "featureB2": "单曲 / 专辑 / 艺术家三级刷新 + 批量整理",
       "featureB3": "来源权重与字段级「是否覆盖」策略",
@@ -155,9 +155,9 @@
     },
     "discovery": {
       "title": "发现",
-      "desc": "看 Apple Music / Bilibili / YouTube 的榜单，听到好歌用 ShazamKit 识别。",
-      "featureTitle": "不知道听什么的时候",
-      "featureDesc": "首页能看几个平台的榜单。不知道听什么时，TuneSync 会按你平时听的给些推荐。外面听到一首好歌，打开识曲就能知道是什么。",
+      "desc": "查看 Apple Music / Bilibili / YouTube 榜单，使用 ShazamKit 识别音乐。",
+      "featureTitle": "没有想听的内容时",
+      "featureDesc": "首页聚合了多个平台的榜单。没有明确目标时，TuneSync 会根据你的收听记录给出推荐。听到喜欢的歌曲，打开识曲即可识别。",
       "featureB1": "Apple Music / Bilibili / YouTube / Last.fm 多源榜单",
       "featureB2": "按你平时听的，给你推些歌",
       "featureB3": "ShazamKit 识曲，历史识别可回看",
@@ -185,12 +185,12 @@
   "docs": {
     "intro": {
       "title": "TuneSync 文档",
-      "lead": "怎么用，一篇一篇讲，从连服务器到跟着唱。",
-      "body": "按实际用法排的：先把你的服务器或文件夹接进来、整理成曲库，然后听歌、看歌词、跟着唱，最后是 AI 助手和元数据整理这些进阶玩法。每篇都带步骤和提示，用的时候照着走就行，忘了哪步随时回来翻。建议第一次用从「快速开始」看起，几分钟就能把第一首歌放出来。"
+      "lead": "逐页说明各项功能的使用方法。",
+      "body": "按使用流程组织：从连接服务器、整理曲库，到播放、查看歌词、伴唱，再到 AI 助手与元数据整理。每篇均包含操作步骤，可随时查阅。首次使用建议从「快速开始」阅读，几分钟即可开始播放。"
     },
     "gettingStarted": {
       "title": "快速开始",
-      "lead": "第一次用，跟着四步走，把你的歌导进来。",
+      "lead": "首次使用时，按四步引导将音乐导入。",
       "shotWelcome": "欢迎引导截图",
       "shotHint": "替换为真实截图：public/screenshots/getting-started.png",
       "overview": {
@@ -235,7 +235,7 @@
     },
     "library": {
       "title": "曲库",
-      "lead": "本地文件夹和远端服务器，并成一个曲库。",
+      "lead": "将本地文件夹与远程服务器整合为一个曲库。",
       "shotLibrary": "曲库截图",
       "shotHint": "替换为真实截图：public/screenshots/library.png",
       "protocols": {
@@ -287,7 +287,7 @@
     },
     "player": {
       "title": "播放器",
-      "lead": "全屏、迷你、队列，还有各种播放控制。",
+      "lead": "全屏播放器、迷你播放器、播放队列及相关控制。",
       "shotPlayer": "播放器截图",
       "shotHint": "替换为真实截图：public/screenshots/player-lyrics.png",
       "modes": {
@@ -327,7 +327,7 @@
     },
     "lyrics": {
       "title": "歌词",
-      "lead": "逐行同步歌词、纯文本阅读模式，还有多个歌词来源。",
+      "lead": "逐行同步歌词、阅读模式，以及多来源歌词获取。",
       "shotLyrics": "歌词截图",
       "shotHint": "替换为真实截图：public/screenshots/lyrics.png",
       "modes": {
@@ -373,7 +373,7 @@
     },
     "karaoke": {
       "title": "K 歌",
-      "lead": "在本机把人声和伴奏分开，调低原唱，用麦克风录自己唱的。",
+      "lead": "在本机分离人声与伴奏，调低原唱，通过麦克风录制演唱。",
       "shotKaraoke": "K 歌截图",
       "shotHint": "替换为真实截图：public/screenshots/karaoke.png",
       "how": {
@@ -426,7 +426,7 @@
     },
     "ai": {
       "title": "AI 助手",
-      "lead": "填你自己的 API Key，让 AI 帮你挑下一首、整理乱七八糟的文件名、给专辑写段简介。用的是你自己的 Key，请求直接发到你选的那家，不经过第三方。",
+      "lead": "使用你自己的 API Key，让 AI 推荐歌曲、整理文件名或撰写专辑简介。请求直接发送至所选服务商，不经过第三方。",
       "shotAi": "AI 设置截图",
       "shotHint": "替换为真实截图：public/screenshots/ai-dj.png",
       "setup": {
@@ -490,7 +490,7 @@
     },
     "metadata": {
       "title": "元数据",
-      "lead": "多来源比对，把封面、歌词、歌的信息补全，让曲库不再乱。",
+      "lead": "从多个来源比对，补全封面、歌词与曲目信息，使曲库保持整洁。",
       "shotMetadata": "元数据截图",
       "shotHint": "替换为真实截图：public/screenshots/metadata.png",
       "sources": {
@@ -535,7 +535,7 @@
     },
     "discovery": {
       "title": "发现",
-      "lead": "首页推荐、多平台榜单、识曲，帮你找下一首想听的。",
+      "lead": "首页推荐、多平台榜单与音乐识别，帮助你发现下一首想听的内容。",
       "shotDiscovery": "发现页截图",
       "shotHint": "替换为真实截图：public/screenshots/discovery.png",
       "home": {
@@ -571,7 +571,7 @@
     },
     "settings": {
       "title": "设置",
-      "lead": "外观、语言、播放器动画、缓存、后台任务。",
+      "lead": "外观、语言、播放器动画、缓存与后台任务。",
       "shotSettings": "设置截图",
       "shotHint": "替换为真实截图：public/screenshots/settings.png",
       "appearance": {
