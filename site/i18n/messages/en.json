@@ -1,7 +1,7 @@
 {
   "common": {
     "siteName": "TuneSync",
-    "tagline": "Bring your scattered music world back together.",
+    "tagline": "Bring music from across your accounts and devices back into one place.",
     "rights": "All rights reserved.",
     "disclaimer": "An unofficial introduction and user guide. Not affiliated with Apple Inc.",
     "appleDisclaimer": "Apple, the Apple logo, iPhone, and iPad are trademarks of Apple Inc. App Store is a service mark of Apple Inc.",
@@ -11,7 +11,7 @@
   },
   "meta": {
     "title": "TuneSync — Your music, all in one place",
-    "description": "Connect a NAS or local folders — TuneSync organizes your scattered music into a single library, automatically fills in artwork and lyrics, and can remove vocals for singing along."
+    "description": "Connect a NAS or local folders — TuneSync consolidates your music into a single library, automatically fills in artwork and lyrics, and can remove vocals for singing along."
   },
   "nav": {
     "features": "Features",
@@ -25,7 +25,7 @@
   "home": {
     "badge": "A native iOS music app built for power users",
     "headline": "Your music, <accent>all in one place</accent>",
-    "subhead": "Connect a NAS or local folders — TuneSync organizes your scattered music into a single library, automatically fills in artwork and lyrics, and can even remove vocals so you can sing along.",
+    "subhead": "Connect a NAS or local folders — TuneSync consolidates your music into a single library, automatically fills in artwork and lyrics, and can even remove vocals so you can sing along.",
     "introTitle": "Music shouldn't be spread across half a dozen apps.",
     "introBody": "TuneSync brings your servers, folders, and player together. Connect once and you're ready.",
     "ctaPrimary": "Get started",
@@ -206,7 +206,7 @@
       },
       "step2": {
         "title": "Connect servers",
-        "body": "Supports WebDAV, SMB, NFS, FTP. Connect a server first, then add folders to it. Manage every server's status and test connectivity in one place — once configured it works, no jumping between discovery and connection."
+        "body": "Supports WebDAV, SMB, NFS, FTP. Connect a server first, then add folders to it. Manage every server's status and test connectivity in one place — once configured, it is ready to use, without switching between discovery and connection."
       },
       "step3": {
         "title": "Add your library",
@@ -218,13 +218,13 @@
       },
       "tip": {
         "title": "See it again",
-        "body": "“Settings → User Guide” reopens the tour; “Settings → Setup Guide” keeps a checklist of what's left."
+        "body": "Settings → User Guide reopens the tour; Settings → Setup Guide maintains a checklist of remaining steps to complete."
       },
       "permissions": {
         "title": "Permissions you'll be asked for",
         "body": "Only when you use the thing that needs it:",
         "localNetwork": "Local network — to find LAN WebDAV / FTP / SMB / NFS servers",
-        "microphone": "Microphone — for song recognition (listening to what's playing around you) and karaoke recording",
+        "microphone": "Microphone — used for song recognition (identifying music playing nearby) and karaoke recording",
         "speech": "Speech recognition — transcribes the vocal on-device to add timing to plain lyrics",
         "applemusic": "Apple Music — so playback can continue in the background"
       },
@@ -295,7 +295,7 @@
         "body": "The full-screen player switches between three views at the bottom — tap to change:",
         "normal": "Standard — big artwork, track title and artist, scrubber, playback controls. The background gradient is pulled from the artwork, so it's different for every track.",
         "lyrics": "Lyrics — scroll line by line in time with the song, current line highlighted. Tracks without timing fall back to reading mode (plain text).",
-        "queue": "Queue — see and reorder what's coming up next."
+        "queue": "Queue — view and reorder upcoming tracks."
       },
       "controls": {
         "title": "Playback controls",
@@ -303,7 +303,7 @@
         "play": "Play / pause / previous / next",
         "scrub": "Drag the scrubber to any second — let go to seek",
         "shuffle": "Shuffle and repeat (off / list / single track)",
-        "speed": "Playback speed (0.75x / 1x / 1.25x / 1.5x / 2x) — handy for practicing a song or skimming",
+        "speed": "Playback speed (0.75x / 1x / 1.25x / 1.5x / 2x) — useful for practicing a song or skimming",
         "airplay": "AirPlay to a HomePod, Apple TV, or other AirPlay device"
       },
       "menu": {
@@ -318,7 +318,7 @@
       },
       "queue": {
         "title": "Play queue",
-        "body": "The queue is what's coming up. Tap a track to play it now, swipe to remove, or clear all (it asks again to prevent mistakes). When it's empty it nudges you to add from the library. Adding a track can mean play next or add to end of queue."
+        "body": "The queue lists upcoming tracks. Tap a track to play it now, swipe to remove, or clear all (it asks for confirmation). When empty, it prompts you to add tracks from the library. Adding a track can be set to play next or append to the end."
       },
       "bg": {
         "title": "Background and lock screen",
@@ -361,7 +361,7 @@
       },
       "confidence": {
         "title": "About “confidence”",
-        "body": "AI-aligned lyrics come with a confidence score (0–100%). If it's low (say, under 60%) it warns you and you can retry. Confidence depends on whether there's a clear vocal, and how well the text lines map onto the detected timing. If you don't like the result, edit the LRC and re-import to overwrite."
+        "body": "AI-aligned lyrics include a confidence score (0–100%). When it is low (for example, below 60%) a warning appears and you can retry. Confidence depends on whether a clear vocal is present and how well the text lines map to the detected timing. If the result is unsatisfactory, edit the LRC and re-import to overwrite."
       },
       "tuning": {
         "title": "Lyrics display",
@@ -485,7 +485,7 @@
       },
       "trial": {
         "title": "Trial chat",
-        "body": "There's a trial chat under AI Assistance — send a message without opening a specific feature to verify the connection works and the model replies. After setting up your key, it's a good idea to test here first."
+        "body": "A trial chat is available under AI Assistance — send a message without opening a specific feature to verify the connection works and the model responds. After configuring your key, it is recommended to test here first."
       }
     },
     "metadata": {
@@ -513,7 +513,7 @@
         "title": "A whole album",
         "body": "The album detail page can refresh the whole album at once — no need to go track by track:",
         "tracklist": "Match the full tracklist — multi-disc included, disc and track numbers line up",
-        "missing": "Flag what's Missing from library — tells you which tracks from the album you haven't collected",
+        "missing": "Flag tracks that are Missing from library — indicates which tracks from the album you have not yet collected",
         "intro": "Have AI write an album intro — verifies the album's background on the web first, streams the text as it writes, with a confidence score"
       },
       "artist": {
@@ -540,7 +540,7 @@
       "shotHint": "Replace with a real screenshot: public/screenshots/discovery.png",
       "home": {
         "title": "Home",
-        "body": "Home arranges sections based on what's in your library and what you listen to — empty sections hide themselves:",
+        "body": "Home arranges sections based on your library contents and listening habits — empty sections are hidden:",
         "foryou": "For You — a recommendation playlist computed from your taste, refreshed each visit",
         "most": "Most Played — the tracks you loop the most",
         "recent": "Continue Listening / Recently Added — pick up where you left off, or see what just landed",
@@ -607,7 +607,7 @@
       },
       "guide": {
         "title": "User guide",
-        "body": "Settings → User Guide reopens the first-launch tour; Settings → Setup Guide keeps a checklist of what's left — check things off as you finish them."
+        "body": "Settings → User Guide reopens the first-launch tour; Settings → Setup Guide maintains a checklist of remaining steps to complete."
       },
       "about": {
         "title": "About",
