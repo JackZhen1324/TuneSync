@@ -19,8 +19,8 @@ export default function Logo({
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <span
-        className="relative inline-block shrink-0 overflow-hidden rounded-[24%] ring-1 ring-black/5 dark:ring-white/10"
-        style={{ width: size, height: size }}
+        className="relative inline-block shrink-0 overflow-hidden ring-1 ring-black/5 dark:ring-white/10"
+        style={{ width: size, height: size, borderRadius: Math.round(size * 0.22) }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
