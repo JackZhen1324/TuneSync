@@ -38,12 +38,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Apple legal disclaimer (mandatory for App Store badge usage). */}
-        <p className="mt-12 max-w-3xl text-xs leading-relaxed text-[var(--fg-subtle)]">
-          {tCommon("appleDisclaimer")}
-        </p>
-
-        <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t pt-6 text-xs text-[var(--fg-subtle)] sm:flex-row"
+        <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t pt-6 text-xs text-[var(--fg-subtle)] sm:flex-row"
              style={{ borderColor: "var(--border)" }}>
           <p>© {year} TuneSync. {tCommon("rights")}</p>
           <p>{tCommon("disclaimer")}</p>
