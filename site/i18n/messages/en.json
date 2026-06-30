@@ -20,7 +20,9 @@
     "product": "Product",
     "resources": "Resources",
     "menu": "Menu",
-    "download": "Download"
+    "download": "Download",
+    "support": "Support",
+    "privacy": "Privacy"
   },
   "home": {
     "badge": "A native iOS music app built for power users",
@@ -613,6 +615,88 @@
         "title": "About",
         "body": "Settings → About TuneSync — version number, whether the separation model is ready, and third-party library credits."
       }
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: June 30, 2026",
+    "intro": "TuneSync is designed with privacy as a core principle. This policy explains what data we collect and how we use it.",
+    "noCollection": {
+      "title": "Data We Do Not Collect",
+      "body": "TuneSync is a local-first music player. We do not collect, store, or transmit your personal data to our servers. Specifically:",
+      "p1": "We do not require an account or login.",
+      "p2": "We do not track your listening habits or activity.",
+      "p3": "We do not sell or share your data with third parties."
+    },
+    "onDevice": {
+      "title": "Data Stored on Your Device",
+      "body": "The following data is stored locally on your device and is never sent to our servers:",
+      "p1": "Your music library index (song titles, artists, album names, file paths).",
+      "p2": "Album artwork and metadata fetched for your songs.",
+      "p3": "Lyrics downloaded or generated for display during playback.",
+      "p4": "Karaoke recordings you create (stored only if you choose to save them).",
+      "p5": "App settings and preferences.",
+      "footer": "This data remains on your device and can be deleted at any time by removing the app or clearing data from within Settings."
+    },
+    "permissions": {
+      "title": "Permissions",
+      "body": "TuneSync requests the following permissions:",
+      "mic": "Microphone: Used only when you use Sing/Karaoke mode to record your voice. Recording is processed locally on your device.",
+      "speech": "Speech Recognition: Used for the song recognition feature. Audio is processed on-device or by the system speech framework.",
+      "network": "Local Network: Used to discover and connect to WebDAV media servers on your local network.",
+      "music": "Apple Music: Used to import artwork and metadata from your Apple Music library if you choose to use that feature."
+    },
+    "ai": {
+      "title": "Optional AI Features",
+      "body": "TuneSync may use on-device machine learning or an optional AI provider (configured by you in Settings) to fetch metadata, album art, and lyrics. If you enable a third-party AI provider, data about your songs (title, artist, album) may be sent to that provider's API. This is entirely optional and disabled by default."
+    },
+    "webdav": {
+      "title": "WebDAV Connections",
+      "body": "If you connect TuneSync to a WebDAV server, your credentials are stored securely in the device keychain and are only used to access your media files on that server. We do not have access to your WebDAV credentials."
+    },
+    "children": {
+      "title": "Children's Privacy",
+      "body": "TuneSync does not knowingly collect data from children. The app does not require an account and does not collect personal information."
+    },
+    "rights": {
+      "title": "Your Rights",
+      "body": "Since all data is stored locally on your device, you have full control. Uninstalling the app removes all associated data immediately."
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "body": "We may update this privacy policy from time to time. Any changes will be posted here with an updated date."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "If you have questions about this privacy policy, contact us at:"
+    }
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "We're here to help. Get answers to common questions or reach out to us.",
+    "contact": {
+      "title": "Get in Touch",
+      "emailLabel": "Email",
+      "email": "xhdp123@126.com",
+      "responseTime": "We typically respond within 24 hours."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "How do I add music to TuneSync?",
+      "a1": "TuneSync works with your own music library. You can import audio files from the Files app, or connect to a WebDAV/NAS server via Settings > Network Discovery. The app supports MP3, FLAC, M4A, and other common audio formats.",
+      "q2": "Does TuneSync require an internet connection?",
+      "a2": "Core playback works offline. An internet connection is needed for downloading album art, lyrics, and metadata, or when using optional AI features.",
+      "q3": "How does the karaoke/sing mode work?",
+      "a3": "While a song is playing, tap the sing/microphone button. Grant microphone permission, and TuneSync will display synchronized lyrics and record your voice mixed with the instrumental. Recordings are saved locally on your device.",
+      "q4": "Is my data private?",
+      "a4": "Yes. TuneSync is local-first and does not collect your personal data. See our Privacy Policy for details.",
+      "q5": "Which devices are supported?",
+      "a5": "TuneSync requires iOS 18 or later and is optimized for iPhone."
+    },
+    "resources": {
+      "title": "Documentation",
+      "body": "Browse our documentation for detailed guides on every feature.",
+      "button": "View Documentation"
     }
   }
 }

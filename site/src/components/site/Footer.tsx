@@ -34,6 +34,8 @@ export default function Footer() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link className="text-[var(--fg-muted)] hover:text-[var(--fg)]" href="/docs">{tNav("docs")}</Link></li>
+              <li><Link className="text-[var(--fg-muted)] hover:text-[var(--fg)]" href="/support">{tNav("support")}</Link></li>
+              <li><Link className="text-[var(--fg-muted)] hover:text-[var(--fg)]" href="/privacy">{tNav("privacy")}</Link></li>
             </ul>
           </div>
         </div>
